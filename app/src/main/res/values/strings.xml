@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CoronaClassroomAllocationApplication</string>
+
+    <string name="gong">공성현 연결</string>
 </resources>
