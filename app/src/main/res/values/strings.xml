@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">CoronaClassroomAllocationApplication</string>
 
+    <!-- (고지훈사용중~)intro 화면에서 사용되는 string.xml -->
+    <string name="logo_name">DongEui BoKang</string>
+    <string name="logo_desc">Please take your seat</string>
+
     <string name="gong">공성현 연결</string>
 </resources>
