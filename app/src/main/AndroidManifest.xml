@@ -9,7 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".activity_login"></activity>
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@xml/meun_ractangle" />
+
+        <activity android:name=".activity_menu" />
+        <activity android:name=".activity_login" />
         <activity android:name=".MainActivity" />
         <activity android:name=".activity_intro">
             <intent-filter>
