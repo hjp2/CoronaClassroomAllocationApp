@@ -8,15 +8,19 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.NoActionBar">
-        <meta-data
-            android:name="com.google.android.actions"
-            android:resource="@xml/meun_ractangle" />
-
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".activity_menu" />
         <activity android:name=".activity_login" />
         <activity android:name=".MainActivity" />
         <activity android:name=".activity_intro">
+
+        </activity>
+
+        <activity android:name=".activity_selectclass"/>
+        <activity android:name=".activity_selectbuilding">
+
+        </activity>
+        <activity android:name=".activity_selectfloor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,9 +28,6 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
