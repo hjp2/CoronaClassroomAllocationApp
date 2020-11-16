@@ -20,7 +20,7 @@
         <activity android:name=".activity_selectbuilding">
 
         </activity>
-        <activity android:name=".activity_selectfloor">
+        <activity android:name=".activity_secondprivateinfo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
