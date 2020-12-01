@@ -15,5 +15,16 @@
     <string name="login_login">로그인</string>
     <string name="login_google">구글 로그인</string>
 
+    <!-- main 화면에서 사용되는 string.xml -->
+    <string name="main_banner_name">DongEuiBoKang</string>
+    <string name="main_banner_desc">COVID-19 ClassRoom Rservation</string>
+    <string name="sub_title1">강의실예약</string>
+    <string name="sub_title2">커뮤니티</string>
+    <string name="sub_title3">동의모바일</string>
+    <string name="sub_title4">공지사항</string>
+    <string name="sub_title5">중앙도서관</string>
+    <string name="sub_title6">내정보변경</string>
+
+
     <string name="gong">공성현 연결</string>
 </resources>

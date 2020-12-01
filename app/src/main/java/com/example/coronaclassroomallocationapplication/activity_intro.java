@@ -38,8 +38,8 @@ public class activity_intro extends AppCompatActivity {
         //배경 이미지 가져오기
         iv_intro = new ImageView(this);
         iv_intro.setImageResource(R.drawable.intro_image);
-        iv_intro.setScaleX(2.0f);
-        iv_intro.setScaleY(2.0f);
+        iv_intro.setScaleX(2.18f);
+        iv_intro.setScaleY(2.18f);
 
         intro_height = iv_intro.getMaxHeight();
         intro_width = iv_intro.getMaxWidth();
