@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "663142282473",
+    "firebase_url": "https://coronacaa-c96d7.firebaseio.com",
+    "project_id": "coronacaa-c96d7",
+    "storage_bucket": "coronacaa-c96d7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:663142282473:android:8baa1f8a0d13e2959cec78",
+        "android_client_info": {
+          "package_name": "com.example.coronaclassroomallocationapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "663142282473-fisi70gmn76q1j8h6j8tbt8kiq05jdgi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.coronaclassroomallocationapplication",
+            "certificate_hash": "274ee4882860d055363cda0f2fc89a357cfd6c38"
+          }
+        },
+        {
+          "client_id": "663142282473-p5pf5berku60mjmalocvkg4u379ug4ff.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqKaLIVB4MoOrLp1YdYYiHtfLhMrA5y64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "663142282473-p5pf5berku60mjmalocvkg4u379ug4ff.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

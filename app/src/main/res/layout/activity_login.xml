@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:paddingBottom="50dp"
+        android:paddingBottom="30dp"
         android:text="@string/login_banner_desc"
         android:textColor="#A1A1A1"
         android:textSize="15sp" />
@@ -54,6 +54,7 @@
             android:textColorHint="#434343">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#434343" />
@@ -69,6 +70,7 @@
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_pw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
@@ -96,6 +98,11 @@
             android:background="#0459DC"
             android:text="@string/login_login"
             android:textColor="#fff" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/signInButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/bt_join"
