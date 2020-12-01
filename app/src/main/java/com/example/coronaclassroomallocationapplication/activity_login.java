@@ -3,10 +3,14 @@ package com.example.coronaclassroomallocationapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -19,6 +23,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -144,6 +149,15 @@ public class activity_login extends AppCompatActivity {
                 }else{
                     Toast.makeText(activity_login.this, "아이디 또는 비밀번호 오류",Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        //회원가입 버튼 클릭 이벤트 정의
+        bt_join.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity_login.this, activity_join.class);
+                startActivity(intent);
             }
         });
 

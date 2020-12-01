@@ -16,7 +16,8 @@
         android:id="@+id/logoImage"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:src="@drawable/intro_logo" />
+        android:src="@drawable/intro_logo"
+        android:transitionName="logo_image"/>
 
     <TextView
         android:id="@+id/logo_name"
@@ -26,7 +27,8 @@
         android:gravity="center"
         android:text="@string/login_banner_name"
         android:textColor="#5A5A5A"
-        android:textSize="41sp" />
+        android:textSize="41sp"
+        android:transitionName="logo_text"/>
 
     <TextView
         android:id="@+id/slogan_name"
@@ -36,7 +38,8 @@
         android:paddingBottom="30dp"
         android:text="@string/login_banner_desc"
         android:textColor="#A1A1A1"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:transitionName="logo_textdesc"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,7 +60,8 @@
                 android:id="@+id/input_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#434343" />
+                android:textColor="#434343"
+                android:transitionName="id_tran"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -74,7 +78,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:textColor="#434343" />
+                android:textColor="#434343"
+                android:transitionName="pw_tran"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -113,7 +118,8 @@
             android:background="#00000000"
             android:elevation="0dp"
             android:text="@string/login_sign_up"
-            android:textColor="#292929" />
+            android:textColor="#292929"
+            android:transitionName="join_tran"/>
 
 
     </LinearLayout>
