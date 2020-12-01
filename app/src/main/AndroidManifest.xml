@@ -9,17 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".activity_menu" />
-        <!-- <activity android:name=".activity_login" /> -->
+        <activity android:name=".activity_menu" /> <!-- <activity android:name=".activity_login" /> -->
         <activity android:name=".MainActivity" />
-        <activity android:name=".activity_intro">
-
-        </activity>
-
-        <activity android:name=".activity_selectclass"/>
-        <activity android:name=".activity_selectbuilding">
-
-        </activity>
+        <activity android:name=".activity_intro"></activity>
+        <activity android:name=".activity_selectclass" />
+        <activity android:name=".activity_selectbuilding"></activity>
         <activity android:name=".activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
