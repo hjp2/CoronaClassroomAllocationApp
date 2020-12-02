@@ -27,8 +27,8 @@
         android:gravity="center"
         android:text="@string/login_banner_name"
         android:textColor="#5A5A5A"
-        android:textSize="41sp"
-        android:transitionName="logo_text"/>
+        android:textSize="42sp"
+        android:transitionName="logo_text" />
 
     <TextView
         android:id="@+id/slogan_name"
@@ -98,7 +98,7 @@
             android:id="@+id/bt_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="5dp"
             android:background="#0459DC"
             android:text="@string/login_login"

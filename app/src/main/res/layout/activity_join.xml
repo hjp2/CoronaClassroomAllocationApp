@@ -4,42 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity_join"
-    android:orientation="vertical"
     android:background="#fff"
-    android:padding="20dp">
+    android:orientation="vertical"
+    android:padding="20dp"
+    tools:context=".activity_join">
 
     <ImageView
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:src="@drawable/intro_logo" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="welcome"
-        android:textSize="40sp"
+        android:layout_marginTop="-5dp"
         android:fontFamily="@font/baloo"
-        android:layout_marginTop="-20dp"/>
-    
+        android:text="Welcome"
+        android:textColor="#5A5A5A"
+        android:textSize="40sp" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SignUp to start your new Journey"
-        android:textSize="18sp" />
-    
+        android:text="서비스를 이용하기위해 회원가입을 시작하세요."
+        android:textSize="15sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp">
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/user_id"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="아이디"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            android:hint="아이디">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_id"
@@ -50,11 +52,10 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/user_password"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="비밀번호"
-            app:passwordToggleEnabled="true"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            android:hint="비밀번호">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_pw"
@@ -65,11 +66,11 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/user_name"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="이름"
-            app:counterMaxLength="10"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            app:counterMaxLength="10">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_name"
@@ -80,10 +81,10 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/user_email"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="이메일"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            android:hint="이메일">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_email"
@@ -94,10 +95,10 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/user_phonenum"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="휴대폰 번호"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            android:hint="휴대폰 번호">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_phonenum"
@@ -109,10 +110,10 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/joinButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="가입하기"
         android:background="#0459DC"
-        android:textColor="#fff"
-        android:onClick="saveInfo"/>
+        android:text="가입하기"
+        android:textColor="#fff" />
 </LinearLayout>
