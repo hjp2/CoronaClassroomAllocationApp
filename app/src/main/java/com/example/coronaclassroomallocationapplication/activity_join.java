@@ -4,11 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class activity_join extends AppCompatActivity {
     TextInputEditText user_id; //사용자 아이디
@@ -44,13 +48,24 @@ public class activity_join extends AppCompatActivity {
         //저장시킬 노드 참조 객체 가져오기
         DatabaseReference rootRef = firebaseDatabase.getReference(); //()안에 아무것도 작성하지 않을 경우 최상위 노드
 
-        DatabaseReference memberRef = rootRef.child("member");
-        DatabaseReference itemRef = memberRef.push(); //자식 노드 생성
-        itemRef.child("id").setValue(id_data);
-        itemRef.child("pw").setValue(pw_data);
-        itemRef.child("name").setValue(name_data);
-        itemRef.child("email").setValue(email_data);
-        itemRef.child("phonenum").setValue(phonenum_data);
+        Map<String, Object> childUpdates = new HashMap<>();
+        Map<String, Object> postValues = null;
+
+        userInfo post = new userInfo(id_data, pw_data, name_data, email_data, phonenum_data);
+        postValues = post.toMap();
+
+        childUpdates.put("/member/"+ id_data , postValues);
+        rootRef.updateChildren(childUpdates);
+
+        Toast.makeText(activity_join.this, "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+
+//        DatabaseReference memberRef = rootRef.child("member");
+//        DatabaseReference itemRef = memberRef.push(); //자식 노드 생성
+//        itemRef.child("id").setValue(id_data);
+//        itemRef.child("pw").setValue(pw_data);
+//        itemRef.child("name").setValue(name_data);
+//        itemRef.child("email").setValue(email_data);
+//        itemRef.child("phonenum").setValue(phonenum_data);
 
         finish();
     }

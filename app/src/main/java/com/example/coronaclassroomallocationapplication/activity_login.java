@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
@@ -29,10 +30,25 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+
 public class activity_login extends AppCompatActivity {
+    public static boolean flag = false;
+
+    private DatabaseReference mDatabase;
+
+    static ArrayList<String> arrayIndex =  new ArrayList<String>();
+    static ArrayList<String> arrayData = new ArrayList<String>();
+
     //일반 로그인 관련
     Button bt_login; //로그인 버튼
     Button bt_join; //회원가입 버튼
@@ -41,10 +57,10 @@ public class activity_login extends AppCompatActivity {
     TextInputEditText input_id; //입력받은 아이디
     TextInputEditText input_pw; //입력받은 비밀번호
 
-    String id; //임시 아이디(DB이전)
-    String pw; //임시 비밀번호(DB이전)
+    String id = "1"; //임시 아이디(DB이전)
+    String pw = "2"; //임시 비밀번호(DB이전)
 
-    boolean flag = false; //로그인 성공 여부를 판단하기 위한 변수
+    //boolean flag = false; //로그인 성공 여부를 판단하기 위한 변수
 
     //구글 로그인 관련
     private FirebaseAuth mAuth = null;
@@ -56,14 +72,44 @@ public class activity_login extends AppCompatActivity {
         bt_login = (Button)findViewById(R.id.bt_login);
         bt_join = (Button)findViewById(R.id.bt_join);
         bt_findpw = (Button)findViewById(R.id.bt_findpw);
-
-        id = "qwer";
-        pw = "qwer123";
+        mDatabase = FirebaseDatabase.getInstance().getReference(); //firebase정의
     }
+
 
     private boolean loginFlag() { //로그인 성공 여부를 판단하기 위한 메서드
         input_id = (TextInputEditText)findViewById(R.id.input_id);
         input_pw = (TextInputEditText)findViewById(R.id.input_pw);
+
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.e("getFirebaseDatabase", "key: " + dataSnapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    String key = postSnapshot.getKey();
+                    if(key.equals(input_id.getText().toString())) {
+                        userInfo get = postSnapshot.getValue(userInfo.class);
+                        String[] info = {get.id, get.pw, get.name, get.email, get.phonenum};
+
+                        id = info[0];
+                        pw = info[1];
+
+                        Log.d("getFirebaseDatabase", "key: " + key);
+                        Log.d("getFirebaseDatabase", "info: " + info[0] + info[1] + info[2] + info[3] + info[4]);
+                        break;
+                    }else{
+                        System.out.println("There is no data...");
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("getFirebaseDatabase","loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        Query sortbyAge = FirebaseDatabase.getInstance().getReference().child("member").orderByChild("id");
+        sortbyAge.addListenerForSingleValueEvent(postListener);
+
 
         if (id.equals(input_id.getText().toString())) {
             System.out.println("아이디 성공");
