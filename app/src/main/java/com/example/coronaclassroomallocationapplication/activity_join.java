@@ -66,6 +66,8 @@ public class activity_join extends AppCompatActivity implements View.OnClickList
                                 userMap.put(FirebaseID.documentId, user.getUid());
                                 userMap.put(FirebaseID.email, user_id.getText().toString());
                                 userMap.put(FirebaseID.password, user_pw.getText().toString());
+                                userMap.put(FirebaseID.name, user_name.getText().toString());
+                                userMap.put(FirebaseID.phonenum, user_phonenum.getText().toString());
                                 mStore.collection(FirebaseID.user).document(user.getUid()).set(userMap, SetOptions.merge()); //SetOptions.merge는 덮어쓰기 효과
                                 Toast.makeText(activity_join.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
                                 finish(); //회원가입 종료

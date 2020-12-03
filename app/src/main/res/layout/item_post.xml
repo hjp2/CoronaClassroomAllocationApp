@@ -5,15 +5,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/item_post_title"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:textColor="@android:color/black"
-        android:layout_margin="8dp"
-        android:textStyle="bold"
-        tools:text="TITLE"/>
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/item_post_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:layout_weight="1"
+            android:textColor="@android:color/black"
+            android:layout_margin="8dp"
+            android:textStyle="bold"
+            tools:text="TITLE"/>
+        <TextView
+            android:id="@+id/item_post_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_gravity="center_vertical"
+            android:textColor="@android:color/black"
+            android:layout_marginRight="8dp"
+            tools:text="작성자: name"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/item_post_contents"

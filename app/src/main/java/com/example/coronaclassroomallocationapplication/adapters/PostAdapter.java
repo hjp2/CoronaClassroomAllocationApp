@@ -32,23 +32,26 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         Post data = datas.get(position); //Post객체 생성, position은 0,1,2이 순서로 내려온다.
         holder.title.setText(data.getTitle()); //Title 아이템을 넣어준다.
         holder.contents.setText(data.getContents()); //Contents 아이템을 넣어준다.
+        holder.name.setText("작성자: " + data.getName()); //name 아이템을 넣어준다.
     }
 
     @Override
     public int getItemCount() { //아이템의 총 길이
-        return 0;
+        return datas.size();
     }
 
     class PostViewHolder extends RecyclerView.ViewHolder{
 
         private TextView title;
         private TextView contents;
+        private TextView name;
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
 
             title = itemView.findViewById(R.id.item_post_title);
             contents = itemView.findViewById(R.id.item_post_contents);
+            name = itemView.findViewById(R.id.item_post_name);
         }
     }
 }

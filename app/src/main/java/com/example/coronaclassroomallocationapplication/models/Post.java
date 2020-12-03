@@ -1,18 +1,43 @@
 package com.example.coronaclassroomallocationapplication.models;
 
+import com.google.firebase.firestore.ServerTimestamp;
+
+import java.util.Date;
+
 public class Post {
 
     private String documentId;
     private String title;
     private String contents;
+    private String name;
+    @ServerTimestamp
+    private Date date;
 
     public Post() {
     }
 
-    public Post(String documentId, String title, String contents) {
+    public Post(String documentId, String title, String contents, String name) {
         this.documentId = documentId;
         this.title = title;
         this.contents = contents;
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public String getDocumentId() {
@@ -45,6 +70,8 @@ public class Post {
                 "documentId='" + documentId + '\'' +
                 ", title='" + title + '\'' +
                 ", contents='" + contents + '\'' +
+                ", name='" + name + '\'' +
+                ", date=" + date +
                 '}';
     }
 }

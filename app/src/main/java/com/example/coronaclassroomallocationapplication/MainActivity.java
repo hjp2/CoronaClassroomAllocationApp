@@ -44,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
         sub_title2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("두번째 선택");
+                intent = new Intent(MainActivity.this, activity_coummunity.class);
+                startActivity(intent);
             }
         });
 
