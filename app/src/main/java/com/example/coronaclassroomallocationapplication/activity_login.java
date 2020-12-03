@@ -22,10 +22,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class activity_login extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
 
     private TextInputEditText input_id; //입력받은 아이디
     private TextInputEditText input_pw; //입력받은 비밀번호
@@ -33,7 +39,6 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
     //구글 로그인 관련
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
-    private SignInButton signInButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,11 +70,9 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
@@ -84,26 +87,38 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
                         } else {
-                            // If sign in fails, display a message to the user.
                             updateUI(null);
                         }
                     }
                 });
     }
 
-    private void updateUI(FirebaseUser user) { //update ui code here
+    private void updateUI(FirebaseUser user) {
         if (user != null) {
+            String email = user.getEmail();
+            String name = user.getDisplayName();
+            String phonenum = user.getPhoneNumber();
+
+            //구글 로그인 관련 1회성성
+           Map<String, Object> userMap = new HashMap<>();
+            userMap.put(FirebaseID.documentId, user.getUid());
+            userMap.put(FirebaseID.email, email);
+            userMap.put(FirebaseID.password, null);
+            userMap.put(FirebaseID.name, name);
+            userMap.put(FirebaseID.address, null);
+            userMap.put(FirebaseID.phonenum, phonenum);
+            mStore.collection(FirebaseID.user).document(user.getUid()).set(userMap, SetOptions.merge()); //SetOptions.merge는 덮어쓰기 효과
+
             Intent intent = new Intent(activity_login.this, MainActivity.class);
             startActivity(intent);
             finish();
         }
     }
 
-    //기본 이메일 로그인인
+    //기본 이메일 로그인
    @Override
     protected void onStart() {
         super.onStart();
@@ -122,21 +137,25 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
                 startActivity(new Intent(activity_login.this, activity_join.class));
                 break;
             case R.id.bt_login: //로그인 버튼을 클릭했을 경우
-                mAuth.signInWithEmailAndPassword(input_id.getText().toString(), input_pw.getText().toString())
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    if(user != null) {
-                                        Toast.makeText(activity_login.this, "로그인 성공: " + user.getUid(), Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(activity_login.this, MainActivity.class));
+                if(input_id.getText().toString().equals("") || input_pw.getText().toString().equals("")){
+                    Toast.makeText(activity_login.this, "아이디와 비밀번호를 입력해주세요.",Toast.LENGTH_SHORT).show();
+                }else {
+                    mAuth.signInWithEmailAndPassword(input_id.getText().toString(), input_pw.getText().toString())
+                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        FirebaseUser user = mAuth.getCurrentUser();
+                                        if (user != null) {
+                                            Toast.makeText(activity_login.this, "로그인 성공: " + user.getUid(), Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(activity_login.this, MainActivity.class));
+                                        }
+                                    } else {
+                                        Toast.makeText(activity_login.this, "로그인 실패", Toast.LENGTH_SHORT).show();
                                     }
-                                } else {
-                                    Toast.makeText(activity_login.this, "로그인 실패",Toast.LENGTH_SHORT).show();
                                 }
-                            }
-                        });
+                            });
+                }
                 break;
             case R.id.signInButton: //구글 로그인 버튼을 클릭했을 경우
                 signIn();

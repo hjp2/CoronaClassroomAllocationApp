@@ -9,6 +9,7 @@ public class FirebaseID {
     public static String email = "email";
     public static String password = "password";
     public static String name = "name";
+    public static String address = "address";
     public static String phonenum = "phonenum";
 
     public static String title = "title";
