@@ -37,9 +37,10 @@ public class activity_selectfloor extends AppCompatActivity {
         setContentView(R.layout.activity_selectfloor);
         //주석
         title = (TextView)findViewById(R.id.TextView_title);
-        title.setText("층선택");
-        listView=(ListView)findViewById(R.id.listview);
         final String building = getIntent().getStringExtra("building");
+        title.setText(building + " 층선택");
+        listView=(ListView)findViewById(R.id.listview);
+
 
 
         initDatabase();

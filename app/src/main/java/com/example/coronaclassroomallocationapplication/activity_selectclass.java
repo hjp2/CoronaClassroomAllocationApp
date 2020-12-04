@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CalendarView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.database.ChildEventListener;
@@ -28,8 +30,10 @@ public class activity_selectclass extends AppCompatActivity {
     private ChildEventListener mChild;
 
     private ListView listView;
+    private CalendarView calview;
     private ArrayAdapter<String> adapter;
     List<Object> Array = new ArrayList<Object>();
+    String sdate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,11 +42,21 @@ public class activity_selectclass extends AppCompatActivity {
 
         listView=(ListView)findViewById(R.id.listview);
         title = (TextView)findViewById(R.id.TextView_title);
+        calview = (CalendarView)findViewById(R.id.calendarView);
+
+        calview.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                int rmonth = month+1;
+                sdate = new String(year+"-"+rmonth+"-"+dayOfMonth);
+                System.out.println(sdate);
+            }
+        });
 
 
 
-        String building = getIntent().getStringExtra("building");
-        String floor = getIntent().getStringExtra("floor");
+        final String building = getIntent().getStringExtra("building");
+        final String floor = getIntent().getStringExtra("floor");
 
         title.setText(building+" "+floor);
         initDatabase();
@@ -78,13 +92,13 @@ public class activity_selectclass extends AppCompatActivity {
                 //        Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), activity_selecttime.class);
                 intent.addFlags (Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                //intent.putExtra("floor", (String) Array.get(arg2));
-
+                intent.putExtra("building", building);
+                intent.putExtra("floor",floor);
+                intent.putExtra("sdate",sdate);
+                intent.putExtra("sclass", (String) Array.get(arg2));
                 startActivity(intent);
             }
         });
-
-
 
 
     }
