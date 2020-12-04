@@ -38,7 +38,7 @@ public class RepostAdapter extends RecyclerView.Adapter<RepostAdapter.RepostView
         return datas.size();
     }
 
-    class RepostViewHolder extends RecyclerView.ViewHolder{
+    public class RepostViewHolder extends RecyclerView.ViewHolder{
 
         private TextView contents;
         private TextView name;
