@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity_community_detail">
+
+    <LinearLayout
+        android:id="@+id/community2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00A3FF"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:background="#00A3FF"
+            android:src="@drawable/ic_baseline_arrow_back_24"
+            app:layout_constraintBottom_toTopOf="@+id/textView10"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="#00A3FF"
+            android:gravity="center_vertical"
+            android:paddingLeft="30dp"
+            android:textColor="#fff"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/community3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/community2">
+
+        <TextView
+            android:id="@+id/post2_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:text="TITLE" />
+
+        <TextView
+            android:id="@+id/post2_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingRight="10dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            tools:text="작성자: name" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/post2_contents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:layout_below="@id/community3"
+        tools:text="contents" />
+
+    <TextView
+        android:id="@+id/community_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#333333"
+        android:layout_marginTop="7dp"
+        android:layout_below="@id/post2_contents"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/main_recyclerview2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/community_line"
+        android:background="#fff"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <EditText
+        android:id="@+id/post_contents_edit2"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:hint="@string/contents_input"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:background="@drawable/shape_round2"
+        android:layout_margin="10dp"
+        android:paddingLeft="10dp"
+        android:gravity="center_vertical"
+        android:layout_alignParentBottom="true"/>
+
+    <ImageButton android:id="@+id/post_rewrite_button"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/post_contents_edit2"
+        android:layout_alignBottom="@+id/post_contents_edit2"
+        android:layout_alignRight="@+id/post_contents_edit2"
+        android:layout_margin="3dp"
+        android:background="@drawable/ic_baseline_send_24"/>
+
+</RelativeLayout>

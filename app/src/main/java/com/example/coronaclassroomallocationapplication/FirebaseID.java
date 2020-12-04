@@ -4,8 +4,10 @@ public class FirebaseID {
 
     public static String user = "user";
     public static String post = "post";
+    public static String repost = "repost";
 
     public static String documentId = "documentId";
+    public static String userId = "userId";
     public static String email = "email";
     public static String password = "password";
     public static String name = "name";

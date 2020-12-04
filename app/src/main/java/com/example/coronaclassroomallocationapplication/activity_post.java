@@ -54,7 +54,8 @@ public class activity_post extends AppCompatActivity implements View.OnClickList
         if(mAuth.getCurrentUser() != null){
             String postId = mStore.collection(FirebaseID.post).document().getId();
             Map<String, Object> data = new HashMap<>();
-            data.put(FirebaseID.documentId, mAuth.getCurrentUser().getUid());
+            data.put(FirebaseID.documentId, postId);
+            data.put(FirebaseID.userId, mAuth.getCurrentUser().getUid());
             data.put(FirebaseID.title,mTitle.getText().toString());
             data.put(FirebaseID.contents,mContents.getText().toString());
             data.put(FirebaseID.name, name);

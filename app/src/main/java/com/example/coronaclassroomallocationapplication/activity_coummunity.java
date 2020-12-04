@@ -5,13 +5,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.app.admin.ConnectEvent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.coronaclassroomallocationapplication.adapters.PostAdapter;
 import com.example.coronaclassroomallocationapplication.models.Post;
+import com.example.coronaclassroomallocationapplication.models.Repost;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class activity_coummunity extends AppCompatActivity implements View.OnClickListener {
+public class activity_coummunity extends AppCompatActivity implements View.OnClickListener, RecyclerViewItemClickListener.OnItemClickListener {
     private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
 
     private RecyclerView mPostRecyclerView;
@@ -41,6 +45,8 @@ public class activity_coummunity extends AppCompatActivity implements View.OnCli
 
         mPostRecyclerView = findViewById(R.id.main_recyclerview);
         findViewById(R.id.main_post_edit).setOnClickListener(this);
+
+        mPostRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this, mPostRecyclerView, this));
     }
 
     @Override
@@ -48,7 +54,7 @@ public class activity_coummunity extends AppCompatActivity implements View.OnCli
         super.onStart();
         mDatas = new ArrayList<>();
         mStore.collection(FirebaseID.post)
-                .orderBy(FirebaseID.timestamp, Query.Direction.ASCENDING)
+                .orderBy(FirebaseID.timestamp, Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
@@ -63,6 +69,7 @@ public class activity_coummunity extends AppCompatActivity implements View.OnCli
                                 Post data = new Post(documentId, title, contents, name);
                                 mDatas.add(data);
                             }
+
                             mAdapter = new PostAdapter(mDatas);
                             mPostRecyclerView.setAdapter(mAdapter);
                         }
@@ -73,5 +80,32 @@ public class activity_coummunity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         startActivity(new Intent(activity_coummunity.this, activity_post.class));
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Intent intent = new Intent(this, activity_community_detail.class);
+        intent.putExtra(FirebaseID.documentId, mDatas.get(position).getDocumentId());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onItemLongClick(View view, final int position) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setMessage("삭제 하시겠습니까?");
+        dialog.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mStore.collection(FirebaseID.post).document(mDatas.get(position).getDocumentId()).delete();
+                Toast.makeText(activity_coummunity.this, "삭제 되었습니다.", Toast.LENGTH_SHORT).show();
+            }
+        }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(activity_coummunity.this, "취소 되었습니다.", Toast.LENGTH_SHORT).show();
+            }
+        });
+        dialog.setTitle("삭제 알림");
+        dialog.show();
     }
 }
