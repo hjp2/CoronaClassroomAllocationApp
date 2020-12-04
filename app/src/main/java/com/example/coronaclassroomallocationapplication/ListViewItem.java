@@ -1,9 +1,14 @@
 package com.example.coronaclassroomallocationapplication;
 
+import android.view.View;
+
 public class ListViewItem {
     private String time;
     private String people;
     private String state;
+    public View.OnClickListener onClickListener;
+
+
 
     public void setTime(String time) {
         this.time = time;

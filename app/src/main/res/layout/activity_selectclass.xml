@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,27 +8,25 @@
     tools:context=".MainActivity">
 
     <include
-        android:id="@+id/include"
         layout="@layout/toolbar"></include>
 
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_height="300dp"
+        android:layout_below="@+id/layout_toolbar"
+        android:layout_centerInParent="true"/>
 
     <ListView
         android:id="@+id/listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calendarView"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="88dp" />
+        android:layout_below="@id/calendarView"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        >
+
+    </ListView>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
