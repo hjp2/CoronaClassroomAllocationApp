@@ -1,0 +1,67 @@
+Index: app/src/main/java/com/example/coronaclassroomallocationapplication/activity_login.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.coronaclassroomallocationapplication;\n\nimport androidx.annotation.NonNull;\nimport androidx.appcompat.app.AppCompatActivity;\n\nimport android.content.Intent;\nimport android.os.Bundle;\nimport android.view.View;\nimport android.widget.Toast;\n\nimport com.google.android.gms.auth.api.signin.GoogleSignIn;\nimport com.google.android.gms.auth.api.signin.GoogleSignInAccount;\nimport com.google.android.gms.auth.api.signin.GoogleSignInClient;\nimport com.google.android.gms.auth.api.signin.GoogleSignInOptions;\nimport com.google.android.gms.common.SignInButton;\nimport com.google.android.gms.common.api.ApiException;\nimport com.google.android.gms.tasks.OnCompleteListener;\nimport com.google.android.gms.tasks.Task;\nimport com.google.android.material.textfield.TextInputEditText;\nimport com.google.firebase.auth.AuthCredential;\nimport com.google.firebase.auth.AuthResult;\nimport com.google.firebase.auth.FirebaseAuth;\nimport com.google.firebase.auth.FirebaseUser;\nimport com.google.firebase.auth.GoogleAuthProvider;\nimport com.google.firebase.firestore.FirebaseFirestore;\nimport com.google.firebase.firestore.SetOptions;\n\nimport java.util.HashMap;\nimport java.util.Map;\n\npublic class activity_login extends AppCompatActivity implements View.OnClickListener {\n\n    private FirebaseAuth mAuth = FirebaseAuth.getInstance();\n    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();\n\n    private TextInputEditText input_id; //입력받은 아이디\n    private TextInputEditText input_pw; //입력받은 비밀번호\n\n    //구글 로그인 관련\n    private GoogleSignInClient mGoogleSignInClient;\n    private static final int RC_SIGN_IN = 9001;\n\n    @Override\n    public void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(R.layout.activity_login);\n\n        input_id = findViewById(R.id.input_id); //아이디를 찾는 과정\n        input_pw = findViewById(R.id.input_pw); //비밀번호를 찾는 과정\n\n        findViewById(R.id.bt_join).setOnClickListener(this); //회원가입 버튼을 클릭했을때 이벤트\n        findViewById(R.id.bt_login).setOnClickListener(this); //로그인 버튼을 클릭했을때 이벤트\n        findViewById(R.id.signInButton).setOnClickListener(this); //구글 로그인 버튼을 클릭했을때 이벤트\n\n        //구글로그인 확인 과정\n       GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)\n                .requestIdToken(getString(R.string.default_web_client_id))\n                .requestEmail()\n                .build();\n        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);\n    }\n\n    //구글 로그인\n    private void signIn() {\n        Intent signInIntent = mGoogleSignInClient.getSignInIntent();\n        startActivityForResult(signInIntent, RC_SIGN_IN);\n    }\n\n    @Override\n    public void onActivityResult(int requestCode, int resultCode, Intent data) {\n        super.onActivityResult(requestCode, resultCode, data);\n\n        if (requestCode == RC_SIGN_IN) {\n            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);\n            try {\n                GoogleSignInAccount account = task.getResult(ApiException.class);\n                firebaseAuthWithGoogle(account);\n            } catch (ApiException e) {\n            }\n        }\n    }\n\n    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {\n        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);\n        mAuth.signInWithCredential(credential)\n                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {\n                    @Override\n                    public void onComplete(@NonNull Task<AuthResult> task) {\n                        if (task.isSuccessful()) {\n                            FirebaseUser user = mAuth.getCurrentUser();\n                            updateUI(user);\n                        } else {\n                            updateUI(null);\n                        }\n                    }\n                });\n    }\n\n    private void updateUI(FirebaseUser user) {\n        if (user != null) {\n            String email = user.getEmail();\n            String name = user.getDisplayName();\n            String phonenum = user.getPhoneNumber();\n\n            //구글 로그인 관련 1회성성\n           Map<String, Object> userMap = new HashMap<>();\n            userMap.put(FirebaseID.documentId, user.getUid());\n            userMap.put(FirebaseID.email, email);\n            userMap.put(FirebaseID.password, null);\n            userMap.put(FirebaseID.name, name);\n            userMap.put(FirebaseID.address, null);\n            userMap.put(FirebaseID.phonenum, phonenum);\n            mStore.collection(FirebaseID.user).document(user.getUid()).set(userMap, SetOptions.merge()); //SetOptions.merge는 덮어쓰기 효과\n\n            Intent intent = new Intent(activity_login.this, MainActivity.class);\n            startActivity(intent);\n            finish();\n        }\n    }\n\n    //기본 이메일 로그인\n   @Override\n    protected void onStart() {\n        super.onStart();\n        FirebaseUser user = mAuth.getCurrentUser();\n        if(user != null){\n            Toast.makeText(activity_login.this, \"자동 로그인: \"+user.getUid(), Toast.LENGTH_SHORT).show();\n            startActivity(new Intent(activity_login.this, MainActivity.class));\n            finish();\n        }\n    }\n\n    @Override\n    public void onClick(View v) {\n        switch (v.getId()){\n            case R.id.bt_join: //회원가입 버튼을 클릭했을 경우\n                startActivity(new Intent(activity_login.this, activity_join.class));\n                break;\n            case R.id.bt_login: //로그인 버튼을 클릭했을 경우\n                if(input_id.getText().toString().equals(\"\") || input_pw.getText().toString().equals(\"\")){\n                    Toast.makeText(activity_login.this, \"아이디와 비밀번호를 입력해주세요.\",Toast.LENGTH_SHORT).show();\n                }else {\n                    mAuth.signInWithEmailAndPassword(input_id.getText().toString(), input_pw.getText().toString())\n                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {\n                                @Override\n                                public void onComplete(@NonNull Task<AuthResult> task) {\n                                    if (task.isSuccessful()) {\n                                        FirebaseUser user = mAuth.getCurrentUser();\n                                        if (user != null) {\n                                            Toast.makeText(activity_login.this, \"로그인 성공: \" + user.getUid(), Toast.LENGTH_SHORT).show();\n                                            startActivity(new Intent(activity_login.this, MainActivity.class));\n                                        }\n                                    } else {\n                                        Toast.makeText(activity_login.this, \"로그인 실패\", Toast.LENGTH_SHORT).show();\n                                    }\n                                }\n                            });\n                }\n                break;\n            case R.id.signInButton: //구글 로그인 버튼을 클릭했을 경우\n                signIn();\n                break;\n        }\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/coronaclassroomallocationapplication/activity_login.java	(revision b2a11ae70650c8f8bcd65684b0f5afa6005f83a3)
++++ app/src/main/java/com/example/coronaclassroomallocationapplication/activity_login.java	(date 1607012072000)
+@@ -28,6 +28,7 @@
+ import java.util.HashMap;
+ import java.util.Map;
+ 
++
+ public class activity_login extends AppCompatActivity implements View.OnClickListener {
+ 
+     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    package=\"com.example.coronaclassroomallocationapplication\">\n    <uses-permission android:name=\"android.permission.INTERNET\"></uses-permission>\n\n    <application\n        android:allowBackup=\"true\"\n        android:icon=\"@mipmap/ic_launcher\"\n        android:label=\"@string/app_name\"\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\n        android:supportsRtl=\"true\"\n        android:theme=\"@style/Theme.AppCompat.Light.NoActionBar\">\n        <activity android:name=\".activity_post\"></activity>\n        <activity android:name=\".activity_coummunity\" />\n        <activity android:name=\".activity_join\" />\n        <activity android:name=\".activity_menu\" /> <!-- <activity android:name=\".activity_login\" /> -->\n        <activity android:name=\".MainActivity\" />\n        <activity android:name=\".activity_login\" />\n        <activity android:name=\".activity_selectclass\" />\n        <activity android:name=\".activity_selecttime\" />\n        <activity android:name=\".activity_selectfloor\" />\n        <activity android:name=\".activity_privateinfo\" />\n        <activity android:name=\".activity_secondprivateinfo\" />\n        <activity android:name=\".activity_selectbuilding\">\n\n        </activity>\n        <activity android:name=\".activity_intro\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\" />\n\n                <category android:name=\"android.intent.category.LAUNCHER\" />\n            </intent-filter>\n\n        </activity>\n\n        <meta-data\n            android:name=\"preloaded_fonts\"\n            android:resource=\"@array/preloaded_fonts\" />\n    </application>\n\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/AndroidManifest.xml	(revision b2a11ae70650c8f8bcd65684b0f5afa6005f83a3)
++++ app/src/main/AndroidManifest.xml	(date 1607064828000)
+@@ -1,7 +1,6 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+     package="com.example.coronaclassroomallocationapplication">
+-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+ 
+     <application
+         android:allowBackup="true"
+@@ -10,27 +9,23 @@
+         android:roundIcon="@mipmap/ic_launcher_round"
+         android:supportsRtl="true"
+         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+-        <activity android:name=".activity_post"></activity>
+-        <activity android:name=".activity_coummunity" />
++        <activity android:name=".activity_post"/>
++        <activity android:name=".activity_coummunity"/>
+         <activity android:name=".activity_join" />
+         <activity android:name=".activity_menu" /> <!-- <activity android:name=".activity_login" /> -->
+         <activity android:name=".MainActivity" />
+         <activity android:name=".activity_login" />
+         <activity android:name=".activity_selectclass" />
+-        <activity android:name=".activity_selecttime" />
+-        <activity android:name=".activity_selectfloor" />
+         <activity android:name=".activity_privateinfo" />
+         <activity android:name=".activity_secondprivateinfo" />
+-        <activity android:name=".activity_selectbuilding">
+-
+-        </activity>
+-        <activity android:name=".activity_intro">
++        <activity android:name=".activity_selectbuilding" />
++        <activity android:name=".activity_intro"/>
++        <activity android:name=".activity_notice">
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+ 
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+-
+         </activity>
+ 
+         <meta-data

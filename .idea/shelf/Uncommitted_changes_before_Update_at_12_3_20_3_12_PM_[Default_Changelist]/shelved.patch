@@ -1,0 +1,36 @@
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    package=\"com.example.coronaclassroomallocationapplication\">\n\n    <application\n        android:allowBackup=\"true\"\n        android:icon=\"@mipmap/ic_launcher\"\n        android:label=\"@string/app_name\"\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\n        android:supportsRtl=\"true\"\n        android:theme=\"@style/Theme.AppCompat.Light.NoActionBar\">\n        <activity android:name=\".activity_menu\" />\n        <!-- <activity android:name=\".activity_login\" /> -->\n        <activity android:name=\".MainActivity\" />\n        <activity android:name=\".activity_intro\">\n\n        </activity>\n\n        <activity android:name=\".activity_selectclass\"/>\n        <activity android:name=\".activity_selectbuilding\">\n\n        </activity>\n        <activity android:name=\".activity_login\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\" />\n\n                <category android:name=\"android.intent.category.LAUNCHER\" />\n            </intent-filter>\n        </activity>\n\n        <meta-data\n            android:name=\"preloaded_fonts\"\n            android:resource=\"@array/preloaded_fonts\" />\n    </application>\n\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/AndroidManifest.xml	(revision 0ce38680267cea6eb8de6d3da4c3970c3c9ac5bd)
++++ app/src/main/AndroidManifest.xml	(date 1606717357000)
+@@ -20,7 +20,7 @@
+         <activity android:name=".activity_selectbuilding">
+ 
+         </activity>
+-        <activity android:name=".activity_login">
++        <activity android:name=".activity_notice">
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+ 
+Index: build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>// Top-level build file where you can add configuration options common to all sub-projects/modules.\nbuildscript {\n    repositories {\n        google()\n        jcenter()\n    }\n    dependencies {\n        classpath 'com.android.tools.build:gradle:4.1.0'\n\n        // NOTE: Do not place your application dependencies here; they belong\n        // in the individual module build.gradle files\n    }\n}\n\nallprojects {\n    repositories {\n        google()\n        jcenter()\n    }\n}\n\ntask clean(type: Delete) {\n    delete rootProject.buildDir\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- build.gradle	(revision 0ce38680267cea6eb8de6d3da4c3970c3c9ac5bd)
++++ build.gradle	(date 1606711232000)
+@@ -5,7 +5,7 @@
+         jcenter()
+     }
+     dependencies {
+-        classpath 'com.android.tools.build:gradle:4.1.0'
++        classpath 'com.android.tools.build:gradle:4.1.1'
+ 
+         // NOTE: Do not place your application dependencies here; they belong
+         // in the individual module build.gradle files
