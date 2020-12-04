@@ -69,7 +69,6 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
@@ -104,7 +103,7 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
 
             //구글 로그인 관련 1회성성
            Map<String, Object> userMap = new HashMap<>();
-            userMap.put(FirebaseID.documentId, user.getUid());
+            //userMap.put(FirebaseID.documentId, user.getUid());
             userMap.put(FirebaseID.email, email);
             userMap.put(FirebaseID.password, null);
             userMap.put(FirebaseID.name, name);

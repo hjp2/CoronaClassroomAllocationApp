@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     CardView sub_title1; //강의실 예약
@@ -16,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     CardView sub_title5; //중앙도서관
     CardView sub_title6; //내정보변경
     Intent intent;
+    private long backKeyPressedTime = 0;
+    private Toast toast;
 
     private void init(){
         sub_title1 = (CardView)findViewById(R.id.sub_title1);
@@ -83,6 +86,22 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+    }
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() > backKeyPressedTime + 2500) {
+            backKeyPressedTime = System.currentTimeMillis();
+            toast = Toast.makeText(this, "뒤로 가기 버튼을 한 번 더 누르시면 종료됩니다.", Toast.LENGTH_LONG);
+            toast.show();
+            return;
+        }
+        if (System.currentTimeMillis() <= backKeyPressedTime + 2500) {
+            finish();
+            toast.cancel();
+            toast = Toast.makeText(this,"이용해 주셔서 감사합니다.",Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
 
 //    @Override
