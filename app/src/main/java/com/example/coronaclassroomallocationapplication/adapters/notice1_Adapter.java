@@ -52,8 +52,6 @@ public class notice1_Adapter extends BaseAdapter {
         TextView sub_name = (TextView) convertView.findViewById(R.id.sub_name);
         TextView sub_data = (TextView) convertView.findViewById(R.id.sub_data);
         TextView review = (TextView) convertView.findViewById(R.id.review);
-        ImageView heart = (ImageView) convertView.findViewById(R.id.heart);
-        TextView heart_number = (TextView) convertView.findViewById(R.id.heart_number);
 
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
@@ -64,8 +62,6 @@ public class notice1_Adapter extends BaseAdapter {
         sub_name.setText(listViewItem.getSub_name());
         sub_data.setText(listViewItem.getSub_data());
         review.setText(listViewItem.getReview());
-        heart.setImageDrawable(listViewItem.getHeart());
-        heart_number.setText(listViewItem.getHeart_number());
 
         return convertView;
     }
@@ -79,9 +75,6 @@ public class notice1_Adapter extends BaseAdapter {
         item.setSub_name(sub_name);
         item.setSub_data(sub_data);
         item.setReview(review);
-        item.setHeart(heart);
-        item.setHeart_number(heart_number);
-
         listviewitemList.add(item);
     }
 

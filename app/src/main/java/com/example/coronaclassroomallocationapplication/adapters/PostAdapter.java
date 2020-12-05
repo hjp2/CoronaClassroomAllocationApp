@@ -75,10 +75,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             main_data = itemView.findViewById(R.id.main_data);
             main_title = itemView.findViewById(R.id.main_title);
             main_ask = itemView.findViewById(R.id.main_ask);
-
-            //title = itemView.findViewById(R.id.item_post_title);
-            //contents = itemView.findViewById(R.id.item_post_contents);
-            //name = itemView.findViewById(R.id.item_post_name);
         }
     }
 }
