@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         sub_title6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent(MainActivity.this, activity_privateinfo.class);
+                intent = new Intent(MainActivity.this, activity_secondprivateinfo.class);
                 startActivity(intent);
             }
         });

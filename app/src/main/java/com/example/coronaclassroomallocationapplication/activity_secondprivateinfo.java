@@ -28,6 +28,7 @@ import java.util.Map;
 public class activity_secondprivateinfo extends AppCompatActivity {
     private Button bt_deleteuser; //회원 탈퇴
     private Button bt_changeuser; //회원정보변경
+    private Button bt_mypost; //내가 작성한글
     private TextInputEditText info_pw;
     private TextInputEditText info_name;
     private TextInputEditText info_address;
@@ -53,6 +54,7 @@ public class activity_secondprivateinfo extends AppCompatActivity {
         user_info_id = findViewById(R.id.user_info_id);
         user_info_name = findViewById(R.id.user_info_name);
         bt_changeuser = findViewById(R.id.info_change);
+        bt_mypost=findViewById(R.id.info_write);
         privateinfo_back_button = findViewById(R.id.privateinfo_back_button);
 
         String user = mAuth.getInstance().getUid();
@@ -126,5 +128,14 @@ public class activity_secondprivateinfo extends AppCompatActivity {
                 finish();
             }
         });;
+
+        bt_mypost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity_secondprivateinfo.this, activity_mypost.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 }

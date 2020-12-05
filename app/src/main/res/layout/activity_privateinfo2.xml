@@ -221,8 +221,21 @@
         android:layout_marginRight="15dp" />
 
     <Button
+        android:layout_below="@id/info_change"
+        android:id="@+id/info_write"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="15dp"
+        android:background="#FFAA2F"
+        android:text="작성글 보기"
+        android:textSize="15sp"
+        android:textColor="#fff"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp" />
+
+    <Button
         android:id="@+id/delete_user"
-        android:layout_below="@+id/info_change"
+        android:layout_below="@+id/info_write"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="15dp"
