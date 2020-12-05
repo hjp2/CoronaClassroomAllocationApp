@@ -45,6 +45,7 @@ public class activity_selecttime extends AppCompatActivity {
     private ListView listView;
     private ListViewAdapter adapter;
     int i = 0;
+    int timecount[] = new int[8];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,7 @@ public class activity_selecttime extends AppCompatActivity {
         final String floor = getIntent().getStringExtra("floor");
         final String sclass = getIntent().getStringExtra("sclass");
         final String sdate = getIntent().getStringExtra("sdate");
+        final String max = getIntent().getStringExtra("max");
 
 
         title.setText(sclass + "호 " + sdate);
@@ -70,7 +72,8 @@ public class activity_selecttime extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(adapter);
         final String times[] = new String[]{"09:00 ~ 10:00","10:00 ~ 11:00","11:00 ~ 11:00","12:00 ~ 13:00","13:00 ~ 14:00","14:00 ~ 15:00","15:00 ~ 16:00", "16:00 ~ 17:00"};
-        final int timecount[] = {0,0,0,0,0,0,0,0};
+
+
 
 
         // 첫 번째 아이템 추가.
@@ -85,6 +88,7 @@ public class activity_selecttime extends AppCompatActivity {
                         if (queryDocumentSnapshots != null) {
                             adapter.clearItem(); //리스트가 갱신되는게 아니라 화면에 쌓이기 때문에 정리를 해주어야한다.
                             //ids.clear();
+                            timecount = new int[8];
                             for (DocumentSnapshot snap : queryDocumentSnapshots.getDocuments()) {
                                 Map<String, Object> shot = snap.getData();
                                 String rtime = String.valueOf(shot.get("시간"));
@@ -102,15 +106,14 @@ public class activity_selecttime extends AppCompatActivity {
 
                             }
                             for(int j = 0;j<times.length;j++){
-                                adapter.addItem(times[j], Integer.toString(timecount[j]), "예약하기");
+                                adapter.addItem(times[j], Integer.toString(timecount[j]) +" / "+ max, "예약하기");
                                 System.out.println("test");
                                 System.out.println(timecount[j]);
 
                             }
 
                             adapter.notifyDataSetChanged();
-                            listView.setSelection(adapter.getCount() - 1);
-
+                            //listView.setSelection(adapter.getCount() - 1);
 
                         }
                     }
@@ -121,26 +124,20 @@ public class activity_selecttime extends AppCompatActivity {
 
 
 
-
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                Toast.makeText(getApplicationContext(), "선택됨",
-                        Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), adapter.getItem(arg2).getTime(),
+                //        Toast.LENGTH_SHORT).show();
+                adapter.getItem(arg2).setState("예약완료");
 
-                //Intent intent = new Intent(getApplicationContext(), activity_selectclass.class);
-                //intent.addFlags (Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                //intent.putExtra("building", building);
-                //intent.putExtra("floor", Array.get(arg2));
-                //startActivity(intent);
 
                 if(mAuth.getCurrentUser() != null){
                     String rId = mStore.collection("classroom/"+building+"/층/"+floor+"/강의실/"+sclass+"/예약").document().getId();
                     Map<String, Object> data = new HashMap<>();
                     data.put("날짜",sdate);
                     data.put("예약자", mAuth.getCurrentUser().getUid());
-                    data.put("시간","10:00 ~ 11:00");
+                    data.put("시간",adapter.getItem(arg2).getTime());
                     mStore.collection("classroom/"+building+"/층/"+floor+"/강의실/"+sclass+"/예약").document(rId).set(data, SetOptions.merge());
                 }
 

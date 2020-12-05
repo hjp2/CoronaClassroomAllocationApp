@@ -80,8 +80,8 @@ public class activity_selectbuilding extends AppCompatActivity{
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                Toast.makeText(getApplicationContext(), Array.get(arg2),
-                        Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), Array.get(arg2),
+                //        Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), activity_selectfloor.class);
                 intent.addFlags (Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 intent.putExtra("building", Array.get(arg2));
