@@ -8,8 +8,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="08:00 ~ 09:00"
-        android:layout_margin="40dp"
-        android:textSize="20dp"
+        android:layout_margin="30dp"
+        android:textSize="25dp"
         android:textStyle="bold"
         >
     </TextView>
@@ -19,9 +19,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_margin="20dp"
-        android:textSize="20dp"
-        android:text="4/15">
+        android:layout_margin="10dp"
+
+        android:text="4/15"
+        android:textSize="20dp">
+
     </TextView>
 
     <TextView
@@ -30,9 +32,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/TextView_people"
         android:layout_alignParentRight="true"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:textSize="20dp"
-        android:text="예정"
+        android:textOff="취소하기"
+        android:textOn="예약하기"
         android:clickable="true">
 
     </TextView>

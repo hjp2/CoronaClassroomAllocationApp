@@ -54,6 +54,9 @@ public class activity_selectfloor extends AppCompatActivity {
         listView.setAdapter(adapter);
 
 
+
+
+
         mStore.collection("classroom/"+building+"/층")
                 //.orderBy("층", Query.Direction.ASCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -75,6 +78,7 @@ public class activity_selectfloor extends AppCompatActivity {
                             }
                             adapter.notifyDataSetChanged();
                             listView.setSelection(adapter.getCount() - 1);
+                            listView.smoothScrollToPosition(0);
 
                         }
                     }
@@ -84,8 +88,8 @@ public class activity_selectfloor extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                Toast.makeText(getApplicationContext(), Array.get(arg2),
-                        Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), Array.get(arg2),
+                //        Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), activity_selectclass.class);
                 intent.addFlags (Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 intent.putExtra("building", building);

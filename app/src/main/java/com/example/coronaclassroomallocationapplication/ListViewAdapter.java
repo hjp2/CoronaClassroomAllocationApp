@@ -4,7 +4,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
@@ -22,7 +24,7 @@ public class ListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public ListViewItem getItem(int position) {
         return listViewItemList.get(position) ;
     }
 
@@ -55,6 +57,7 @@ public class ListViewAdapter extends BaseAdapter {
         people.setText(listViewItem.getPeople());
         state.setText(listViewItem.getState());
 
+
         return convertView;
     }
 
@@ -71,4 +74,6 @@ public class ListViewAdapter extends BaseAdapter {
     public void clearItem(){
         listViewItemList.clear();
     }
+
+
 }
