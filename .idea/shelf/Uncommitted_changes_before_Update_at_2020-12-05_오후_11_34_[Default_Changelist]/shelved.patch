@@ -1,0 +1,944 @@
+Index: app/src/main/java/com/example/coronaclassroomallocationapplication/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.coronaclassroomallocationapplication;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.cardview.widget.CardView;\r\n\r\nimport android.content.Intent;\r\nimport android.net.Uri;\r\nimport android.os.Bundle;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\n\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.auth.FirebaseUser;\r\nimport com.google.firebase.firestore.DocumentSnapshot;\r\nimport com.google.firebase.firestore.FirebaseFirestore;\r\nimport com.google.firebase.firestore.SetOptions;\r\n\r\nimport org.w3c.dom.Text;\r\n\r\nimport java.util.Map;\r\n\r\npublic class MainActivity extends AppCompatActivity {\r\n    CardView sub_title1; //강의실 예약\r\n    CardView sub_title2; //커뮤니티\r\n    CardView sub_title3; //동의모바일\r\n    CardView sub_title4; //공지사항\r\n    CardView sub_title5; //중앙도서관\r\n    CardView sub_title6; //내정보변경\r\n    TextView myname;\r\n    Button logout_button;\r\n    private FirebaseAuth mAuth;\r\n    Intent intent;\r\n    private long backKeyPressedTime = 0;\r\n    private Toast toast;\r\n    private String id;\r\n    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();\r\n\r\n\r\n    private void init(){\r\n        sub_title1 = (CardView)findViewById(R.id.sub_title1);\r\n        sub_title2 = (CardView)findViewById(R.id.sub_title2);\r\n        sub_title3 = (CardView)findViewById(R.id.sub_title3);\r\n        sub_title4 = (CardView)findViewById(R.id.sub_title4);\r\n        sub_title5 = (CardView)findViewById(R.id.sub_title5);\r\n        sub_title6 = (CardView)findViewById(R.id.sub_title6);\r\n        logout_button = findViewById(R.id.logout_button);\r\n        myname = (TextView)findViewById(R.id.myname);\r\n    }\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_main);\r\n\r\n        this.init();\r\n\r\n        sub_title1.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                intent = new Intent(MainActivity.this, activity_selectbuilding.class);\r\n                startActivity(intent);\r\n            }\r\n        });\r\n\r\n        sub_title2.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                intent = new Intent(MainActivity.this, activity_coummunity.class);\r\n                startActivity(intent);\r\n            }\r\n        });\r\n\r\n        sub_title3.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                intent = getPackageManager().getLaunchIntentForPackage(\"kr.ac.deu.mobileid\");\r\n                startActivity(intent);\r\n                finish();\r\n            }\r\n        });\r\n\r\n        sub_title4.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(\"https://www.deu.ac.kr/www/board/3\"));\r\n                startActivity(intent);\r\n                finish();\r\n            }\r\n        });\r\n\r\n        sub_title5.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(\"https://lib.deu.ac.kr/lib/SlimaPlus.csp\"));\r\n                startActivity(intent);\r\n                finish();\r\n            }\r\n        });\r\n\r\n        sub_title6.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                intent = new Intent(MainActivity.this, activity_secondprivateinfo.class);\r\n                startActivity(intent);\r\n            }\r\n        });\r\n\r\n        //고지훈 추가(로그아웃) -> 문제시 이야기해주세요.\r\n        logout_button.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                mAuth.getInstance().signOut(); //계정에서 로그아웃\r\n                intent = new Intent(MainActivity.this, activity_login.class);\r\n                startActivity(intent);\r\n            }\r\n        });\r\n\r\n        String user = mAuth.getInstance().getUid();\r\n        mStore.collection(FirebaseID.user).document(user)\r\n                .get()\r\n                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {\r\n                    @Override\r\n                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {\r\n                        if (task.isSuccessful()) {\r\n                            if (task.getResult().exists()) { //문서가 없을경우 처리방법\r\n                                if (task.getResult() != null) {\r\n                                    Map<String, Object> snap = task.getResult().getData();\r\n                                    String name = String.valueOf(snap.get(FirebaseID.name));\r\n                                    myname.setText(name);\r\n                                }\r\n                            }\r\n                        }\r\n                    }\r\n                });\r\n    }\r\n\r\n    @Override\r\n    public void onBackPressed() {\r\n        if (System.currentTimeMillis() > backKeyPressedTime + 2500) {\r\n            backKeyPressedTime = System.currentTimeMillis();\r\n            toast = Toast.makeText(this, \"뒤로 가기 버튼을 한 번 더 누르시면 종료됩니다.\", Toast.LENGTH_LONG);\r\n            toast.show();\r\n            return;\r\n        }\r\n        if (System.currentTimeMillis() <= backKeyPressedTime + 2500) {\r\n            finish();\r\n            toast.cancel();\r\n            toast = Toast.makeText(this,\"이용해 주셔서 감사합니다.\",Toast.LENGTH_LONG);\r\n            toast.show();\r\n        }\r\n    }\r\n\r\n//    @Override\r\n//    public void onClick(View v){\r\n//        switch (v.getId()){\r\n//            case R.id.sub_title1:\r\n//                Intent intent = new Intent(MainActivity.this, activity_selectbuilding.class);\r\n//                startActivity(intent);\r\n//                finish();\r\n//                break;\r\n//            case R.id.sub_title2:\r\n//                break;\r\n//            case R.id.sub_title3:\r\n//                Intent intent3 = getPackageManager().getLaunchIntentForPackage(\"kr.ac.deu.mobileid\");\r\n//                startActivity(intent3);\r\n//                finish();\r\n//                break;\r\n//            case R.id.sub_title4:\r\n//                Intent intent4 = new Intent(Intent.ACTION_VIEW, Uri.parse(\"https://www.deu.ac.kr/www/board/3\"));\r\n//                startActivity(intent4);\r\n//                finish();\r\n//                break;\r\n//            case R.id.sub_title5:\r\n//                Intent intent5 = new Intent(Intent.ACTION_VIEW, Uri.parse(\"https://lib.deu.ac.kr/lib/SlimaPlus.csp\"));\r\n//                startActivity(intent5);\r\n//                finish();\r\n//                break;\r\n//            case R.id.sub_title6:\r\n//                Intent intent6 = new Intent(MainActivity.this, activity_privateinfo.class);\r\n//                startActivity(intent6);\r\n//                finish();\r\n//                break;\r\n//        }\r\n//    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/coronaclassroomallocationapplication/MainActivity.java	(revision f56495aab8b0888171553142a6497a0e6e1cfcb4)
++++ app/src/main/java/com/example/coronaclassroomallocationapplication/MainActivity.java	(date 1607176105253)
+@@ -24,6 +24,7 @@
+ 
+ import java.util.Map;
+ 
++//어플리케이션의 메인화면
+ public class MainActivity extends AppCompatActivity {
+     CardView sub_title1; //강의실 예약
+     CardView sub_title2; //커뮤니티
+@@ -31,8 +32,8 @@
+     CardView sub_title4; //공지사항
+     CardView sub_title5; //중앙도서관
+     CardView sub_title6; //내정보변경
+-    TextView myname;
+-    Button logout_button;
++    TextView myname; //이름
++    Button logout_button; //로그아웃 버튼
+     private FirebaseAuth mAuth;
+     Intent intent;
+     private long backKeyPressedTime = 0;
+@@ -41,7 +42,7 @@
+     private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
+ 
+ 
+-    private void init(){
++    private void init(){ //초기화 메소드 => 각각의 View의 Id를 찾아 저장한다.
+         sub_title1 = (CardView)findViewById(R.id.sub_title1);
+         sub_title2 = (CardView)findViewById(R.id.sub_title2);
+         sub_title3 = (CardView)findViewById(R.id.sub_title3);
+@@ -59,58 +60,64 @@
+ 
+         this.init();
+ 
++        //강의실 버튼을 클릭했을 경우
+         sub_title1.setOnClickListener(new View.OnClickListener() {
+             @Override
+-            public void onClick(View v) {
++            public void onClick(View v) { //건물 선택화면으로 이동
+                 intent = new Intent(MainActivity.this, activity_selectbuilding.class);
+                 startActivity(intent);
+             }
+         });
+ 
++        //커뮤니티 버튼을 클릭했을 경우
+         sub_title2.setOnClickListener(new View.OnClickListener() {
+             @Override
+-            public void onClick(View v) {
++            public void onClick(View v) { //커뮤니티 화면으로 이동
+                 intent = new Intent(MainActivity.this, activity_coummunity.class);
+                 startActivity(intent);
+             }
+         });
+ 
++        //동의모바일 버튼을 클릭했을 경우
+         sub_title3.setOnClickListener(new View.OnClickListener() {
+             @Override
+-            public void onClick(View v) {
++            public void onClick(View v) { //동의모바일 화면으로 이동
+                 intent = getPackageManager().getLaunchIntentForPackage("kr.ac.deu.mobileid");
+                 startActivity(intent);
+                 finish();
+             }
+         });
+ 
++        //공지사항 버튼을 클릭했을 경우
+         sub_title4.setOnClickListener(new View.OnClickListener() {
+             @Override
+-            public void onClick(View v) {
++            public void onClick(View v) { //동의대학교 공지사항 화면으로 이동
+                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.deu.ac.kr/www/board/3"));
+                 startActivity(intent);
+                 finish();
+             }
+         });
+ 
++        //중앙도서관 버튼을 클릭했을 경우
+         sub_title5.setOnClickListener(new View.OnClickListener() {
+             @Override
+-            public void onClick(View v) {
++            public void onClick(View v) { //동의대학교 중앙도서관 화면으로 이동
+                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://lib.deu.ac.kr/lib/SlimaPlus.csp"));
+                 startActivity(intent);
+                 finish();
+             }
+         });
+ 
++        //내정보변경 버튼을 클릭했을 경우
+         sub_title6.setOnClickListener(new View.OnClickListener() {
+             @Override
+-            public void onClick(View v) {
++            public void onClick(View v) { //내정보변경 화면으로 이동
+                 intent = new Intent(MainActivity.this, activity_secondprivateinfo.class);
+                 startActivity(intent);
+             }
+         });
+ 
+-        //고지훈 추가(로그아웃) -> 문제시 이야기해주세요.
++        //로그아웃 버튼을 클릭했을 경우
+         logout_button.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+@@ -120,7 +127,9 @@
+             }
+         });
+ 
++        //메인화면의 이름 속성을 현재 사용자의 이름으로 변경하기 위한 코드
+         String user = mAuth.getInstance().getUid();
++        //mStore에 저장되어있는 현재 유저의 정보를 받아 그중 name속성을 메인화면 페이지에 적용
+         mStore.collection(FirebaseID.user).document(user)
+                 .get()
+                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+@@ -154,37 +163,4 @@
+             toast.show();
+         }
+     }
+-
+-//    @Override
+-//    public void onClick(View v){
+-//        switch (v.getId()){
+-//            case R.id.sub_title1:
+-//                Intent intent = new Intent(MainActivity.this, activity_selectbuilding.class);
+-//                startActivity(intent);
+-//                finish();
+-//                break;
+-//            case R.id.sub_title2:
+-//                break;
+-//            case R.id.sub_title3:
+-//                Intent intent3 = getPackageManager().getLaunchIntentForPackage("kr.ac.deu.mobileid");
+-//                startActivity(intent3);
+-//                finish();
+-//                break;
+-//            case R.id.sub_title4:
+-//                Intent intent4 = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.deu.ac.kr/www/board/3"));
+-//                startActivity(intent4);
+-//                finish();
+-//                break;
+-//            case R.id.sub_title5:
+-//                Intent intent5 = new Intent(Intent.ACTION_VIEW, Uri.parse("https://lib.deu.ac.kr/lib/SlimaPlus.csp"));
+-//                startActivity(intent5);
+-//                finish();
+-//                break;
+-//            case R.id.sub_title6:
+-//                Intent intent6 = new Intent(MainActivity.this, activity_privateinfo.class);
+-//                startActivity(intent6);
+-//                finish();
+-//                break;
+-//        }
+-//    }
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/example/coronaclassroomallocationapplication/activity_join.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.coronaclassroomallocationapplication;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\nimport android.view.View;\r\nimport android.widget.Toast;\r\n\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.android.material.textfield.TextInputEditText;\r\nimport com.google.android.material.textfield.TextInputLayout;\r\nimport com.google.firebase.auth.AuthResult;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.auth.FirebaseUser;\r\nimport com.google.firebase.database.DataSnapshot;\r\nimport com.google.firebase.database.DatabaseError;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\nimport com.google.firebase.database.Query;\r\nimport com.google.firebase.database.ValueEventListener;\r\nimport com.google.firebase.firestore.FirebaseFirestore;\r\nimport com.google.firebase.firestore.SetOptions;\r\n\r\nimport java.util.HashMap;\r\nimport java.util.Map;\r\n\r\npublic class activity_join extends AppCompatActivity implements View.OnClickListener {\r\n    public boolean flag = false;\r\n\r\n    private FirebaseAuth mAuth = FirebaseAuth.getInstance();\r\n    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();\r\n\r\n    private TextInputEditText user_id; //사용자 아이디\r\n    private TextInputEditText user_pw; //사용자 비밀번호\r\n    private TextInputEditText user_name; //사용자 이름\r\n    private TextInputEditText user_address; //사용자 주소\r\n    private TextInputEditText user_phonenum; //사용자 휴대폰 번호\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_join);\r\n\r\n        user_id = findViewById(R.id.input_id);\r\n        user_pw = findViewById(R.id.input_pw);\r\n        user_name = findViewById(R.id.input_name);\r\n        user_address = findViewById(R.id.input_address);\r\n        user_phonenum = findViewById(R.id.input_phonenum);\r\n\r\n        findViewById(R.id.joinButton).setOnClickListener(this);\r\n        findViewById(R.id.join_back_button).setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                finish();\r\n            }\r\n        });\r\n    }\r\n\r\n    @Override\r\n    public void onClick(View v) {\r\n        if (!validataId() || !validataPw() || !validataName() || !validataEmail() || !validataPhonenum()) {\r\n            return;\r\n        } else {\r\n            mAuth.createUserWithEmailAndPassword(user_id.getText().toString(), user_pw.getText().toString())\r\n                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {\r\n                        @Override\r\n                        public void onComplete(@NonNull Task<AuthResult> task) {\r\n                            if (task.isSuccessful()) {\r\n                                FirebaseUser user = mAuth.getCurrentUser();\r\n                                if (user != null) {\r\n                                    Map<String, Object> userMap = new HashMap<>();\r\n                                    userMap.put(FirebaseID.documentId, user.getUid());\r\n                                    userMap.put(FirebaseID.email, user_id.getText().toString());\r\n                                    userMap.put(FirebaseID.password, user_pw.getText().toString());\r\n                                    userMap.put(FirebaseID.name, user_name.getText().toString());\r\n                                    userMap.put(FirebaseID.address, user_address.getText().toString());\r\n                                    userMap.put(FirebaseID.phonenum, user_phonenum.getText().toString());\r\n                                    mStore.collection(FirebaseID.user).document(user.getUid()).set(userMap, SetOptions.merge()); //SetOptions.merge는 덮어쓰기 효과\r\n                                    Toast.makeText(activity_join.this, \"회원가입 성공\", Toast.LENGTH_SHORT).show();\r\n                                    finish(); //회원가입 종료\r\n                                }\r\n                            } else { //회원가입 실패 시 발생\r\n                                Toast.makeText(activity_join.this, \"회원가입 실패\", Toast.LENGTH_SHORT).show();\r\n                            }\r\n                        }\r\n                    });\r\n        }\r\n    }\r\n\r\n    private Boolean validataId(){\r\n        String val =  user_id.getText().toString();\r\n        String emailPattern = \"[a-zA-Z0-9._-]+@[a-z]+\\\\.+[a-z]+\";\r\n\r\n        if(val.isEmpty()){\r\n            user_id.setError(\"아이디 항목을 입력해주세요.\");\r\n            return false;\r\n        }else if(!val.matches(emailPattern)){\r\n            user_id.setError(\"이메일 형식을 지켜주세요.\");\r\n            return false;\r\n        }\r\n        else{\r\n            user_id.setError(null);\r\n            return true;\r\n        }\r\n    }\r\n    private Boolean validataName(){\r\n        String val =  user_name.getText().toString();\r\n\r\n        if(val.isEmpty()){\r\n            user_name.setError(\"이름 항목을 입력해주세요.\");\r\n            return false;\r\n        }\r\n        else{\r\n            user_name.setError(null);\r\n            return true;\r\n        }\r\n    }\r\n    private Boolean validataPw(){\r\n        String val =  user_pw.getText().toString();\r\n        String passwordval = \".{4,}\";\r\n\r\n        if(val.isEmpty()){\r\n            user_pw.setError(\"비밀번호 항목을 입력해주세요.\");\r\n            return false;\r\n        }else if(!val.matches(passwordval)){\r\n            user_pw.setError(\"비밀번호를 4자 이상 입력해주세요.\");\r\n            return false;\r\n        }\r\n        else{\r\n            user_pw.setError(null);\r\n            return true;\r\n        }\r\n    }\r\n    private Boolean validataEmail(){\r\n        String val =  user_address.getText().toString();\r\n        if(val.isEmpty()) {\r\n            user_address.setError(\"주소 항목을 입력해주세요.\");\r\n            return false;\r\n        }\r\n        else{\r\n            user_address.setError(null);\r\n            return true;\r\n        }\r\n    }\r\n    private Boolean validataPhonenum(){\r\n        String val =  user_phonenum.getText().toString();\r\n\r\n        if(val.isEmpty()){\r\n            user_phonenum.setError(\"휴대폰 번호 항목을 입력해주세요.\");\r\n            return false;\r\n        }\r\n        else{\r\n            user_phonenum.setError(null);\r\n            return true;\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/coronaclassroomallocationapplication/activity_join.java	(revision f56495aab8b0888171553142a6497a0e6e1cfcb4)
++++ app/src/main/java/com/example/coronaclassroomallocationapplication/activity_join.java	(date 1607172203761)
+@@ -28,11 +28,10 @@
+ import java.util.HashMap;
+ import java.util.Map;
+ 
++//어플리케이션의 회원가입 화면
+ public class activity_join extends AppCompatActivity implements View.OnClickListener {
+-    public boolean flag = false;
+-
+-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+-    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
++    private FirebaseAuth mAuth = FirebaseAuth.getInstance(); //인스턴스 mAuth를 생성하고, 초기화
++    private FirebaseFirestore mStore = FirebaseFirestore.getInstance(); //인스턴스 mStore를 생성하고, 초기화
+ 
+     private TextInputEditText user_id; //사용자 아이디
+     private TextInputEditText user_pw; //사용자 비밀번호
+@@ -45,33 +44,38 @@
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_join);
+ 
++        //각각 xml파일에 지정된 아이디 속성을 찾는 과정
+         user_id = findViewById(R.id.input_id);
+         user_pw = findViewById(R.id.input_pw);
+         user_name = findViewById(R.id.input_name);
+         user_address = findViewById(R.id.input_address);
+         user_phonenum = findViewById(R.id.input_phonenum);
+ 
++        //Click 이벤트 처리
+         findViewById(R.id.joinButton).setOnClickListener(this);
+         findViewById(R.id.join_back_button).setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+-                finish();
++                finish(); //현재 실행중인 화면을 종료한다.
+             }
+         });
+     }
+ 
++    //joinButton을 눌렀을 경우, 실행되는 메소드
+     @Override
+     public void onClick(View v) {
+-        if (!validataId() || !validataPw() || !validataName() || !validataEmail() || !validataPhonenum()) {
+-            return;
++        if (!validataId() || !validataPw() || !validataName() || !validataAddress() || !validataPhonenum()) {
++            return; //아이디, 패스워드, 이름, 이메일, 휴대폰번호의 입력문을 검증하는 메소드
+         } else {
++            //이메일주소와 비밀번호를 가져와 유효성을 검사한 후 신규사용자를 만든다.
+             mAuth.createUserWithEmailAndPassword(user_id.getText().toString(), user_pw.getText().toString())
+                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                         @Override
+                         public void onComplete(@NonNull Task<AuthResult> task) {
+-                            if (task.isSuccessful()) {
+-                                FirebaseUser user = mAuth.getCurrentUser();
+-                                if (user != null) {
++                            if (task.isSuccessful()) { //로그인을 성공하게 될 경우
++                                FirebaseUser user = mAuth.getCurrentUser(); //현재 접속중인 유저의 정보를 저장
++                                if (user != null) { //유저가 null이 아닐경우
++                                    //userMap에 Uid, email, password, name, address, phonenum을 저장한다.
+                                     Map<String, Object> userMap = new HashMap<>();
+                                     userMap.put(FirebaseID.documentId, user.getUid());
+                                     userMap.put(FirebaseID.email, user_id.getText().toString());
+@@ -79,11 +83,13 @@
+                                     userMap.put(FirebaseID.name, user_name.getText().toString());
+                                     userMap.put(FirebaseID.address, user_address.getText().toString());
+                                     userMap.put(FirebaseID.phonenum, user_phonenum.getText().toString());
+-                                    mStore.collection(FirebaseID.user).document(user.getUid()).set(userMap, SetOptions.merge()); //SetOptions.merge는 덮어쓰기 효과
++                                    //FireStore에 해당 유저에 Uid부분에 userMap을 저장, SetOptions.merge는 덮어쓰기 효과
++                                    mStore.collection(FirebaseID.user).document(user.getUid()).set(userMap, SetOptions.merge());
++                                    //회원가입을 성공하게 될 경우, 토스트 메시지
+                                     Toast.makeText(activity_join.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
+                                     finish(); //회원가입 종료
+                                 }
+-                            } else { //회원가입 실패 시 발생
++                            } else { //회원가입 실패하게 될 경우, 토스트 메시지
+                                 Toast.makeText(activity_join.this, "회원가입 실패", Toast.LENGTH_SHORT).show();
+                             }
+                         }
+@@ -91,26 +97,29 @@
+         }
+     }
+ 
++    //아이디 검증 메서드
+     private Boolean validataId(){
+         String val =  user_id.getText().toString();
++        //정규식을 사용하여, 아이디를 검증
+         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+ 
+-        if(val.isEmpty()){
+-            user_id.setError("아이디 항목을 입력해주세요.");
+-            return false;
++        if(val.isEmpty()){ //항목이 비어있을 경우
++            user_id.setError("아이디 항목을 입력해주세요."); //에러를 통해 사용자에게 알려준다.
++            return false; //에러가 있을 경우 false 반환
+         }else if(!val.matches(emailPattern)){
+             user_id.setError("이메일 형식을 지켜주세요.");
+             return false;
+         }
+         else{
+             user_id.setError(null);
+-            return true;
++            return true; //모든 조건이 충족될 경우 True 반환
+         }
+     }
++    // 이름 검증 과정
+     private Boolean validataName(){
+         String val =  user_name.getText().toString();
+ 
+-        if(val.isEmpty()){
++        if(val.isEmpty()){ //항목이 비어있을 경우
+             user_name.setError("이름 항목을 입력해주세요.");
+             return false;
+         }
+@@ -119,41 +128,47 @@
+             return true;
+         }
+     }
++
++    //비밀번호 검증 과정
+     private Boolean validataPw(){
+         String val =  user_pw.getText().toString();
+-        String passwordval = ".{4,}";
++        String passwordval = ".{4,}"; //정규식
+ 
+-        if(val.isEmpty()){
++        if(val.isEmpty()){ //항목이 비어있을 경우
+             user_pw.setError("비밀번호 항목을 입력해주세요.");
+             return false;
+-        }else if(!val.matches(passwordval)){
++        }else if(!val.matches(passwordval)){ //정규식에 부합하지 않을 경우
+             user_pw.setError("비밀번호를 4자 이상 입력해주세요.");
+             return false;
+         }
+-        else{
++        else{ //그외
+             user_pw.setError(null);
+             return true;
+         }
+     }
+-    private Boolean validataEmail(){
++
++    //주소 검증 과정
++    private Boolean validataAddress(){
+         String val =  user_address.getText().toString();
+-        if(val.isEmpty()) {
++        if(val.isEmpty()) { //항목이 비어있을 경우
+             user_address.setError("주소 항목을 입력해주세요.");
+             return false;
+         }
+-        else{
++        else{ //그외
+             user_address.setError(null);
+             return true;
+         }
+     }
++
++    //휴대폰 번호 검증 과정
+     private Boolean validataPhonenum(){
+         String val =  user_phonenum.getText().toString();
+ 
+-        if(val.isEmpty()){
++        if(val.isEmpty()){ //항목이 비어있을 경우
+             user_phonenum.setError("휴대폰 번호 항목을 입력해주세요.");
+             return false;
+         }
+-        else{
++        else{//그외
+             user_phonenum.setError(null);
+             return true;
+         }
+Index: app/src/main/java/com/example/coronaclassroomallocationapplication/activity_post.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.coronaclassroomallocationapplication;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.view.View;\r\nimport android.widget.EditText;\r\n\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.firestore.DocumentSnapshot;\r\nimport com.google.firebase.firestore.FieldValue;\r\nimport com.google.firebase.firestore.FirebaseFirestore;\r\nimport com.google.firebase.firestore.SetOptions;\r\n\r\nimport java.util.HashMap;\r\nimport java.util.Map;\r\n\r\npublic class activity_post extends AppCompatActivity implements View.OnClickListener {\r\n\r\n    private FirebaseAuth mAuth = FirebaseAuth.getInstance();\r\n    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();\r\n    private EditText mTitle, mContents;\r\n    private String name;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_post);\r\n\r\n        mTitle = findViewById(R.id.post_title_edit);\r\n        mContents = findViewById(R.id.post_contents_edit);\r\n\r\n        findViewById(R.id.post_save_button).setOnClickListener(this);\r\n\r\n        if(mAuth.getCurrentUser() != null){\r\n            mStore.collection(FirebaseID.user).document(mAuth.getCurrentUser().getUid())\r\n                    .get()\r\n                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {\r\n                        @Override\r\n                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {\r\n                            if(task.getResult() != null){\r\n                                name = (String) task.getResult().getData().get(FirebaseID.name);\r\n                            }\r\n                        }\r\n                    });\r\n        }\r\n\r\n        findViewById(R.id.write_back_button).setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                Intent intent = new Intent(activity_post.this, activity_coummunity.class);\r\n                startActivity(intent);\r\n                finish();\r\n            }\r\n        });\r\n    }\r\n\r\n    @Override\r\n    public void onClick(View v) {\r\n        if(mAuth.getCurrentUser() != null){\r\n            String postId = mStore.collection(FirebaseID.post).document().getId();\r\n            Map<String, Object> data = new HashMap<>();\r\n            data.put(FirebaseID.documentId, postId);\r\n            data.put(FirebaseID.userId, mAuth.getCurrentUser().getUid());\r\n            data.put(FirebaseID.title,mTitle.getText().toString());\r\n            data.put(FirebaseID.contents,mContents.getText().toString());\r\n            data.put(FirebaseID.name, name);\r\n            data.put(FirebaseID.timestamp, FieldValue.serverTimestamp());\r\n            mStore.collection(FirebaseID.post).document(postId).set(data, SetOptions.merge());\r\n            finish();\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/coronaclassroomallocationapplication/activity_post.java	(revision f56495aab8b0888171553142a6497a0e6e1cfcb4)
++++ app/src/main/java/com/example/coronaclassroomallocationapplication/activity_post.java	(date 1607176932439)
+@@ -19,24 +19,27 @@
+ import java.util.HashMap;
+ import java.util.Map;
+ 
++//커뮤니티에 글을 작성하기 위한 화면
+ public class activity_post extends AppCompatActivity implements View.OnClickListener {
+ 
+-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+-    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
+-    private EditText mTitle, mContents;
+-    private String name;
++    private FirebaseAuth mAuth = FirebaseAuth.getInstance(); //Firebase를 사용하기 위해 mAuth인스턴스 생성 및 초기화
++    private FirebaseFirestore mStore = FirebaseFirestore.getInstance(); //Firebase를 사용하기 위해 mStore인스턴스 생성 및 초기화
++    private EditText mTitle, mContents; //글 제목, 글 내욜
++    private String name; //작성자 이름
+ 
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_post);
+ 
+-        mTitle = findViewById(R.id.post_title_edit);
+-        mContents = findViewById(R.id.post_contents_edit);
++        mTitle = findViewById(R.id.post_title_edit); //View에서 Id를 찾아 지정
++        mContents = findViewById(R.id.post_contents_edit); //View에서 Id를 찾아 지정
+ 
+-        findViewById(R.id.post_save_button).setOnClickListener(this);
++        findViewById(R.id.post_save_button).setOnClickListener(this); //글 작성 완료 버튼 이벤트
+ 
++        //현재 작성한 사용자의 이름을 받아오기 위한 작업
+         if(mAuth.getCurrentUser() != null){
++            //FireStore에 저장된 user의 정보를 받아, 속성인 name만 추출
+             mStore.collection(FirebaseID.user).document(mAuth.getCurrentUser().getUid())
+                     .get()
+                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+@@ -49,29 +52,33 @@
+                     });
+         }
+ 
++        //뒤로가기 버튼을 클릭했을 경우 이벤트
+         findViewById(R.id.write_back_button).setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
++                //Community화면으로 이동
+                 Intent intent = new Intent(activity_post.this, activity_coummunity.class);
+                 startActivity(intent);
+-                finish();
++                finish(); //작업을 마치면 현재 화면 종료
+             }
+         });
+     }
+ 
++    //클릭 이벤트
+     @Override
+     public void onClick(View v) {
+-        if(mAuth.getCurrentUser() != null){
+-            String postId = mStore.collection(FirebaseID.post).document().getId();
+-            Map<String, Object> data = new HashMap<>();
+-            data.put(FirebaseID.documentId, postId);
+-            data.put(FirebaseID.userId, mAuth.getCurrentUser().getUid());
+-            data.put(FirebaseID.title,mTitle.getText().toString());
+-            data.put(FirebaseID.contents,mContents.getText().toString());
+-            data.put(FirebaseID.name, name);
+-            data.put(FirebaseID.timestamp, FieldValue.serverTimestamp());
++        if(mAuth.getCurrentUser() != null){//현재 로그인된 사용자가 null이 아닐 경우
++            String postId = mStore.collection(FirebaseID.post).document().getId(); //현재 접속한 유저의 아이디를 받아온다.
++            Map<String, Object> data = new HashMap<>(); //데이터를 저장하기위해 Key와 Value를 갖는 Map변수 선언
++            data.put(FirebaseID.documentId, postId); //포스팅 Id
++            data.put(FirebaseID.userId, mAuth.getCurrentUser().getUid()); //접속한 사용자 아이디
++            data.put(FirebaseID.title,mTitle.getText().toString()); //작성글 제목
++            data.put(FirebaseID.contents,mContents.getText().toString()); //작성글 내용
++            data.put(FirebaseID.name, name); //작성자 이름
++            data.put(FirebaseID.timestamp, FieldValue.serverTimestamp()); //작성된 글의 시간
+             mStore.collection(FirebaseID.post).document(postId).set(data, SetOptions.merge());
+-            finish();
++            //FireStore에 post항목에 저장
++            finish();//모든 작업이 완료될 경우, 작업 종료
+         }
+     }
+ }
+\ No newline at end of file
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    package=\"com.example.coronaclassroomallocationapplication\">\r\n    <uses-permission android:name=\"android.permission.INTERNET\"></uses-permission>\r\n\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:icon=\"@mipmap/ic_launcher\"\r\n        android:label=\"@string/app_name\"\r\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\r\n        android:supportsRtl=\"true\"\r\n        android:theme=\"@style/Theme.AppCompat.Light.NoActionBar\">\r\n        <activity android:name=\".activity_community_detail\"></activity>\r\n        <activity android:name=\".activity_post\" />\r\n        <activity android:name=\".activity_coummunity\" />\r\n        <activity android:name=\".activity_join\" />\r\n        <activity android:name=\".activity_notice\"/>\r\n        <activity android:name=\".activity_menu\" /> <!-- <activity android:name=\".activity_login\" /> -->\r\n        <activity android:name=\".MainActivity\" />\r\n        <activity android:name=\".activity_login\" />\r\n        <activity android:name=\".activity_selectclass\" />\r\n        <activity android:name=\".activity_selecttime\" />\r\n        <activity android:name=\".activity_selectfloor\" />\r\n        <activity android:name=\".activity_privateinfo\" />\r\n        <activity android:name=\".activity_secondprivateinfo\" />\r\n        <activity android:name=\".activity_selectbuilding\">\r\n\r\n        </activity>\r\n        <activity android:name=\".activity_intro\">\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n\r\n        </activity>\r\n\r\n        <meta-data\r\n            android:name=\"preloaded_fonts\"\r\n            android:resource=\"@array/preloaded_fonts\" />\r\n    </application>\r\n\r\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/AndroidManifest.xml	(revision f56495aab8b0888171553142a6497a0e6e1cfcb4)
++++ app/src/main/AndroidManifest.xml	(date 1607175824437)
+@@ -15,7 +15,7 @@
+         <activity android:name=".activity_coummunity" />
+         <activity android:name=".activity_join" />
+         <activity android:name=".activity_notice"/>
+-        <activity android:name=".activity_menu" /> <!-- <activity android:name=".activity_login" /> -->
++        <!-- <activity android:name=".activity_login" /> -->
+         <activity android:name=".MainActivity" />
+         <activity android:name=".activity_login" />
+         <activity android:name=".activity_selectclass" />
+Index: app/src/main/java/com/example/coronaclassroomallocationapplication/activity_login.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.coronaclassroomallocationapplication;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.view.View;\r\nimport android.widget.CheckBox;\r\nimport android.widget.Toast;\r\n\r\nimport com.google.android.gms.auth.api.signin.GoogleSignIn;\r\nimport com.google.android.gms.auth.api.signin.GoogleSignInAccount;\r\nimport com.google.android.gms.auth.api.signin.GoogleSignInClient;\r\nimport com.google.android.gms.auth.api.signin.GoogleSignInOptions;\r\nimport com.google.android.gms.common.SignInButton;\r\nimport com.google.android.gms.common.api.ApiException;\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.android.material.textfield.TextInputEditText;\r\nimport com.google.firebase.auth.AuthCredential;\r\nimport com.google.firebase.auth.AuthResult;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.auth.FirebaseUser;\r\nimport com.google.firebase.auth.GoogleAuthProvider;\r\nimport com.google.firebase.firestore.FirebaseFirestore;\r\nimport com.google.firebase.firestore.SetOptions;\r\n\r\nimport java.util.HashMap;\r\nimport java.util.Map;\r\n\r\n\r\npublic class activity_login extends AppCompatActivity implements View.OnClickListener {\r\n\r\n    private FirebaseAuth mAuth = FirebaseAuth.getInstance();\r\n    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();\r\n\r\n    private TextInputEditText input_id; //입력받은 아이디\r\n    private TextInputEditText input_pw; //입력받은 비밀번호\r\n    private CheckBox checkBox;//자동로그인 체크박스\r\n    private boolean check;\r\n\r\n    //구글 로그인 관련\r\n    private GoogleSignInClient mGoogleSignInClient;\r\n    private static final int RC_SIGN_IN = 9001;\r\n\r\n    @Override\r\n    public void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_login);\r\n\r\n        input_id = findViewById(R.id.input_id); //아이디를 찾는 과정\r\n        input_pw = findViewById(R.id.input_pw); //비밀번호를 찾는 과정\r\n        checkBox = findViewById(R.id.login_checkbox);\r\n\r\n        findViewById(R.id.bt_join).setOnClickListener(this); //회원가입 버튼을 클릭했을때 이벤트\r\n        findViewById(R.id.bt_login).setOnClickListener(this); //로그인 버튼을 클릭했을때 이벤트\r\n        findViewById(R.id.signInButton).setOnClickListener(this); //구글 로그인 버튼을 클릭했을때 이벤트\r\n\r\n        //구글로그인 확인 과정\r\n        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)\r\n                .requestIdToken(getString(R.string.default_web_client_id))\r\n                .requestEmail()\r\n                .build();\r\n        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);\r\n    }\r\n\r\n    //구글 로그인\r\n    private void signIn() {\r\n        Intent signInIntent = mGoogleSignInClient.getSignInIntent();\r\n        startActivityForResult(signInIntent, RC_SIGN_IN);\r\n    }\r\n\r\n    @Override\r\n    public void onActivityResult(int requestCode, int resultCode, Intent data) {\r\n        super.onActivityResult(requestCode, resultCode, data);\r\n        if (requestCode == RC_SIGN_IN) {\r\n            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);\r\n            try {\r\n                GoogleSignInAccount account = task.getResult(ApiException.class);\r\n                firebaseAuthWithGoogle(account);\r\n            } catch (ApiException e) {\r\n            }\r\n        }\r\n    }\r\n\r\n    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {\r\n        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);\r\n        mAuth.signInWithCredential(credential)\r\n                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {\r\n                    @Override\r\n                    public void onComplete(@NonNull Task<AuthResult> task) {\r\n                        if (task.isSuccessful()) {\r\n                            FirebaseUser user = mAuth.getCurrentUser();\r\n                            updateUI(user);\r\n                        } else {\r\n                            updateUI(null);\r\n                        }\r\n                    }\r\n                });\r\n    }\r\n\r\n    private void updateUI(FirebaseUser user) {\r\n        if (user != null) {\r\n            String email = user.getEmail();\r\n            String name = user.getDisplayName();\r\n            String phonenum = user.getPhoneNumber();\r\n\r\n            //구글 로그인 관련 1회성성\r\n            Map<String, Object> userMap = new HashMap<>();\r\n            //userMap.put(FirebaseID.documentId, user.getUid());\r\n            userMap.put(FirebaseID.email, email);\r\n            userMap.put(FirebaseID.password, null);\r\n            userMap.put(FirebaseID.name, name);\r\n            userMap.put(FirebaseID.address, null);\r\n            userMap.put(FirebaseID.phonenum, phonenum);\r\n            mStore.collection(FirebaseID.user).document(user.getUid()).set(userMap, SetOptions.merge()); //SetOptions.merge는 덮어쓰기 효과\r\n\r\n            Intent intent = new Intent(activity_login.this, MainActivity.class);\r\n            startActivity(intent);\r\n            finish();\r\n        }\r\n    }\r\n\r\n    //기본 이메일 로그인\r\n    @Override\r\n    protected void onStart() {\r\n        super.onStart();\r\n        FirebaseUser user = mAuth.getCurrentUser();\r\n        if(user != null){\r\n            Toast.makeText(activity_login.this, \"자동 로그인: \"+user.getUid(), Toast.LENGTH_SHORT).show();\r\n            startActivity(new Intent(activity_login.this, MainActivity.class));\r\n            finish();\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void onClick(View v) {\r\n        switch (v.getId()){\r\n            case R.id.bt_join: //회원가입 버튼을 클릭했을 경우\r\n                startActivity(new Intent(activity_login.this, activity_join.class));\r\n                break;\r\n            case R.id.bt_login: //로그인 버튼을 클릭했을 경우\r\n                if(input_id.getText().toString().equals(\"\") || input_pw.getText().toString().equals(\"\")){\r\n                    Toast.makeText(activity_login.this, \"아이디와 비밀번호를 입력해주세요.\",Toast.LENGTH_SHORT).show();\r\n                }else {\r\n                    mAuth.signInWithEmailAndPassword(input_id.getText().toString(), input_pw.getText().toString())\r\n                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {\r\n                                @Override\r\n                                public void onComplete(@NonNull Task<AuthResult> task) {\r\n                                    if (task.isSuccessful()) {\r\n                                        FirebaseUser user = mAuth.getCurrentUser();\r\n                                        if(checkBox.isChecked()){\r\n                                            checkBox.setChecked(true);\r\n                                        }\r\n                                        if (user != null) {\r\n                                            Toast.makeText(activity_login.this, \"로그인 성공: \" + user.getUid(), Toast.LENGTH_SHORT).show();\r\n                                            startActivity(new Intent(activity_login.this, MainActivity.class));\r\n                                        }\r\n                                    } else {\r\n                                        Toast.makeText(activity_login.this, \"로그인 실패\", Toast.LENGTH_SHORT).show();\r\n                                    }\r\n                                }\r\n                            });\r\n                }\r\n                break;\r\n            case R.id.signInButton: //구글 로그인 버튼을 클릭했을 경우\r\n                signIn();\r\n                break;\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/coronaclassroomallocationapplication/activity_login.java	(revision f56495aab8b0888171553142a6497a0e6e1cfcb4)
++++ app/src/main/java/com/example/coronaclassroomallocationapplication/activity_login.java	(date 1607175167550)
+@@ -29,52 +29,54 @@
+ import java.util.HashMap;
+ import java.util.Map;
+ 
+-
++//어플리케이션의 로그인, 구글로그인 화면
+ public class activity_login extends AppCompatActivity implements View.OnClickListener {
+ 
+-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+-    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
++    private FirebaseAuth mAuth = FirebaseAuth.getInstance(); //인스턴스 mAuth 선언, 초기화
++    private FirebaseFirestore mStore = FirebaseFirestore.getInstance(); //인스턴스 mStore 선언, 초기화
+ 
+     private TextInputEditText input_id; //입력받은 아이디
+     private TextInputEditText input_pw; //입력받은 비밀번호
+     private CheckBox checkBox;//자동로그인 체크박스
+     private boolean check;
+ 
+-    //구글 로그인 관련
++    //구글 로그인을 하기위해 사용되는 변수
+     private GoogleSignInClient mGoogleSignInClient;
+-    private static final int RC_SIGN_IN = 9001;
++    private static final int RC_SIGN_IN = 9001; //구글로그인 하기 위해 요청 코드
+ 
+     @Override
+     public void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_login);
+ 
+-        input_id = findViewById(R.id.input_id); //아이디를 찾는 과정
+-        input_pw = findViewById(R.id.input_pw); //비밀번호를 찾는 과정
+-        checkBox = findViewById(R.id.login_checkbox);
++        input_id = findViewById(R.id.input_id); //아이디를 xml에서 찾는 과정
++        input_pw = findViewById(R.id.input_pw); //비밀번호를 xml에서 찾는 과정
++        checkBox = findViewById(R.id.login_checkbox); //체크박스를 xml에서 찾는 과정
+ 
+         findViewById(R.id.bt_join).setOnClickListener(this); //회원가입 버튼을 클릭했을때 이벤트
+         findViewById(R.id.bt_login).setOnClickListener(this); //로그인 버튼을 클릭했을때 이벤트
+         findViewById(R.id.signInButton).setOnClickListener(this); //구글 로그인 버튼을 클릭했을때 이벤트
+ 
+-        //구글로그인 확인 과정
++        //사용자ID, 이메일 주소와 같은 프로필 정보를 요청하여, 가져온다.(구글)
+         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                 .requestIdToken(getString(R.string.default_web_client_id))
+                 .requestEmail()
+                 .build();
++        //gso에서 지정한 옵션으로 GoogleSignInClient를 빌드(구글)
+         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+     }
+ 
+-    //구글 로그인
++    //구글 로그인을 위한 메소드
+     private void signIn() {
+         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+         startActivityForResult(signInIntent, RC_SIGN_IN);
+     }
+ 
++    //액티비티 결과 처리
+     @Override
+     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+         super.onActivityResult(requestCode, resultCode, data);
+-        if (requestCode == RC_SIGN_IN) {
++        if (requestCode == RC_SIGN_IN) { //요청코드가 변수와 같을 경우
+             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+             try {
+                 GoogleSignInAccount account = task.getResult(ApiException.class);
+@@ -84,13 +86,16 @@
+         }
+     }
+ 
++    //구글 로그인 성공한 후, 파이어베이스를 인증하는 과정
+     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
++        //사용자가 정상적으로 로그인하면 GoogleSignInAccount객체에서 토큰ID를 가져온다.
+         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+         mAuth.signInWithCredential(credential)
+                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                     @Override
+                     public void onComplete(@NonNull Task<AuthResult> task) {
+                         if (task.isSuccessful()) {
++                            //Firebase사용자 인증 정보로 교환
+                             FirebaseUser user = mAuth.getCurrentUser();
+                             updateUI(user);
+                         } else {
+@@ -100,6 +105,7 @@
+                 });
+     }
+ 
++    //로그인후에 파이어스토어 내 정보를 저장하고, 다음 메인 화면으로 넘기는 메소드
+     private void updateUI(FirebaseUser user) {
+         if (user != null) {
+             String email = user.getEmail();
+@@ -109,16 +115,17 @@
+             //구글 로그인 관련 1회성성
+             Map<String, Object> userMap = new HashMap<>();
+             //userMap.put(FirebaseID.documentId, user.getUid());
+-            userMap.put(FirebaseID.email, email);
+-            userMap.put(FirebaseID.password, null);
+-            userMap.put(FirebaseID.name, name);
+-            userMap.put(FirebaseID.address, null);
+-            userMap.put(FirebaseID.phonenum, phonenum);
++            userMap.put(FirebaseID.email, email); //구글 이메일
++            userMap.put(FirebaseID.password, null); //구글 패스워드
++            userMap.put(FirebaseID.name, name); //구글 이름
++            userMap.put(FirebaseID.address, null); //구글 주소(구글에서 저장을 안했기 때문에 null)
++            userMap.put(FirebaseID.phonenum, phonenum); //구글 휴대폰번호(구글에서 저장을 안했기 때문에 null)
+             mStore.collection(FirebaseID.user).document(user.getUid()).set(userMap, SetOptions.merge()); //SetOptions.merge는 덮어쓰기 효과
+ 
++            //intent를 사용하여 메인화면으로 이동
+             Intent intent = new Intent(activity_login.this, MainActivity.class);
+             startActivity(intent);
+-            finish();
++            finish(); //완료되면 현재화면 종료
+         }
+     }
+ 
+@@ -126,22 +133,24 @@
+     @Override
+     protected void onStart() {
+         super.onStart();
++        //현재 접속된 유저 정보가 존재할 경우, 자동 로그인
+         FirebaseUser user = mAuth.getCurrentUser();
+         if(user != null){
+             Toast.makeText(activity_login.this, "자동 로그인: "+user.getUid(), Toast.LENGTH_SHORT).show();
+             startActivity(new Intent(activity_login.this, MainActivity.class));
+-            finish();
++            finish(); //현재화면 종료
+         }
+     }
+ 
++    //각각에 버튼을 클릭했을 때 발생하는 이벤트
+     @Override
+     public void onClick(View v) {
+         switch (v.getId()){
+             case R.id.bt_join: //회원가입 버튼을 클릭했을 경우
+-                startActivity(new Intent(activity_login.this, activity_join.class));
++                startActivity(new Intent(activity_login.this, activity_join.class)); //회원가입 화면으로 이동
+                 break;
+             case R.id.bt_login: //로그인 버튼을 클릭했을 경우
+-                if(input_id.getText().toString().equals("") || input_pw.getText().toString().equals("")){
++                if(input_id.getText().toString().equals("") || input_pw.getText().toString().equals("")){ //텍스트필드가 비어있을 경우 토스트메시지
+                     Toast.makeText(activity_login.this, "아이디와 비밀번호를 입력해주세요.",Toast.LENGTH_SHORT).show();
+                 }else {
+                     mAuth.signInWithEmailAndPassword(input_id.getText().toString(), input_pw.getText().toString())
+@@ -150,14 +159,16 @@
+                                 public void onComplete(@NonNull Task<AuthResult> task) {
+                                     if (task.isSuccessful()) {
+                                         FirebaseUser user = mAuth.getCurrentUser();
+-                                        if(checkBox.isChecked()){
++                                        if(checkBox.isChecked()){ //자동로그인을 위한 체크박스
+                                             checkBox.setChecked(true);
+                                         }
+                                         if (user != null) {
++                                            //로그인이 성공하게 될 경우 토스트 메시지 및 메인 화면 이동
+                                             Toast.makeText(activity_login.this, "로그인 성공: " + user.getUid(), Toast.LENGTH_SHORT).show();
+                                             startActivity(new Intent(activity_login.this, MainActivity.class));
+                                         }
+                                     } else {
++                                        //로그인을 실패했을 경우 토스트메시지
+                                         Toast.makeText(activity_login.this, "로그인 실패", Toast.LENGTH_SHORT).show();
+                                     }
+                                 }
+@@ -165,7 +176,7 @@
+                 }
+                 break;
+             case R.id.signInButton: //구글 로그인 버튼을 클릭했을 경우
+-                signIn();
++                signIn(); //메서드호출
+                 break;
+         }
+     }
+Index: app/src/main/res/layout/activity_menu.xml
+===================================================================
+--- app/src/main/res/layout/activity_menu.xml	(revision f56495aab8b0888171553142a6497a0e6e1cfcb4)
++++ app/src/main/res/layout/activity_menu.xml	(revision f56495aab8b0888171553142a6497a0e6e1cfcb4)
+@@ -1,203 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<!-- 메뉴화면 박희준 수정중 -->
+-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+-    xmlns:app="http://schemas.android.com/apk/res-auto"
+-    xmlns:tools="http://schemas.android.com/tools"
+-    android:layout_width="match_parent"
+-    android:layout_height="match_parent"
+-    tools:context=".activity_menu"
+-    android:background="#E5E5E5">
+-
+-    <ImageView
+-        android:id="@+id/box1"
+-        android:layout_width="0dp"
+-        android:layout_height="150dp"
+-        android:background="@color/colorPrimary"
+-        app:layout_constraintTop_toTopOf="parent"
+-        app:layout_constraintRight_toRightOf="parent"
+-        app:layout_constraintLeft_toLeftOf="parent">
+-
+-    </ImageView>
+-
+-    <ImageView
+-        android:id="@+id/logo"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:src="@drawable/menu_logo"
+-        app:layout_constraintTop_toTopOf="@id/box1"
+-        app:layout_constraintRight_toRightOf="@id/box1"
+-        app:layout_constraintLeft_toLeftOf="@id/box1"
+-        android:layout_marginTop="50dp">
+-    </ImageView>
+-
+-    <TextView
+-        android:id="@+id/단계"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:text="거리두기 0 단계"
+-        android:textSize="25dp"
+-        android:textStyle="bold"
+-        app:layout_constraintTop_toBottomOf="@id/logo"
+-        app:layout_constraintLeft_toLeftOf="@id/box1"
+-        app:layout_constraintRight_toRightOf="@id/box1"
+-        android:layout_marginTop="20dp">
+-    </TextView>
+-
+-
+-    <ImageView
+-        android:id="@+id/강의실예약"
+-        android:layout_width="100dp"
+-        android:layout_height="100dp"
+-        app:layout_constraintTop_toBottomOf="@id/box1"
+-        app:layout_constraintLeft_toLeftOf="parent"
+-        app:layout_constraintRight_toRightOf="parent"
+-        app:layout_constraintHorizontal_bias="0.25"
+-        android:layout_marginTop="50dp">
+-
+-    </ImageView>
+-
+-    <ImageView
+-        android:id="@+id/공지사항"
+-        android:layout_width="100dp"
+-        android:layout_height="100dp"
+-        android:background="@color/colorPrimary"
+-        app:layout_constraintTop_toTopOf="@id/강의실예약"
+-        app:layout_constraintLeft_toLeftOf="parent"
+-        app:layout_constraintRight_toRightOf="parent"
+-        app:layout_constraintHorizontal_bias="0.75">
+-    </ImageView>
+-
+-    <ImageView
+-        android:id="@+id/자유게시판"
+-        android:layout_width="100dp"
+-        android:layout_height="100dp"
+-        android:background="@color/colorPrimary"
+-        app:layout_constraintTop_toBottomOf="@id/강의실예약"
+-        app:layout_constraintLeft_toLeftOf="parent"
+-        app:layout_constraintRight_toRightOf="parent"
+-        app:layout_constraintHorizontal_bias="0.25"
+-        android:layout_marginTop="50dp">
+-
+-    </ImageView>
+-
+-    <ImageView
+-        android:id="@+id/동의모바일"
+-        android:layout_width="100dp"
+-        android:layout_height="100dp"
+-        android:background="@color/colorPrimary"
+-        app:layout_constraintTop_toTopOf="@id/자유게시판"
+-        app:layout_constraintLeft_toLeftOf="parent"
+-        app:layout_constraintRight_toRightOf="parent"
+-        app:layout_constraintHorizontal_bias="0.75">
+-    </ImageView>
+-
+-    <ImageView
+-        android:id="@+id/대학생활정보"
+-        android:layout_width="300dp"
+-        android:layout_height="200dp"
+-        android:background="#ffffff"
+-        app:layout_constraintTop_toTopOf="parent"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintLeft_toLeftOf="parent"
+-        app:layout_constraintRight_toRightOf="parent"
+-        app:layout_constraintVertical_bias="0.9">
+-    </ImageView>
+-
+-    <TextView
+-        android:id="@+id/text0"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:text="대학생활정보"
+-        android:textColor="#000000"
+-        app:layout_constraintLeft_toLeftOf="@id/대학생활정보"
+-        app:layout_constraintTop_toTopOf="@id/대학생활정보"
+-        app:layout_constraintRight_toRightOf="@id/대학생활정보"
+-        app:layout_constraintBottom_toBottomOf="@id/대학생활정보"
+-        app:layout_constraintVertical_bias="0.1"
+-        app:layout_constraintHorizontal_bias="0.1">
+-    </TextView>
+-
+-    <TextView
+-        android:id="@+id/text1"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:text="도서관"
+-        android:textColor="#000000"
+-        app:layout_constraintLeft_toLeftOf="@id/대학생활정보"
+-        app:layout_constraintTop_toTopOf="@id/대학생활정보"
+-        app:layout_constraintRight_toRightOf="@id/대학생활정보"
+-        app:layout_constraintBottom_toBottomOf="@id/대학생활정보"
+-        app:layout_constraintVertical_bias="0.3"
+-        app:layout_constraintHorizontal_bias="0.1">
+-    </TextView>
+-    <TextView
+-        android:id="@+id/text2"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:text="교내식단"
+-        android:textColor="#000000"
+-        app:layout_constraintLeft_toLeftOf="@id/대학생활정보"
+-        app:layout_constraintTop_toTopOf="@id/대학생활정보"
+-        app:layout_constraintRight_toRightOf="@id/대학생활정보"
+-        app:layout_constraintBottom_toBottomOf="@id/대학생활정보"
+-        app:layout_constraintVertical_bias="0.3"
+-        app:layout_constraintHorizontal_bias="0.6">
+-    </TextView>
+-
+-    <TextView
+-        android:id="@+id/text3"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:text="셔틀버스"
+-        android:textColor="#000000"
+-        app:layout_constraintLeft_toLeftOf="@id/대학생활정보"
+-        app:layout_constraintTop_toTopOf="@id/대학생활정보"
+-        app:layout_constraintRight_toRightOf="@id/대학생활정보"
+-        app:layout_constraintBottom_toBottomOf="@id/대학생활정보"
+-        app:layout_constraintVertical_bias="0.5"
+-        app:layout_constraintHorizontal_bias="0.1">
+-    </TextView>
+-
+-    <TextView
+-        android:id="@+id/text4"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:text="효민생활관"
+-        android:textColor="#000000"
+-        app:layout_constraintLeft_toLeftOf="@id/대학생활정보"
+-        app:layout_constraintTop_toTopOf="@id/대학생활정보"
+-        app:layout_constraintRight_toRightOf="@id/대학생활정보"
+-        app:layout_constraintBottom_toBottomOf="@id/대학생활정보"
+-        app:layout_constraintVertical_bias="0.5"
+-        app:layout_constraintHorizontal_bias="0.6">
+-    </TextView>
+-
+-    <TextView
+-        android:id="@+id/text5"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:text="교내전화"
+-        android:textColor="#000000"
+-        app:layout_constraintLeft_toLeftOf="@id/대학생활정보"
+-        app:layout_constraintTop_toTopOf="@id/대학생활정보"
+-        app:layout_constraintRight_toRightOf="@id/대학생활정보"
+-        app:layout_constraintBottom_toBottomOf="@id/대학생활정보"
+-        app:layout_constraintVertical_bias="0.7"
+-        app:layout_constraintHorizontal_bias="0.1">
+-    </TextView>
+-
+-    <TextView
+-        android:id="@+id/text6"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:text="학사일정"
+-        android:textColor="#000000"
+-        app:layout_constraintLeft_toLeftOf="@id/대학생활정보"
+-        app:layout_constraintTop_toTopOf="@id/대학생활정보"
+-        app:layout_constraintRight_toRightOf="@id/대학생활정보"
+-        app:layout_constraintBottom_toBottomOf="@id/대학생활정보"
+-        app:layout_constraintVertical_bias="0.7"
+-        app:layout_constraintHorizontal_bias="0.6">
+-    </TextView>
+-
+-</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+Index: app/src/main/java/com/example/coronaclassroomallocationapplication/activity_menu.java
+===================================================================
+--- app/src/main/java/com/example/coronaclassroomallocationapplication/activity_menu.java	(revision f56495aab8b0888171553142a6497a0e6e1cfcb4)
++++ app/src/main/java/com/example/coronaclassroomallocationapplication/activity_menu.java	(revision f56495aab8b0888171553142a6497a0e6e1cfcb4)
+@@ -1,14 +0,0 @@
+-package com.example.coronaclassroomallocationapplication;
+-
+-import androidx.appcompat.app.AppCompatActivity;
+-
+-import android.os.Bundle;
+-
+-public class activity_menu extends AppCompatActivity {
+-
+-    @Override
+-    protected void onCreate(Bundle savedInstanceState) {
+-        super.onCreate(savedInstanceState);
+-        setContentView(R.layout.activity_menu);
+-    }
+-}
+\ No newline at end of file
+Index: app/src/main/java/com/example/coronaclassroomallocationapplication/activity_secondprivateinfo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.coronaclassroomallocationapplication;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\nimport android.widget.ImageView;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.annotation.Nullable;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.android.material.textfield.TextInputEditText;\r\nimport com.google.android.material.textfield.TextInputLayout;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.auth.FirebaseUser;\r\nimport com.google.firebase.firestore.DocumentSnapshot;\r\nimport com.google.firebase.firestore.FirebaseFirestore;\r\nimport com.google.firebase.firestore.SetOptions;\r\n\r\nimport java.util.HashMap;\r\nimport java.util.Map;\r\n\r\npublic class activity_secondprivateinfo extends AppCompatActivity {\r\n    private Button bt_deleteuser; //회원 탈퇴\r\n    private Button bt_changeuser; //회원정보변경\r\n    private TextInputEditText info_pw;\r\n    private TextInputEditText info_name;\r\n    private TextInputEditText info_address;\r\n    private TextInputEditText info_phonenum;\r\n    private TextView user_info_id;\r\n    private TextView user_info_name;\r\n    private FirebaseAuth mAuth;\r\n    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();\r\n    private ImageView privateinfo_back_button;\r\n\r\n\r\n    @Override\r\n    protected void onCreate(@Nullable Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_privateinfo2);\r\n\r\n        mAuth = FirebaseAuth.getInstance();\r\n        bt_deleteuser = (Button)findViewById(R.id.delete_user); //회원 탈퇴\r\n        info_pw = findViewById(R.id.info_input_pw);\r\n        info_name = findViewById(R.id.info_input_name);\r\n        info_address = findViewById(R.id.info_input_address);\r\n        info_phonenum = findViewById(R.id.info_input_phonenum);\r\n        user_info_id = findViewById(R.id.user_info_id);\r\n        user_info_name = findViewById(R.id.user_info_name);\r\n        bt_changeuser = findViewById(R.id.info_change);\r\n        privateinfo_back_button = findViewById(R.id.privateinfo_back_button);\r\n\r\n        String user = mAuth.getInstance().getUid();\r\n        mStore.collection(FirebaseID.user).document(user)\r\n                .get()\r\n                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {\r\n                    @Override\r\n                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {\r\n                        if (task.isSuccessful()) {\r\n                            if (task.getResult().exists()) { //문서가 없을경우 처리방법\r\n                                if (task.getResult() != null) {\r\n                                    Map<String, Object> snap = task.getResult().getData();\r\n                                    String id = String.valueOf(snap.get(FirebaseID.email));\r\n                                    String pw = String.valueOf(snap.get(FirebaseID.password));\r\n                                    String name = String.valueOf(snap.get(FirebaseID.name));\r\n                                    String address = String.valueOf(snap.get(FirebaseID.address));\r\n                                    String phonenum = String.valueOf(snap.get(FirebaseID.phonenum));\r\n                                    info_pw.setText(pw);\r\n                                    user_info_id.setText(id);\r\n                                    info_name.setText(name);\r\n                                    user_info_name.setText(name);\r\n                                    info_address.setText(address);\r\n                                    info_phonenum.setText(phonenum);\r\n                                }\r\n                            }\r\n                        }\r\n                    }\r\n                });\r\n\r\n        bt_changeuser.setOnClickListener(new View.OnClickListener() {\r\n            String user = mAuth.getInstance().getUid();\r\n            @Override\r\n            public void onClick(View v) {\r\n                mStore.collection(FirebaseID.user).document(user)\r\n                        .get()\r\n                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {\r\n                            @Override\r\n                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {\r\n                                if (task.isSuccessful()) {\r\n                                    FirebaseUser user = mAuth.getCurrentUser();\r\n                                    if (user != null) {\r\n                                        Map<String, Object> userMap = new HashMap<>();\r\n                                        userMap.put(FirebaseID.password, info_pw.getText().toString());\r\n                                        userMap.put(FirebaseID.name, info_name.getText().toString());\r\n                                        userMap.put(FirebaseID.address, info_address.getText().toString());\r\n                                        userMap.put(FirebaseID.phonenum, info_phonenum.getText().toString());\r\n                                        mStore.collection(FirebaseID.user).document(user.getUid()).set(userMap, SetOptions.merge()); //SetOptions.merge는 덮어쓰기 효과\r\n                                        Toast.makeText(activity_secondprivateinfo.this, \"정보 변경이 완료되었습니다.\", Toast.LENGTH_SHORT).show();\r\n                                    }\r\n                                }\r\n                            }\r\n                        });\r\n            }\r\n        });\r\n\r\n        //고지훈 추가(회원 탈퇴) -> 문제시 이야기해주세요.\r\n        bt_deleteuser.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                mAuth.getCurrentUser().delete();\r\n                Toast.makeText(activity_secondprivateinfo.this, \"그동안 이용해주셔서 감사합니다.\", Toast.LENGTH_SHORT).show();\r\n                finishAffinity();\r\n            }\r\n        });\r\n\r\n        privateinfo_back_button.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                Intent intent = new Intent(activity_secondprivateinfo.this, MainActivity.class);\r\n                startActivity(intent);\r\n                finish();\r\n            }\r\n        });;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/coronaclassroomallocationapplication/activity_secondprivateinfo.java	(revision f56495aab8b0888171553142a6497a0e6e1cfcb4)
++++ app/src/main/java/com/example/coronaclassroomallocationapplication/activity_secondprivateinfo.java	(date 1607176932429)
+@@ -25,14 +25,15 @@
+ import java.util.HashMap;
+ import java.util.Map;
+ 
++//어플리케이션의 내정보변경 화면
+ public class activity_secondprivateinfo extends AppCompatActivity {
+-    private Button bt_deleteuser; //회원 탈퇴
+-    private Button bt_changeuser; //회원정보변경
+-    private TextInputEditText info_pw;
+-    private TextInputEditText info_name;
+-    private TextInputEditText info_address;
+-    private TextInputEditText info_phonenum;
+-    private TextView user_info_id;
++    private Button bt_deleteuser; //회원 탈퇴 버튼
++    private Button bt_changeuser; //회원정보변경 버튼
++    private TextInputEditText info_pw; //패스워드
++    private TextInputEditText info_name; //이름
++    private TextInputEditText info_address; //주소
++    private TextInputEditText info_phonenum; //휴대폰 번호
++    private TextView user_info_id; //
+     private TextView user_info_name;
+     private FirebaseAuth mAuth;
+     private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
+Index: app/src/main/java/com/example/coronaclassroomallocationapplication/activity_intro.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.coronaclassroomallocationapplication;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.constraintlayout.widget.ConstraintLayout;\r\n\r\nimport android.animation.ObjectAnimator;\r\nimport android.content.Intent;\r\nimport android.graphics.Point;\r\nimport android.os.Bundle;\r\nimport android.os.Handler;\r\nimport android.view.Display;\r\nimport android.view.View;\r\nimport android.view.WindowManager;\r\nimport android.view.animation.Animation;\r\nimport android.view.animation.AnimationUtils;\r\nimport android.widget.ImageView;\r\nimport android.widget.TextView;\r\n\r\npublic class activity_intro extends AppCompatActivity {\r\n    private static int SPLASH_SCREEN = 4000;\r\n    Animation topAnim, bottomAnim;\r\n    ImageView image;\r\n    TextView logo, slogan;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);\r\n        setContentView(R.layout.activity_intro);\r\n\r\n        //애니메이션\r\n        topAnim = AnimationUtils.loadAnimation(this, R.anim.top_animation);\r\n        bottomAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_animation);\r\n\r\n        image = findViewById(R.id.imageView8);\r\n        logo = findViewById(R.id.logo);\r\n        slogan = findViewById(R.id.slogan);\r\n\r\n        image.setAnimation(topAnim);\r\n        logo.setAnimation(bottomAnim);\r\n        slogan.setAnimation(bottomAnim);\r\n\r\n        new Handler().postDelayed(new Runnable() {\r\n            @Override\r\n            public void run() {\r\n                Intent intent = new Intent(activity_intro.this, activity_login.class);\r\n                startActivity(intent);\r\n                finish();\r\n            }\r\n        }, SPLASH_SCREEN);\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/coronaclassroomallocationapplication/activity_intro.java	(revision f56495aab8b0888171553142a6497a0e6e1cfcb4)
++++ app/src/main/java/com/example/coronaclassroomallocationapplication/activity_intro.java	(date 1607171290804)
+@@ -2,7 +2,6 @@
+ 
+ import androidx.appcompat.app.AppCompatActivity;
+ import androidx.constraintlayout.widget.ConstraintLayout;
+-
+ import android.animation.ObjectAnimator;
+ import android.content.Intent;
+ import android.graphics.Point;
+@@ -16,33 +15,37 @@
+ import android.widget.ImageView;
+ import android.widget.TextView;
+ 
++//어플리케이션의 인트로 화면
+ public class activity_intro extends AppCompatActivity {
+-    private static int SPLASH_SCREEN = 4000;
+-    Animation topAnim, bottomAnim;
+-    ImageView image;
+-    TextView logo, slogan;
++    private static int SPLASH_SCREEN = 4000; //애니메이션이 진행되는 시간 4초
++    Animation topAnim, bottomAnim; //화면의 상단 그림 애니메이션과 하단 텍스트 애니메이션을 담당하는 변수
++    ImageView image; //이미지뷰의 변수
++    TextView logo, slogan; //텍스트뷰의 변수
+ 
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
++        //휴대폰 Status bar를 제거하기위해 FULLSCREEN을 사용
+         setContentView(R.layout.activity_intro);
+ 
+-        //애니메이션
++        //애니메이션 => 애니메이션 폴더에 존재하는 속성을 찾아 사용할 수 있도록 지정
+         topAnim = AnimationUtils.loadAnimation(this, R.anim.top_animation);
+         bottomAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_animation);
+ 
++        //각각의 변수에서 xml에 지정된 아이디를 찾는 과정
+         image = findViewById(R.id.imageView8);
+         logo = findViewById(R.id.logo);
+         slogan = findViewById(R.id.slogan);
+ 
++        //애니메이션 효과 지정
+         image.setAnimation(topAnim);
+         logo.setAnimation(bottomAnim);
+         slogan.setAnimation(bottomAnim);
+ 
+         new Handler().postDelayed(new Runnable() {
+             @Override
+-            public void run() {
++            public void run() { //지연 처리를 하기 위해 핸들러 사용
+                 Intent intent = new Intent(activity_intro.this, activity_login.class);
+                 startActivity(intent);
+                 finish();
