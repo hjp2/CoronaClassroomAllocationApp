@@ -164,8 +164,7 @@ public class activity_community_detail extends AppCompatActivity implements View
                                 String contents = String.valueOf(shot.get(FirebaseID.contents));
                                 String name = String.valueOf(shot.get(FirebaseID.name));
                                 String post = String.valueOf(shot.get(FirebaseID.post));
-                                String date = String.valueOf(shot.get(FirebaseID.timestamp));
-                                Repost data = new Repost(documentId, userId, contents, name, post, date);
+                                Repost data = new Repost(documentId, post, userId, contents, name);
                                 if (check.equals(post)) {
                                     mDatas.add(data);
                                     reContents.setText("");
