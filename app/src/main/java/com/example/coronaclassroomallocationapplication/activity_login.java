@@ -142,7 +142,7 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    //각각에 버튼을 클릭했을 때 발생하는 이벤트
+    //각각에 버튼을 클릭했을 때 발생하는 이   벤트
     @Override
     public void onClick(View v) {
         switch (v.getId()){
