@@ -25,15 +25,16 @@ import com.google.firebase.firestore.SetOptions;
 import java.util.HashMap;
 import java.util.Map;
 
+//어플리케이션의 내정보변경 화면
 public class activity_secondprivateinfo extends AppCompatActivity {
-    private Button bt_deleteuser; //회원 탈퇴
-    private Button bt_changeuser; //회원정보변경
+    private Button bt_deleteuser; //회원 탈퇴 버튼
+    private Button bt_changeuser; //회원정보변경 버튼
+    private TextInputEditText info_pw; //패스워드
+    private TextInputEditText info_name; //이름
+    private TextInputEditText info_address; //주소
+    private TextInputEditText info_phonenum; //휴대폰 번호
     private Button bt_mypost; //내가 작성한글
-    private TextInputEditText info_pw;
-    private TextInputEditText info_name;
-    private TextInputEditText info_address;
-    private TextInputEditText info_phonenum;
-    private TextView user_info_id;
+    private TextView user_info_id; //
     private TextView user_info_name;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
@@ -120,15 +121,6 @@ public class activity_secondprivateinfo extends AppCompatActivity {
             }
         });
 
-        privateinfo_back_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(activity_secondprivateinfo.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });;
-
         bt_mypost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,5 +129,14 @@ public class activity_secondprivateinfo extends AppCompatActivity {
                 finish();
             }
         });
+
+        privateinfo_back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity_secondprivateinfo.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });;
     }
 }
