@@ -8,6 +8,7 @@
     android:id="@+id/layout_toolbar"
     android:background="#00A3FF"
     >
+
     <ImageView
         android:id="@+id/backbutton"
         android:layout_centerVertical="true"
@@ -17,7 +18,8 @@
         android:background="@drawable/ic_baseline_arrow_back_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:clickable="true">
 
     </ImageView>
 

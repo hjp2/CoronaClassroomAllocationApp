@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.coronaclassroomallocationapplication.adapters.PostAdapter;
 import com.example.coronaclassroomallocationapplication.models.Post;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,6 +32,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -35,10 +41,13 @@ import java.util.Map;
 
 public class activity_selectbuilding extends AppCompatActivity{
     private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     private ListView listView;
     private ArrayAdapter<String> adapter;
     private List<String> Array = new ArrayList<String>();
+
+
     //private List<String> docid = new ArrayList<String>();
 
 
@@ -50,6 +59,21 @@ public class activity_selectbuilding extends AppCompatActivity{
         listView = findViewById(R.id.listview);
         title = (TextView) findViewById(R.id.TextView_title);
         title.setText("건물선택");
+
+        ImageView backbutton = findViewById(R.id.backbutton);
+
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
+
+
+
+
+
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<String>());
         listView.setAdapter(adapter);
@@ -92,6 +116,8 @@ public class activity_selectbuilding extends AppCompatActivity{
         });
 
     }
+
+
 
     @Override
     protected void onStart() {

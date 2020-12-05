@@ -1,5 +1,6 @@
 package com.example.coronaclassroomallocationapplication;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,14 @@ import android.widget.ToggleButton;
 import java.util.ArrayList;
 
 public class ListViewAdapter extends BaseAdapter {
+    private String max;
+
 
     private ArrayList<ListViewItem> listViewItemList = new ArrayList<ListViewItem>() ;
 
-    public ListViewAdapter() {
+    public ListViewAdapter(String max) {
+
+        this.max = max;
 
     }
 
@@ -53,9 +58,24 @@ public class ListViewAdapter extends BaseAdapter {
         ListViewItem listViewItem = listViewItemList.get(position);
 
         // 아이템 내 각 위젯에 데이터 반영
-        time.setText(listViewItem.getTime());
-        people.setText(listViewItem.getPeople());
-        state.setText(listViewItem.getState());
+        String tmptime = listViewItem.getTime();
+        String tmppeople = listViewItem.getPeople();
+        String tmpstate = listViewItem.getState();
+        time.setText(tmptime);
+        people.setText(tmppeople);
+        state.setText(tmpstate);
+
+        if(tmpstate.equals("예약완료")) state.setTextColor(Color.BLUE);
+        else state.setTextColor(Color.BLACK);
+
+        String[] tmpsplit = tmppeople.split(" / ");
+
+
+        if(Integer.parseInt(tmpsplit[0])> Integer.parseInt(max)*0.8)
+            people.setTextColor(Color.RED);
+        else if(Integer.parseInt(tmpsplit[0])> Integer.parseInt(max)*0.5)
+                people.setTextColor(Color.parseColor("#FF6B00"));
+        else people.setTextColor(Color.BLACK);
 
 
         return convertView;

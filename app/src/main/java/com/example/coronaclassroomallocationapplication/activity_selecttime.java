@@ -3,6 +3,7 @@ package com.example.coronaclassroomallocationapplication;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -34,6 +35,8 @@ public class activity_selecttime extends AppCompatActivity {
     String rname;
     String userid = mAuth.getCurrentUser().getUid();
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,14 +53,26 @@ public class activity_selecttime extends AppCompatActivity {
         final String sdate = getIntent().getStringExtra("sdate");
         final String max = getIntent().getStringExtra("max");
 
+        ImageView backbutton = findViewById(R.id.backbutton);
+
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
 
         title.setText(sclass + "호 " + sdate);
 
-        adapter = new ListViewAdapter();
+        adapter = new ListViewAdapter(max);
 
         // 리스트뷰 참조 및 Adapter달기
         listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(adapter);
+
+
+
 
         // 첫 번째 아이템 추가.
         //adapter.addItem("08:00 ~ 09:00","13 / 15", "예약하기");

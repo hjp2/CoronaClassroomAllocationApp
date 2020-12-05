@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,12 +15,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -43,7 +47,9 @@ public class activity_selectclass extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     private List<String> Array = new ArrayList<String>();
     private String sdate;
-    private String max;
+    private ArrayList<String> max;
+    private String currentlevel;
+    private String levelinfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +62,15 @@ public class activity_selectclass extends AppCompatActivity {
         Date time = new Date();
         sdate = format1.format(time);
         System.out.println(sdate);
+
+        ImageView backbutton = findViewById(R.id.backbutton);
+
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
 
 
@@ -79,7 +94,39 @@ public class activity_selectclass extends AppCompatActivity {
         title.setText(building + " " + floor);
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<String>());
+        max = new ArrayList<String>();
         listView.setAdapter(adapter);
+
+        String test;
+        DocumentReference docRef = mStore.collection("corona").document("level");
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if(document.exists()){
+                        currentlevel = document.getString("current");
+                        levelinfo = document.getString(currentlevel);
+
+                        System.out.println(currentlevel);
+                        System.out.println(levelinfo);
+
+                    }
+                }
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
 
         mStore.collection("classroom/"+building+"/층/"+floor+"/강의실")
                 //.orderBy("층", Query.Direction.ASCENDING)
@@ -93,13 +140,14 @@ public class activity_selectclass extends AppCompatActivity {
                                 Map<String, Object> shot = snap.getData();
                                 //String floor = String.valueOf(shot.get("층"));
                                 String info = String.valueOf(shot.get("종류"));
-                                max = String.valueOf(shot.get("최대인원"));
+                                String temp = String.valueOf(shot.get("최대인원"));
+                                max.add(temp);
                                 String sclass = snap.getId();
                                 //System.out.println(floor);
 
                                 //ids.add(id);
                                 Array.add(sclass);
-                                adapter.add(sclass+" - "+info + "       최대인원: "+max);
+                                adapter.add(sclass+" - "+info + "       적정인원: "+ Integer.parseInt(temp)/2);
                             }
                             adapter.notifyDataSetChanged();
                             listView.setSelection(adapter.getCount() - 1);
@@ -122,7 +170,7 @@ public class activity_selectclass extends AppCompatActivity {
                 intent.putExtra("building", building);
                 intent.putExtra("floor", floor);
                 intent.putExtra("sdate", sdate);
-                intent.putExtra("max", max);
+                intent.putExtra("max", Integer.toString(Integer.parseInt(max.get(arg2))/2));
                 intent.putExtra("sclass", (String) Array.get(arg2));
                 startActivity(intent);
             }
