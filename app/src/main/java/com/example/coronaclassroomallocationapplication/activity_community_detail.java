@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,9 +33,13 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class activity_community_detail extends AppCompatActivity implements View.OnClickListener, RecyclerViewItemClickListener.OnItemClickListener {
@@ -51,11 +56,20 @@ public class activity_community_detail extends AppCompatActivity implements View
     private RecyclerView mPostRecyclerView;
     private RepostAdapter mAdapter;
     private List<Repost> mDatas;
+    private ImageView community_back_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community_detail);
+
+        community_back_button = findViewById(R.id.community_back_button);
+        community_back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         //댓글 기능 역할(입력)
         reContents = findViewById(R.id.post_contents_edit2);
@@ -150,7 +164,8 @@ public class activity_community_detail extends AppCompatActivity implements View
                                 String contents = String.valueOf(shot.get(FirebaseID.contents));
                                 String name = String.valueOf(shot.get(FirebaseID.name));
                                 String post = String.valueOf(shot.get(FirebaseID.post));
-                                Repost data = new Repost(documentId, userId, contents, name, post);
+                                String date = String.valueOf(shot.get(FirebaseID.timestamp));
+                                Repost data = new Repost(documentId, userId, contents, name, post, date);
                                 if (check.equals(post)) {
                                     mDatas.add(data);
                                     reContents.setText("");
@@ -171,21 +186,21 @@ public class activity_community_detail extends AppCompatActivity implements View
 
     @Override
     public void onItemLongClick(View view, final int position) {
-            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-            dialog.setMessage("삭제 하시겠습니까?");
-            dialog.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    mStore.collection(FirebaseID.repost).document(mDatas.get(position).getDocumentId()).delete();
-                    Toast.makeText(activity_community_detail.this, "삭제 되었습니다.", Toast.LENGTH_SHORT).show();
-                }
-            }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Toast.makeText(activity_community_detail.this, "취소 되었습니다.", Toast.LENGTH_SHORT).show();
-                }
-            });
-            dialog.setTitle("삭제 알림");
-            dialog.show();
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setMessage("삭제 하시겠습니까?");
+        dialog.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mStore.collection(FirebaseID.repost).document(mDatas.get(position).getDocumentId()).delete();
+                Toast.makeText(activity_community_detail.this, "삭제 되었습니다.", Toast.LENGTH_SHORT).show();
+            }
+        }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(activity_community_detail.this, "취소 되었습니다.", Toast.LENGTH_SHORT).show();
+            }
+        });
+        dialog.setTitle("삭제 알림");
+        dialog.show();
     }
 }

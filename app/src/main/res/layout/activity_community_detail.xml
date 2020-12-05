@@ -11,16 +11,16 @@
         android:id="@+id/community2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#00A3FF"
+        android:background="@drawable/background_controller"
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/community_back_button"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
-            android:background="#00A3FF"
+            android:background="#00000000"
             android:src="@drawable/ic_baseline_arrow_back_24"
             app:layout_constraintBottom_toTopOf="@+id/textView10"
             app:layout_constraintStart_toStartOf="parent"
@@ -31,7 +31,7 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:background="#00A3FF"
+            android:background="#00000000"
             android:gravity="center_vertical"
             android:paddingLeft="30dp"
             android:textColor="#fff"
@@ -48,39 +48,62 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@id/community2">
+        android:layout_below="@id/community2"
+        android:padding="5dp">
 
-        <TextView
-            android:id="@+id/post2_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingLeft="10dp"
-            android:textColor="@android:color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            tools:text="TITLE" />
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_baseline_account_box_24"
+            android:layout_gravity="center_vertical"/>
 
-        <TextView
-            android:id="@+id/post2_name"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingRight="10dp"
-            android:textColor="@android:color/black"
-            android:textSize="14sp"
-            tools:text="작성자: name" />
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical">
 
+            <TextView
+                android:id="@+id/post2_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingRight="10dp"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                tools:text="name"/>
+
+            <TextView
+                android:id="@+id/post2_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingRight="10dp"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                tools:text="date"/>
+        </LinearLayout>
     </LinearLayout>
 
     <TextView
-        android:id="@+id/post2_contents"
-        android:layout_width="wrap_content"
+        android:id="@+id/post2_title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:paddingLeft="10dp"
         android:textColor="@android:color/black"
-        android:textSize="16sp"
-        android:layout_below="@id/community3"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        tools:text="TITLE"
+        android:layout_below="@id/community3"/>
+
+    <TextView
+        android:id="@+id/post2_contents"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:layout_below="@id/post2_title"
         tools:text="contents" />
 
     <TextView
@@ -88,7 +111,8 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="#333333"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_below="@id/post2_contents"/>
 
     <androidx.recyclerview.widget.RecyclerView

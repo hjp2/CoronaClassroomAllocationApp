@@ -54,7 +54,7 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.signInButton).setOnClickListener(this); //구글 로그인 버튼을 클릭했을때 이벤트
 
         //구글로그인 확인 과정
-       GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
@@ -103,7 +103,7 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
             String phonenum = user.getPhoneNumber();
 
             //구글 로그인 관련 1회성성
-           Map<String, Object> userMap = new HashMap<>();
+            Map<String, Object> userMap = new HashMap<>();
             //userMap.put(FirebaseID.documentId, user.getUid());
             userMap.put(FirebaseID.email, email);
             userMap.put(FirebaseID.password, null);
@@ -119,7 +119,7 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
     }
 
     //기본 이메일 로그인
-   @Override
+    @Override
     protected void onStart() {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();

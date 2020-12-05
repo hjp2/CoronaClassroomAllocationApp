@@ -11,6 +11,7 @@ public class Repost {
     private String userId;
     private String contents;
     private String name;
+    private String curdate;
     @ServerTimestamp
     private Date date;
 
@@ -18,12 +19,13 @@ public class Repost {
 
     }
 
-    public Repost(String documentId, String userId, String contents, String name, String writeId) {
+    public Repost(String documentId, String writeId, String userId, String contents, String name, String curdate) {
         this.documentId = documentId;
+        this.writeId = writeId;
         this.userId = userId;
         this.contents = contents;
         this.name = name;
-        this.writeId = writeId;
+        this.curdate = curdate;
     }
 
     public String getWriteId() {
@@ -74,6 +76,14 @@ public class Repost {
         this.name = name;
     }
 
+    public String getCurdate() {
+        return curdate;
+    }
+
+    public void setCurdate(String curdate) {
+        this.curdate = curdate;
+    }
+
     @Override
     public String toString() {
         return "Repost{" +
@@ -82,7 +92,9 @@ public class Repost {
                 ", userId='" + userId + '\'' +
                 ", contents='" + contents + '\'' +
                 ", name='" + name + '\'' +
+                ", curdate='" + curdate + '\'' +
                 ", date=" + date +
                 '}';
     }
 }
+

@@ -4,6 +4,8 @@
         <item>@font/archivo_black</item>
         <item>@font/baloo</item>
         <item>@font/bungee</item>
+        <item>@font/muli</item>
+        <item>@font/muli_black</item>
         <item>@font/rubik_mono_one</item>
     </array>
 </resources>

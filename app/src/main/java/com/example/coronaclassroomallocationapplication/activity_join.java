@@ -3,6 +3,7 @@ package com.example.coronaclassroomallocationapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -51,6 +52,12 @@ public class activity_join extends AppCompatActivity implements View.OnClickList
         user_phonenum = findViewById(R.id.input_phonenum);
 
         findViewById(R.id.joinButton).setOnClickListener(this);
+        findViewById(R.id.join_back_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override

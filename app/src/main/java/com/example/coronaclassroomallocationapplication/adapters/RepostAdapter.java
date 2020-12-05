@@ -11,7 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.coronaclassroomallocationapplication.R;
 import com.example.coronaclassroomallocationapplication.models.Repost;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class RepostAdapter extends RecyclerView.Adapter<RepostAdapter.RepostViewHolder>{
 
@@ -28,9 +31,12 @@ public class RepostAdapter extends RecyclerView.Adapter<RepostAdapter.RepostView
 
     @Override
     public void onBindViewHolder(@NonNull RepostViewHolder holder, int position) {
+
         Repost data = datas.get(position); //Repost객체 생성, position은 0,1,2이 순서로 내려온다.
         holder.contents.setText(data.getContents()); //Contents 아이템을 넣어준다.
-        holder.name.setText("작성자: " + data.getName()); //name 아이템을 넣어준다.
+        holder.name.setText(data.getName()); //name 아이템을 넣어준다.
+        holder.date.setText(data.getCurdate());
+
     }
 
     @Override
@@ -42,12 +48,14 @@ public class RepostAdapter extends RecyclerView.Adapter<RepostAdapter.RepostView
 
         private TextView contents;
         private TextView name;
+        private TextView date;
 
         public RepostViewHolder(@NonNull View itemView) {
             super(itemView);
 
             contents = itemView.findViewById(R.id.item_repost_contents);
             name = itemView.findViewById(R.id.item_repost_name);
+            date = itemView.findViewById(R.id.item_repost_date);
         }
     }
 
