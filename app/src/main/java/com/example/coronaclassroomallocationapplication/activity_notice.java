@@ -1,10 +1,12 @@
 package com.example.coronaclassroomallocationapplication;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -59,10 +61,20 @@ public class activity_notice extends AppCompatActivity implements View.OnClickLi
     private RepostAdapter mAdapter;
     private List<Repost> mDatas;
 
+    private ImageView backbutton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ativity_notice);
+
+        backbutton = findViewById(R.id.backbutton2);
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         //댓글 기능 역할(입력)
         reContents = findViewById(R.id.post_contents_edit2);

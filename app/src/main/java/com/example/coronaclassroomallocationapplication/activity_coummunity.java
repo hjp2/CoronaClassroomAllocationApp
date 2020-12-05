@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -36,15 +37,16 @@ import java.util.*;
 
 public class activity_coummunity extends AppCompatActivity implements View.OnClickListener, RecyclerViewItemClickListener.OnItemClickListener {
     private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
-
     int array_image[] = {R.drawable.cat, R.drawable.wolf, R.drawable.children, R.drawable.rabbit, R.drawable.dog};
     Random ram = new Random();
-
     int num = ram.nextInt(array_image.length);
 
     private RecyclerView mPostRecyclerView;
     private PostAdapter mAdapter;
     private List<Post> mDatas;
+
+    private Intent intent;
+    private ImageView homebutton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,14 @@ public class activity_coummunity extends AppCompatActivity implements View.OnCli
         findViewById(R.id.main_post_edit).setOnClickListener(this);
 
         mPostRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this, mPostRecyclerView, this));
+        homebutton = findViewById(R.id.homebutton2);
+        homebutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent = new Intent(activity_coummunity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
