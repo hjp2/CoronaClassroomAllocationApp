@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -36,6 +37,8 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
 
     private TextInputEditText input_id; //입력받은 아이디
     private TextInputEditText input_pw; //입력받은 비밀번호
+    private CheckBox checkBox;//자동로그인 체크박스
+    private boolean check;
 
     //구글 로그인 관련
     private GoogleSignInClient mGoogleSignInClient;
@@ -48,6 +51,7 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
 
         input_id = findViewById(R.id.input_id); //아이디를 찾는 과정
         input_pw = findViewById(R.id.input_pw); //비밀번호를 찾는 과정
+        checkBox = findViewById(R.id.login_checkbox);
 
         findViewById(R.id.bt_join).setOnClickListener(this); //회원가입 버튼을 클릭했을때 이벤트
         findViewById(R.id.bt_login).setOnClickListener(this); //로그인 버튼을 클릭했을때 이벤트
@@ -146,6 +150,9 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         FirebaseUser user = mAuth.getCurrentUser();
+                                        if(checkBox.isChecked()){
+                                            checkBox.setChecked(true);
+                                        }
                                         if (user != null) {
                                             Toast.makeText(activity_login.this, "로그인 성공: " + user.getUid(), Toast.LENGTH_SHORT).show();
                                             startActivity(new Intent(activity_login.this, MainActivity.class));
