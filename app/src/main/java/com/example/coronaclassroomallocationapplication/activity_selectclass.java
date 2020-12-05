@@ -26,7 +26,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +43,7 @@ public class activity_selectclass extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     private List<String> Array = new ArrayList<String>();
     private String sdate;
+    private String max;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,13 @@ public class activity_selectclass extends AppCompatActivity {
         //주석
         final String building = getIntent().getStringExtra("building");
         final String floor = getIntent().getStringExtra("floor");
+        SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy-M-d");
+        Date time = new Date();
+        sdate = format1.format(time);
+        System.out.println(sdate);
+
+
+
 
         listView = findViewById(R.id.listview);
         TextView title;
@@ -83,7 +93,7 @@ public class activity_selectclass extends AppCompatActivity {
                                 Map<String, Object> shot = snap.getData();
                                 //String floor = String.valueOf(shot.get("층"));
                                 String info = String.valueOf(shot.get("종류"));
-                                String max = String.valueOf(shot.get("최대인원"));
+                                max = String.valueOf(shot.get("최대인원"));
                                 String sclass = snap.getId();
                                 //System.out.println(floor);
 
@@ -93,21 +103,26 @@ public class activity_selectclass extends AppCompatActivity {
                             }
                             adapter.notifyDataSetChanged();
                             listView.setSelection(adapter.getCount() - 1);
+                            listView.smoothScrollToPosition(0);
 
                         }
                     }
                 });
 
+
+
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                Toast.makeText(getApplicationContext(), (String) Array.get(arg2),
-                        Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), (String) Array.get(arg2),
+                //        Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), activity_selecttime.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 intent.putExtra("building", building);
                 intent.putExtra("floor", floor);
                 intent.putExtra("sdate", sdate);
+                intent.putExtra("max", max);
                 intent.putExtra("sclass", (String) Array.get(arg2));
                 startActivity(intent);
             }
