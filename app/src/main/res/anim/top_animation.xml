@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- 2초동안 위에서 아래로 이동 -->
     <translate
         android:fromXDelta="0%"
         android:fromYDelta="-50%"
         android:duration="2000"/>
 
+    <!-- 1.5초동안 서서히 나타남 -->
     <alpha
         android:fromAlpha="0.1"
         android:toAlpha="1.0"

@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 mAuth.getInstance().signOut(); //계정에서 로그아웃
                 intent = new Intent(MainActivity.this, activity_login.class);
                 startActivity(intent);
+                finish();
             }
         });
 

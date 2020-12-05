@@ -34,11 +34,11 @@ public class activity_secondprivateinfo extends AppCompatActivity {
     private TextInputEditText info_address; //주소
     private TextInputEditText info_phonenum; //휴대폰 번호
     private Button bt_mypost; //내가 작성한글
-    private TextView user_info_id; //
-    private TextView user_info_name;
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
-    private ImageView privateinfo_back_button;
+    private TextView user_info_id; //사용자의 아이디
+    private TextView user_info_name; //사용자의 이름
+    private FirebaseAuth mAuth; //FirebaseAuth의 인스턴스 변수
+    private FirebaseFirestore mStore = FirebaseFirestore.getInstance(); //FireStore의 인스턴스 변수 생성,초기화
+    private ImageView privateinfo_back_button; //뒤로가기 버튼
 
 
     @Override
@@ -46,6 +46,7 @@ public class activity_secondprivateinfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_privateinfo2);
 
+        //각 뷰에 맞는 아이디를 저장
         mAuth = FirebaseAuth.getInstance();
         bt_deleteuser = (Button)findViewById(R.id.delete_user); //회원 탈퇴
         info_pw = findViewById(R.id.info_input_pw);
@@ -58,27 +59,28 @@ public class activity_secondprivateinfo extends AppCompatActivity {
         bt_mypost=findViewById(R.id.info_write);
         privateinfo_back_button = findViewById(R.id.privateinfo_back_button);
 
-        String user = mAuth.getInstance().getUid();
-        mStore.collection(FirebaseID.user).document(user)
+        //현재 사용자를 요청하는 코드
+        String user = mAuth.getInstance().getUid(); //현재 사용자의 Uid값을 저장
+        mStore.collection(FirebaseID.user).document(user) //FireStore에 user의 값과 일치하는 정보를 찾음
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful()) { //찾기가 성공했다면 조건문 내부 실행
                             if (task.getResult().exists()) { //문서가 없을경우 처리방법
                                 if (task.getResult() != null) {
-                                    Map<String, Object> snap = task.getResult().getData();
-                                    String id = String.valueOf(snap.get(FirebaseID.email));
-                                    String pw = String.valueOf(snap.get(FirebaseID.password));
-                                    String name = String.valueOf(snap.get(FirebaseID.name));
-                                    String address = String.valueOf(snap.get(FirebaseID.address));
-                                    String phonenum = String.valueOf(snap.get(FirebaseID.phonenum));
-                                    info_pw.setText(pw);
-                                    user_info_id.setText(id);
-                                    info_name.setText(name);
-                                    user_info_name.setText(name);
-                                    info_address.setText(address);
-                                    info_phonenum.setText(phonenum);
+                                    Map<String, Object> snap = task.getResult().getData(); //키와 값으로 이루어진 Map변수 선언
+                                    String id = String.valueOf(snap.get(FirebaseID.email)); //아이디 삽입
+                                    String pw = String.valueOf(snap.get(FirebaseID.password)); //비밀번호 삽입
+                                    String name = String.valueOf(snap.get(FirebaseID.name)); //이름 삽입
+                                    String address = String.valueOf(snap.get(FirebaseID.address)); //주소 삽입
+                                    String phonenum = String.valueOf(snap.get(FirebaseID.phonenum)); //휴대폰 번호 삽입
+                                    info_pw.setText(pw); //비밀번호 필드에 저장
+                                    user_info_id.setText(id); //아이디 필드에 저장
+                                    info_name.setText(name); //사용자 이름 필드에 저장
+                                    user_info_name.setText(name); //사용자 이름 필드에 저장
+                                    info_address.setText(address); //사용자 주소 필드에 저장
+                                    info_phonenum.setText(phonenum); //사용자 휴대폰번호 필드에 저장
                                 }
                             }
                         }
@@ -86,23 +88,24 @@ public class activity_secondprivateinfo extends AppCompatActivity {
                 });
 
         bt_changeuser.setOnClickListener(new View.OnClickListener() {
-            String user = mAuth.getInstance().getUid();
+            String user = mAuth.getInstance().getUid(); //현재 로그인된 사용자의 Uid값을 저장
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { //클릭 이벤트
                 mStore.collection(FirebaseID.user).document(user)
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()) {
-                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    FirebaseUser user = mAuth.getCurrentUser(); //정보를 업데이트 하기위해 현재 사용자의 정보를 저장
                                     if (user != null) {
-                                        Map<String, Object> userMap = new HashMap<>();
-                                        userMap.put(FirebaseID.password, info_pw.getText().toString());
-                                        userMap.put(FirebaseID.name, info_name.getText().toString());
-                                        userMap.put(FirebaseID.address, info_address.getText().toString());
-                                        userMap.put(FirebaseID.phonenum, info_phonenum.getText().toString());
+                                        Map<String, Object> userMap = new HashMap<>(); //사용자 정보를 저장하기 위해  Map변수 생성
+                                        userMap.put(FirebaseID.password, info_pw.getText().toString()); //비밀번호 삽입
+                                        userMap.put(FirebaseID.name, info_name.getText().toString()); //이름 삽입
+                                        userMap.put(FirebaseID.address, info_address.getText().toString()); //주소 삽입
+                                        userMap.put(FirebaseID.phonenum, info_phonenum.getText().toString()); //휴대폰 번호 삽입
                                         mStore.collection(FirebaseID.user).document(user.getUid()).set(userMap, SetOptions.merge()); //SetOptions.merge는 덮어쓰기 효과
+                                        //정보가 저장이 완료되었을 경우, 토스트메시지 출력
                                         Toast.makeText(activity_secondprivateinfo.this, "정보 변경이 완료되었습니다.", Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -111,17 +114,18 @@ public class activity_secondprivateinfo extends AppCompatActivity {
             }
         });
 
-        //고지훈 추가(회원 탈퇴) -> 문제시 이야기해주세요.
+        //회원 탈퇴 버튼 이벤트
         bt_deleteuser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.getCurrentUser().delete();
+                mAuth.getCurrentUser().delete(); //현재 사용자의 정보를 삭제
                 Toast.makeText(activity_secondprivateinfo.this, "그동안 이용해주셔서 감사합니다.", Toast.LENGTH_SHORT).show();
                 finishAffinity();
             }
         });
 
-        bt_mypost.setOnClickListener(new View.OnClickListener() {
+        //내글보기 버튼 이벤트트
+       bt_mypost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity_secondprivateinfo.this, activity_mypost.class);
@@ -129,7 +133,7 @@ public class activity_secondprivateinfo extends AppCompatActivity {
                 finish();
             }
         });
-
+        //뒤로가기 버튼 이벤트
         privateinfo_back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

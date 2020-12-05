@@ -28,10 +28,11 @@ import java.util.Map;
 import java.util.Random;
 import java.util.*;
 
+//커뮤니티의 메인 화면
 public class activity_coummunity extends AppCompatActivity implements View.OnClickListener, RecyclerViewItemClickListener.OnItemClickListener {
-    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
+    private FirebaseFirestore mStore = FirebaseFirestore.getInstance(); //mStore의 인스턴스 변수를 생성하고 초기화
     int array_image[] = {R.drawable.cat, R.drawable.wolf, R.drawable.children, R.drawable.rabbit, R.drawable.dog};
-    Random ram = new Random();
+    Random ram = new Random(); //랜덤 값
     int num = ram.nextInt(array_image.length);
 
     private RecyclerView mPostRecyclerView;

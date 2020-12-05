@@ -120,7 +120,8 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
             userMap.put(FirebaseID.name, name); //구글 이름
             userMap.put(FirebaseID.address, null); //구글 주소(구글에서 저장을 안했기 때문에 null)
             userMap.put(FirebaseID.phonenum, phonenum); //구글 휴대폰번호(구글에서 저장을 안했기 때문에 null)
-            mStore.collection(FirebaseID.user).document(user.getUid()).set(userMap, SetOptions.merge()); //SetOptions.merge는 덮어쓰기 효과
+            mStore.collection(FirebaseID.user).document(user.getUid()).set(userMap, SetOptions.merge());
+            //SetOptions.merge는 덮어쓰기 효과
 
             //intent를 사용하여 메인화면으로 이동
             Intent intent = new Intent(activity_login.this, MainActivity.class);
@@ -142,7 +143,7 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    //각각에 버튼을 클릭했을 때 발생하는 이   벤트
+    //각각에 버튼을 클릭했을 때 발생하는 이벤트
     @Override
     public void onClick(View v) {
         switch (v.getId()){
