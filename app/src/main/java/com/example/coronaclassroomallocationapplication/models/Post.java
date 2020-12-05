@@ -1,5 +1,7 @@
 package com.example.coronaclassroomallocationapplication.models;
 
+import android.widget.ImageView;
+
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
@@ -12,9 +14,12 @@ public class Post {
     private String name;
     @ServerTimestamp
     private Date date;
+    private int main_image;
 
     public Post() {
     }
+
+
 
     public Post(String documentId, String title, String contents, String name) {
         this.documentId = documentId;

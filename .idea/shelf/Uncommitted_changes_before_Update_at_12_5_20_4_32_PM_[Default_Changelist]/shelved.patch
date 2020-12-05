@@ -1,0 +1,231 @@
+Index: app/src/main/res/layout/item_post.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"wrap_content\"\n    android:orientation=\"vertical\"\n    android:padding=\"10dp\"\n    >\n\n    <LinearLayout\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\"\n        android:orientation=\"horizontal\">\n\n        <TextView\n            android:id=\"@+id/item_post_title\"\n            android:layout_width=\"0dp\"\n            android:layout_height=\"wrap_content\"\n            android:layout_weight=\"1\"\n            android:paddingLeft=\"10dp\"\n            android:textColor=\"@android:color/black\"\n            android:textSize=\"24sp\"\n            android:textStyle=\"bold\"\n            tools:text=\"TITLE\" />\n\n        <TextView\n            android:id=\"@+id/item_post_name\"\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:layout_gravity=\"center_vertical\"\n            android:paddingRight=\"10dp\"\n            android:textColor=\"@android:color/black\"\n            android:textSize=\"14sp\"\n            tools:text=\"작성자: name\" />\n\n    </LinearLayout>\n\n    <TextView\n        android:id=\"@+id/item_post_contents\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:layout_marginLeft=\"10dp\"\n        android:textColor=\"@android:color/black\"\n        android:textSize=\"16sp\"\n        tools:text=\"contents\" />\n\n    <TextView\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"0.5dp\"\n        android:background=\"#333333\"\n        android:layout_marginTop=\"7dp\"/>\n</LinearLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/item_post.xml	(revision 19510acf64de322fd633c8b5574cb2a69f61963e)
++++ app/src/main/res/layout/item_post.xml	(date 1607107314000)
+@@ -6,7 +6,58 @@
+     android:orientation="vertical"
+     android:padding="10dp"
+     >
+-
++    <LinearLayout
++        android:layout_width="match_parent"
++        android:layout_height="80dp"
++        android:orientation="horizontal">
++        <ImageView
++            android:id="@+id/main_image"
++            android:layout_width="60dp"
++            android:layout_height="60dp"
++            android:layout_gravity="center_vertical"
++            android:src="@drawable/ic_launcher_foreground">
++        </ImageView>
++
++        <LinearLayout
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:orientation="vertical">
++            <TextView
++                android:id="@+id/main_name"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_marginLeft="10dp"
++                android:layout_marginTop="10dp"
++                android:text="test"
++                android:textSize="20sp">
++            </TextView>
++            <TextView
++                android:id="@+id/main_data"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_marginLeft="10dp"
++                android:text="2020/12/12"
++                android:textSize="20sp">
++            </TextView>
++        </LinearLayout>
++    </LinearLayout>
++
++    <TextView
++        android:id="@+id/main_title"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="aaaaaaaaaaaaaaaaa"
++        android:textSize="25sp">
++    </TextView>
++
++    <TextView
++        android:id="@+id/main_ask"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="bbbbbbbbbbbbbbbbb">
++    </TextView>
++
++    <!--
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+@@ -49,4 +100,66 @@
+         android:layout_height="0.5dp"
+         android:background="#333333"
+         android:layout_marginTop="7dp"/>
+-</LinearLayout>
+\ No newline at end of file
++        -->
++
++</LinearLayout>
++
++<!--
++<LinearLayout
++android:layout_width="match_parent"
++android:layout_height="80dp"
++android:orientation="horizontal">
++<ImageView
++    android:id="@+id/main_image"
++    android:layout_width="60dp"
++    android:layout_height="60dp"
++    android:layout_gravity="center_vertical"
++    android:src="@drawable/ic_launcher_foreground">
++</ImageView>
++
++<LinearLayout
++    android:layout_width="match_parent"
++    android:layout_height="wrap_content"
++    android:orientation="vertical">
++    <TextView
++        android:id="@+id/main_name"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:layout_marginLeft="10dp"
++        android:layout_marginTop="10dp"
++        android:text="test"
++        android:textSize="20sp">
++    </TextView>
++    <TextView
++        android:id="@+id/main_data"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:layout_marginLeft="10dp"
++        android:text="2020/12/12"
++        android:textSize="20sp">
++    </TextView>
++</LinearLayout>
++</LinearLayout>
++
++<TextView
++android:id="@+id/main_title"
++android:layout_width="wrap_content"
++android:layout_height="wrap_content"
++android:text="aaaaaaaaaaaaaaaaa"
++android:textSize="25sp">
++</TextView>
++
++<TextView
++android:id="@+id/main_ask"
++android:layout_width="wrap_content"
++android:layout_height="wrap_content"
++android:text="bbbbbbbbbbbbbbbbb">
++</TextView>
++
++<ImageView
++android:id="@+id/support_image"
++android:layout_width="match_parent"
++android:layout_height="150dp"
++android:src="@drawable/ic_launcher_foreground">
++</ImageView>
++-->
+\ No newline at end of file
+Index: app/src/main/java/com/example/coronaclassroomallocationapplication/adapters/RepostAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.coronaclassroomallocationapplication.adapters;\n\nimport android.view.LayoutInflater;\nimport android.view.View;\nimport android.view.ViewGroup;\nimport android.widget.TextView;\n\nimport androidx.annotation.NonNull;\nimport androidx.recyclerview.widget.RecyclerView;\n\nimport com.example.coronaclassroomallocationapplication.R;\nimport com.example.coronaclassroomallocationapplication.models.Repost;\n\nimport java.util.List;\n\npublic class RepostAdapter extends RecyclerView.Adapter<RepostAdapter.RepostViewHolder>{\n\n    private List<Repost> datas;\n    public RepostAdapter(List<Repost> datas) {\n        this.datas = datas;\n    }\n\n    @NonNull\n    @Override\n    public RepostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {\n        return new RepostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_repost, parent, false));\n    }\n\n    @Override\n    public void onBindViewHolder(@NonNull RepostViewHolder holder, int position) {\n        Repost data = datas.get(position); //Repost객체 생성, position은 0,1,2이 순서로 내려온다.\n        holder.contents.setText(data.getContents()); //Contents 아이템을 넣어준다.\n        holder.name.setText(\"작성자: \" + data.getName()); //name 아이템을 넣어준다.\n    }\n\n    @Override\n    public int getItemCount() {\n        return datas.size();\n    }\n\n    public class RepostViewHolder extends RecyclerView.ViewHolder{\n\n        private TextView contents;\n        private TextView name;\n\n        public RepostViewHolder(@NonNull View itemView) {\n            super(itemView);\n\n            contents = itemView.findViewById(R.id.item_repost_contents);\n            name = itemView.findViewById(R.id.item_repost_name);\n        }\n    }\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/coronaclassroomallocationapplication/adapters/RepostAdapter.java	(revision 19510acf64de322fd633c8b5574cb2a69f61963e)
++++ app/src/main/java/com/example/coronaclassroomallocationapplication/adapters/RepostAdapter.java	(date 1607147733000)
+@@ -1,8 +1,10 @@
+ package com.example.coronaclassroomallocationapplication.adapters;
+ 
++import android.graphics.drawable.Drawable;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
++import android.widget.ImageView;
+ import android.widget.TextView;
+ 
+ import androidx.annotation.NonNull;
+@@ -12,25 +14,33 @@
+ import com.example.coronaclassroomallocationapplication.models.Repost;
+ 
+ import java.util.List;
++import java.util.Random;
+ 
+ public class RepostAdapter extends RecyclerView.Adapter<RepostAdapter.RepostViewHolder>{
+ 
++    int array_image[] = {R.drawable.cat, R.drawable.wolf, R.drawable.children, R.drawable.rabbit, R.drawable.dog};
++    Random ram = new Random();
++
++
+     private List<Repost> datas;
+-    public RepostAdapter(List<Repost> datas) {
+-        this.datas = datas;
+-    }
++    public RepostAdapter(List<Repost> datas) { this.datas = datas; }
+ 
+     @NonNull
+     @Override
+     public RepostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+-        return new RepostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_repost, parent, false));
++        return new RepostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.ativity_notice_listview, parent, false));
+     }
+ 
+     @Override
+     public void onBindViewHolder(@NonNull RepostViewHolder holder, int position) {
+         Repost data = datas.get(position); //Repost객체 생성, position은 0,1,2이 순서로 내려온다.
+-        holder.contents.setText(data.getContents()); //Contents 아이템을 넣어준다.
+-        holder.name.setText("작성자: " + data.getName()); //name 아이템을 넣어준다.
++
++        ram.setSeed(System.currentTimeMillis());
++        int num = ram.nextInt(array_image.length);
++
++        holder.sub_name.setText(data.getName());
++        holder.sub_image.setImageResource(array_image[num]);
++        holder.review.setText(data.getContents());
+     }
+ 
+     @Override
+@@ -38,17 +48,24 @@
+         return datas.size();
+     }
+ 
+-    public class RepostViewHolder extends RecyclerView.ViewHolder{
++    class RepostViewHolder extends RecyclerView.ViewHolder{
+ 
+-        private TextView contents;
+-        private TextView name;
++        //리스트 뷰에 담을 내용을 담고 있는 xml
++        private ImageView sub_image;
++        private ImageView heart;
++        private TextView sub_name;
++        private TextView sub_data;
++        private TextView review;
++        private TextView heart_number;
+ 
+         public RepostViewHolder(@NonNull View itemView) {
+             super(itemView);
+ 
+-            contents = itemView.findViewById(R.id.item_repost_contents);
+-            name = itemView.findViewById(R.id.item_repost_name);
++            sub_name = itemView.findViewById(R.id.sub_name);
++            sub_image = itemView.findViewById(R.id.sub_image);
++            review = itemView.findViewById(R.id.review);
++
+         }
+     }
+ 
+-}
++}
+\ No newline at end of file

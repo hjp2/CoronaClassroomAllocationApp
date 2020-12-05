@@ -10,10 +10,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".activity_post"/>
-        <activity android:name=".activity_community_detail"/>
+        <activity android:name=".activity_community_detail"></activity>
+        <activity android:name=".activity_post" />
         <activity android:name=".activity_coummunity" />
         <activity android:name=".activity_join" />
+        <activity android:name=".activity_notice"/>
         <activity android:name=".activity_menu" /> <!-- <activity android:name=".activity_login" /> -->
         <activity android:name=".MainActivity" />
         <activity android:name=".activity_login" />
@@ -21,9 +22,10 @@
         <activity android:name=".activity_selecttime" />
         <activity android:name=".activity_selectfloor" />
         <activity android:name=".activity_privateinfo" />
-        <activity android:name=".activity_notice"/>
         <activity android:name=".activity_secondprivateinfo" />
-       <activity android:name=".activity_selectbuilding"></activity>
+        <activity android:name=".activity_selectbuilding">
+
+        </activity>
         <activity android:name=".activity_intro">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

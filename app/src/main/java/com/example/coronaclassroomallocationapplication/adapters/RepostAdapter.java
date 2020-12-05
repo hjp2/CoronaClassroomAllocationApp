@@ -1,8 +1,10 @@
 package com.example.coronaclassroomallocationapplication.adapters;
 
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,32 +13,35 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.coronaclassroomallocationapplication.R;
 import com.example.coronaclassroomallocationapplication.models.Repost;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
+import java.util.Random;
 
 public class RepostAdapter extends RecyclerView.Adapter<RepostAdapter.RepostViewHolder>{
 
+    int array_image[] = {R.drawable.cat, R.drawable.wolf, R.drawable.children, R.drawable.rabbit, R.drawable.dog};
+    Random ram = new Random();
+
+
     private List<Repost> datas;
-    public RepostAdapter(List<Repost> datas) {
-        this.datas = datas;
-    }
+    public RepostAdapter(List<Repost> datas) { this.datas = datas; }
 
     @NonNull
     @Override
     public RepostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new RepostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_repost, parent, false));
+        return new RepostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.ativity_notice_listview, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull RepostViewHolder holder, int position) {
-
         Repost data = datas.get(position); //Repost객체 생성, position은 0,1,2이 순서로 내려온다.
-        holder.contents.setText(data.getContents()); //Contents 아이템을 넣어준다.
-        holder.name.setText(data.getName()); //name 아이템을 넣어준다.
-        holder.date.setText(data.getCurdate());
 
+        ram.setSeed(System.currentTimeMillis());
+        int num = ram.nextInt(array_image.length);
+
+        holder.sub_name.setText(data.getName());
+        holder.sub_image.setImageResource(array_image[num]);
+        holder.review.setText(data.getContents());
+        //holder.sub_data.setText(data.getCurdate());
     }
 
     @Override
@@ -44,18 +49,24 @@ public class RepostAdapter extends RecyclerView.Adapter<RepostAdapter.RepostView
         return datas.size();
     }
 
-    public class RepostViewHolder extends RecyclerView.ViewHolder{
+    class RepostViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView contents;
-        private TextView name;
-        private TextView date;
+        //리스트 뷰에 담을 내용을 담고 있는 xml
+        private ImageView sub_image;
+        private ImageView heart;
+        private TextView sub_name;
+        private TextView sub_data;
+        private TextView review;
+        private TextView heart_number;
 
         public RepostViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            contents = itemView.findViewById(R.id.item_repost_contents);
-            name = itemView.findViewById(R.id.item_repost_name);
-            date = itemView.findViewById(R.id.item_repost_date);
+            sub_name = itemView.findViewById(R.id.sub_name);
+            sub_image = itemView.findViewById(R.id.sub_image);
+            review = itemView.findViewById(R.id.review);
+            sub_data = itemView.findViewById(R.id.sub_data);
+
         }
     }
 

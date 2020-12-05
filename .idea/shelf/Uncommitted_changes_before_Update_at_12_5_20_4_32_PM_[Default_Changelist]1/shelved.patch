@@ -1,0 +1,720 @@
+Index: app/src/main/java/com/example/coronaclassroomallocationapplication/models/Post.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.coronaclassroomallocationapplication.models;\n\nimport com.google.firebase.firestore.ServerTimestamp;\n\nimport java.util.Date;\n\npublic class Post {\n\n    private String documentId;\n    private String title;\n    private String contents;\n    private String name;\n    @ServerTimestamp\n    private Date date;\n\n    public Post() {\n    }\n\n    public Post(String documentId, String title, String contents, String name) {\n        this.documentId = documentId;\n        this.title = title;\n        this.contents = contents;\n        this.name = name;\n    }\n\n    public String getName() {\n        return name;\n    }\n\n    public void setName(String name) {\n        this.name = name;\n    }\n\n\n    public Date getDate() {\n        return date;\n    }\n\n    public void setDate(Date date) {\n        this.date = date;\n    }\n\n    public String getDocumentId() {\n        return documentId;\n    }\n\n    public void setDocumentId(String documentId) {\n        this.documentId = documentId;\n    }\n\n    public String getTitle() {\n        return title;\n    }\n\n    public void setTitle(String title) {\n        this.title = title;\n    }\n\n    public String getContents() {\n        return contents;\n    }\n\n    public void setContents(String contents) {\n        this.contents = contents;\n    }\n\n    @Override\n    public String toString() {\n        return \"Post{\" +\n                \"documentId='\" + documentId + '\\'' +\n                \", title='\" + title + '\\'' +\n                \", contents='\" + contents + '\\'' +\n                \", name='\" + name + '\\'' +\n                \", date=\" + date +\n                '}';\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/coronaclassroomallocationapplication/models/Post.java	(revision 19510acf64de322fd633c8b5574cb2a69f61963e)
++++ app/src/main/java/com/example/coronaclassroomallocationapplication/models/Post.java	(date 1607142733000)
+@@ -1,5 +1,7 @@
+ package com.example.coronaclassroomallocationapplication.models;
+ 
++import android.widget.ImageView;
++
+ import com.google.firebase.firestore.ServerTimestamp;
+ 
+ import java.util.Date;
+@@ -12,10 +14,13 @@
+     private String name;
+     @ServerTimestamp
+     private Date date;
++    private int main_image;
+ 
+     public Post() {
+     }
+ 
++
++
+     public Post(String documentId, String title, String contents, String name) {
+         this.documentId = documentId;
+         this.title = title;
+Index: app/src/main/java/com/example/coronaclassroomallocationapplication/adapters/PostAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.coronaclassroomallocationapplication.adapters;\n\nimport android.view.LayoutInflater;\nimport android.view.View;\nimport android.view.ViewGroup;\nimport android.widget.TextView;\n\nimport androidx.annotation.NonNull;\nimport androidx.recyclerview.widget.RecyclerView;\n\nimport com.example.coronaclassroomallocationapplication.R;\nimport com.example.coronaclassroomallocationapplication.models.Post;\n\nimport java.util.List;\n\npublic class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {\n\n    private List<Post> datas;\n\n    public PostAdapter(List<Post> datas) {\n        this.datas = datas;\n    }\n\n    @NonNull\n    @Override\n    public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {\n        return new PostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post, parent, false));\n    }\n\n    @Override\n    public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {\n        Post data = datas.get(position); //Post객체 생성, position은 0,1,2이 순서로 내려온다.\n        holder.title.setText(data.getTitle()); //Title 아이템을 넣어준다.\n        holder.contents.setText(data.getContents()); //Contents 아이템을 넣어준다.\n        holder.name.setText(\"작성자: \" + data.getName()); //name 아이템을 넣어준다.\n    }\n\n    @Override\n    public int getItemCount() { //아이템의 총 길이\n        return datas.size();\n    }\n\n    class PostViewHolder extends RecyclerView.ViewHolder{\n\n        private TextView title;\n        private TextView contents;\n        private TextView name;\n\n        public PostViewHolder(@NonNull View itemView) {\n            super(itemView);\n\n            title = itemView.findViewById(R.id.item_post_title);\n            contents = itemView.findViewById(R.id.item_post_contents);\n            name = itemView.findViewById(R.id.item_post_name);\n        }\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/coronaclassroomallocationapplication/adapters/PostAdapter.java	(revision 19510acf64de322fd633c8b5574cb2a69f61963e)
++++ app/src/main/java/com/example/coronaclassroomallocationapplication/adapters/PostAdapter.java	(date 1607142081000)
+@@ -1,8 +1,10 @@
+ package com.example.coronaclassroomallocationapplication.adapters;
+ 
++import android.graphics.drawable.Drawable;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
++import android.widget.ImageView;
+ import android.widget.TextView;
+ 
+ import androidx.annotation.NonNull;
+@@ -12,9 +14,14 @@
+ import com.example.coronaclassroomallocationapplication.models.Post;
+ 
+ import java.util.List;
++import java.util.Random;
+ 
+ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
+ 
++
++    int array_image[] = {R.drawable.cat, R.drawable.wolf, R.drawable.children, R.drawable.rabbit, R.drawable.dog};
++    Random ram = new Random();
++
+     private List<Post> datas;
+ 
+     public PostAdapter(List<Post> datas) {
+@@ -30,9 +37,19 @@
+     @Override
+     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
+         Post data = datas.get(position); //Post객체 생성, position은 0,1,2이 순서로 내려온다.
+-        holder.title.setText(data.getTitle()); //Title 아이템을 넣어준다.
+-        holder.contents.setText(data.getContents()); //Contents 아이템을 넣어준다.
+-        holder.name.setText("작성자: " + data.getName()); //name 아이템을 넣어준다.
++
++        ram.setSeed(System.currentTimeMillis());
++        int num = ram.nextInt(array_image.length);
++
++        holder.main_image.setImageResource(array_image[num]);
++        holder.main_name.setText(data.getName());
++        //holder.main_data.setText(data.getDate().toString());
++        holder.main_title.setText((data.getTitle()));
++        holder.main_ask.setText(data.getContents());
++
++        //holder.title.setText(data.getTitle()); //Title 아이템을 넣어준다.
++        //holder.contents.setText(data.getContents()); //Contents 아이템을 넣어준다.
++        //holder.name.setText("작성자: " + data.getName()); //name 아이템을 넣어준다.
+     }
+ 
+     @Override
+@@ -42,6 +59,13 @@
+ 
+     class PostViewHolder extends RecyclerView.ViewHolder{
+ 
++        private ImageView main_image ;
++        private ImageView support_image;
++        private TextView main_name;
++        private TextView main_data;
++        private TextView main_title;
++        private TextView main_ask;
++
+         private TextView title;
+         private TextView contents;
+         private TextView name;
+@@ -49,9 +73,15 @@
+         public PostViewHolder(@NonNull View itemView) {
+             super(itemView);
+ 
+-            title = itemView.findViewById(R.id.item_post_title);
+-            contents = itemView.findViewById(R.id.item_post_contents);
+-            name = itemView.findViewById(R.id.item_post_name);
++            main_image = itemView.findViewById(R.id.main_image);
++            main_name = itemView.findViewById(R.id.main_name);
++            main_data = itemView.findViewById(R.id.main_data);
++            main_title = itemView.findViewById(R.id.main_title);
++            main_ask = itemView.findViewById(R.id.main_ask);
++
++            //title = itemView.findViewById(R.id.item_post_title);
++            //contents = itemView.findViewById(R.id.item_post_contents);
++            //name = itemView.findViewById(R.id.item_post_name);
+         }
+     }
+-}
++}
+\ No newline at end of file
+Index: app/src/main/java/com/example/coronaclassroomallocationapplication/activity_notice.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.coronaclassroomallocationapplication;\n\nimport android.os.Bundle;\nimport android.util.Log;\nimport android.widget.BaseAdapter;\nimport android.widget.EditText;\nimport android.widget.ImageView;\nimport android.widget.ListAdapter;\nimport android.widget.ListView;\nimport android.widget.TextView;\nimport android.widget.Toast;\n\nimport androidx.annotation.NonNull;\nimport androidx.annotation.Nullable;\nimport androidx.appcompat.app.AppCompatActivity;\nimport androidx.core.content.ContextCompat;\nimport androidx.recyclerview.widget.RecyclerView;\n\nimport com.example.coronaclassroomallocationapplication.adapters.RepostAdapter;\nimport com.example.coronaclassroomallocationapplication.adapters.notice1_Adapter;\nimport com.example.coronaclassroomallocationapplication.models.Repost;\nimport com.google.android.gms.tasks.OnCompleteListener;\nimport com.google.android.gms.tasks.Task;\nimport com.google.firebase.auth.FirebaseAuth;\nimport com.google.firebase.firestore.DocumentSnapshot;\nimport com.google.firebase.firestore.FieldValue;\nimport com.google.firebase.firestore.FirebaseFirestore;\nimport com.google.firebase.firestore.SetOptions;\n\nimport java.util.HashMap;\nimport java.util.List;\nimport java.util.Map;\n\npublic class activity_notice extends AppCompatActivity {\n\n    //\n    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();\n    private TextView sub_name, sub_data, review;\n    private String id;\n    private String check;\n\n    //댓글 기능\n    private FirebaseAuth mAuth = FirebaseAuth.getInstance();\n\n\n    @Override\n    protected void onCreate(@Nullable Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(R.layout.ativity_notice);\n\n        ListView listview ;\n        final notice1_Adapter adapter;\n        adapter = new notice1_Adapter();\n\n        listview = (ListView) findViewById(R.id.review_list);\n        listview.setAdapter(adapter);\n\n        ImageView main_image = (ImageView) findViewById(R.id.main_image);\n        ImageView support_image = (ImageView) findViewById(R.id.support_image);\n        TextView main_name = (TextView) findViewById(R.id.main_name);\n        TextView main_data = (TextView) findViewById(R.id.main_data);\n        TextView main_title = (TextView) findViewById(R.id.main_title);\n        TextView main_ask = (TextView) findViewById(R.id.main_ask);\n\n\n        main_image.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_launcher_foreground));\n        main_name.setText(\"전우치\");\n        main_data.setText(\"2020/12/12\");\n        main_title.setText(\"모바일 많이 어렵나요?\");\n        main_ask.setText(\"박유현 교수님 수업이 어떦가요? 진짜 ㅈㄹ같은가요?\");\n\n\n        //글 불러오는 역할\n        //sub_name = findViewById(R.id.sub_name);\n        //sub_data = findViewById(R.id.sub_data);\n        //review = findViewById(R.id.review);\n\n        id = getIntent().getStringExtra(FirebaseID.documentId);\n        Log.e(\"ITEM DOCUMENT ID\", id);\n\n        check = mStore.collection(FirebaseID.repost).document(id).getId();\n        mStore.collection(FirebaseID.repost).document(id)\n                .get()\n                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {\n                    @Override\n                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {\n                        if (task.isSuccessful()) {\n                            if (task.getResult().exists()) { //문서가 없을경우 처리방법\n                                if (task.getResult() != null) {\n                                    Map<String, Object> snap = task.getResult().getData();\n                                    String name = String.valueOf(snap.get(FirebaseID.name));\n                                    String data = String.valueOf(snap.get(FirebaseID.timestamp));\n                                    String review_a = String.valueOf(snap.get(FirebaseID.contents));\n\n\n                                    //sub_name.setText(name);\n                                    //sub_data.setText(data);\n                                    //review.setText(review_a);\n\n                                    adapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_launcher_foreground), name,\n                                            data,review_a,ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_launcher_foreground), \"4\");\n\n\n                                }\n                            } else {\n                                Toast.makeText(activity_notice.this, \"삭제된 문서입니다.\", Toast.LENGTH_SHORT).show();\n                            }\n                        }\n                    }\n                });\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/coronaclassroomallocationapplication/activity_notice.java	(revision 19510acf64de322fd633c8b5574cb2a69f61963e)
++++ app/src/main/java/com/example/coronaclassroomallocationapplication/activity_notice.java	(date 1607147929000)
+@@ -1,7 +1,9 @@
+ package com.example.coronaclassroomallocationapplication;
+ 
++import android.content.DialogInterface;
+ import android.os.Bundle;
+ import android.util.Log;
++import android.view.View;
+ import android.widget.BaseAdapter;
+ import android.widget.EditText;
+ import android.widget.ImageView;
+@@ -12,6 +14,7 @@
+ 
+ import androidx.annotation.NonNull;
+ import androidx.annotation.Nullable;
++import androidx.appcompat.app.AlertDialog;
+ import androidx.appcompat.app.AppCompatActivity;
+ import androidx.core.content.ContextCompat;
+ import androidx.recyclerview.widget.RecyclerView;
+@@ -23,63 +26,77 @@
+ import com.google.android.gms.tasks.Task;
+ import com.google.firebase.auth.FirebaseAuth;
+ import com.google.firebase.firestore.DocumentSnapshot;
++import com.google.firebase.firestore.EventListener;
+ import com.google.firebase.firestore.FieldValue;
+ import com.google.firebase.firestore.FirebaseFirestore;
++import com.google.firebase.firestore.FirebaseFirestoreException;
++import com.google.firebase.firestore.Query;
++import com.google.firebase.firestore.QuerySnapshot;
+ import com.google.firebase.firestore.SetOptions;
+ 
++import java.util.ArrayList;
+ import java.util.HashMap;
+ import java.util.List;
+ import java.util.Map;
++import java.util.Random;
+ 
+-public class activity_notice extends AppCompatActivity {
++public class activity_notice extends AppCompatActivity implements View.OnClickListener, RecyclerViewItemClickListener.OnItemClickListener{
+ 
+-    //
++    int array_image[] = {R.drawable.cat, R.drawable.wolf, R.drawable.children, R.drawable.rabbit, R.drawable.dog};
++    Random ram = new Random();
++
+     private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
+-    private TextView sub_name, sub_data, review;
++    private TextView name, data, title, ask;
++    private ImageView main_image, sub_image;
+     private String id;
+     private String check;
+ 
+     //댓글 기능
+     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+-
++    private EditText reContents;
++    private String reName;
++    private RecyclerView mPostRecyclerView;
++    private RepostAdapter mAdapter;
++    private List<Repost> mDatas;
+ 
+     @Override
+-    protected void onCreate(@Nullable Bundle savedInstanceState) {
++    protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.ativity_notice);
+ 
+-        ListView listview ;
+-        final notice1_Adapter adapter;
+-        adapter = new notice1_Adapter();
+-
+-        listview = (ListView) findViewById(R.id.review_list);
+-        listview.setAdapter(adapter);
++        //댓글 기능 역할(입력)
++        reContents = findViewById(R.id.post_contents_edit2);
++        findViewById(R.id.post_rewrite_button).setOnClickListener(this);
+ 
+-        ImageView main_image = (ImageView) findViewById(R.id.main_image);
+-        ImageView support_image = (ImageView) findViewById(R.id.support_image);
+-        TextView main_name = (TextView) findViewById(R.id.main_name);
+-        TextView main_data = (TextView) findViewById(R.id.main_data);
+-        TextView main_title = (TextView) findViewById(R.id.main_title);
+-        TextView main_ask = (TextView) findViewById(R.id.main_ask);
+-
+-
+-        main_image.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_launcher_foreground));
+-        main_name.setText("전우치");
+-        main_data.setText("2020/12/12");
+-        main_title.setText("모바일 많이 어렵나요?");
+-        main_ask.setText("박유현 교수님 수업이 어떦가요? 진짜 ㅈㄹ같은가요?");
++        if (mAuth.getCurrentUser() != null) {
++            mStore.collection(FirebaseID.user).document(mAuth.getCurrentUser().getUid())
++                    .get()
++                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
++                        @Override
++                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
++                            if (task.getResult() != null) {
++                                reName = (String) task.getResult().getData().get(FirebaseID.name);
++                            }
++                        }
++                    });
++        }
++        mPostRecyclerView = findViewById(R.id.main_recyclerview2);
++        mPostRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this, mPostRecyclerView, this));
+ 
+ 
+         //글 불러오는 역할
+-        //sub_name = findViewById(R.id.sub_name);
+-        //sub_data = findViewById(R.id.sub_data);
+-        //review = findViewById(R.id.review);
++        main_image = findViewById(R.id.main_image1);
++        name = findViewById(R.id.main_name1);
++        data = findViewById(R.id.main_data1);
++        title = findViewById(R.id.main_title1);
++        ask = findViewById(R.id.main_ask1);
+ 
+         id = getIntent().getStringExtra(FirebaseID.documentId);
+         Log.e("ITEM DOCUMENT ID", id);
+ 
+-        check = mStore.collection(FirebaseID.repost).document(id).getId();
+-        mStore.collection(FirebaseID.repost).document(id)
++        check = mStore.collection(FirebaseID.post).document(id).getId();
++
++        mStore.collection(FirebaseID.post).document(id)
+                 .get()
+                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                     @Override
+@@ -88,19 +105,18 @@
+                             if (task.getResult().exists()) { //문서가 없을경우 처리방법
+                                 if (task.getResult() != null) {
+                                     Map<String, Object> snap = task.getResult().getData();
+-                                    String name = String.valueOf(snap.get(FirebaseID.name));
+-                                    String data = String.valueOf(snap.get(FirebaseID.timestamp));
+-                                    String review_a = String.valueOf(snap.get(FirebaseID.contents));
+-
+ 
+-                                    //sub_name.setText(name);
+-                                    //sub_data.setText(data);
+-                                    //review.setText(review_a);
++                                    ram.setSeed(System.currentTimeMillis());
++                                    int num = ram.nextInt(array_image.length);
+ 
+-                                    adapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_launcher_foreground), name,
+-                                            data,review_a,ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_launcher_foreground), "4");
++                                    String title1 = String.valueOf(snap.get(FirebaseID.title));
++                                    String contents = String.valueOf(snap.get(FirebaseID.contents));
++                                    String name1 = String.valueOf(snap.get(FirebaseID.name));
+ 
+-
++                                    main_image.setImageResource(array_image[num]);
++                                    name.setText(name1);
++                                    title.setText(title1);
++                                    ask.setText(contents);
+                                 }
+                             } else {
+                                 Toast.makeText(activity_notice.this, "삭제된 문서입니다.", Toast.LENGTH_SHORT).show();
+@@ -109,4 +125,81 @@
+                     }
+                 });
+     }
++
++    @Override
++    public void onClick(View v) {
++        if (mAuth.getCurrentUser() != null) {
++            String postId = mStore.collection(FirebaseID.post).document(id).getId();
++            String repostId = mStore.collection(FirebaseID.repost).document().getId();
++            Map<String, Object> data = new HashMap<>();
++            data.put(FirebaseID.documentId, repostId);
++            data.put(FirebaseID.userId, mAuth.getCurrentUser().getUid());
++            data.put(FirebaseID.contents, reContents.getText().toString());
++            data.put(FirebaseID.name, reName);
++            data.put(FirebaseID.post, postId);
++            data.put(FirebaseID.timestamp, FieldValue.serverTimestamp());
++            if (reContents.getText().toString().equals("")) {
++                Toast.makeText(activity_notice.this, "댓글을 입력하세요.", Toast.LENGTH_SHORT).show();
++                return;
++            }
++            mStore.collection(FirebaseID.repost).document(repostId).set(data, SetOptions.merge());
++        }
++    }
++
++    @Override
++    protected void onStart() {
++        super.onStart();
++        mDatas = new ArrayList<>();
++        mStore.collection(FirebaseID.repost)
++                .orderBy(FirebaseID.timestamp, Query.Direction.DESCENDING)
++                .addSnapshotListener(new EventListener<QuerySnapshot>() {
++                    @Override
++                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
++                        if (queryDocumentSnapshots != null) {
++                            mDatas.clear(); //리스트가 갱신되는게 아니라 화면에 쌓이기 때문에 정리를 해주어야한다.
++                            for (DocumentSnapshot snap : queryDocumentSnapshots.getDocuments()) {
++                                Map<String, Object> shot = snap.getData();
++                                String documentId = String.valueOf(shot.get(FirebaseID.documentId));
++                                String userId = String.valueOf(shot.get(FirebaseID.userId));
++                                String contents = String.valueOf(shot.get(FirebaseID.contents));
++                                String name = String.valueOf(shot.get(FirebaseID.name));
++                                String post = String.valueOf(shot.get(FirebaseID.post));
++                                Repost data = new Repost(documentId, userId, contents, name, post);
++                                if (check.equals(post)) {
++                                    mDatas.add(data);
++                                    reContents.setText("");
++                                }
++                            }
++
++                            mAdapter = new RepostAdapter(mDatas);
++                            mPostRecyclerView.setAdapter(mAdapter);
++                        }
++                    }
++                });
++    }
++
++    @Override
++    public void onItemClick(View view, int position) {
++
++    }
++
++    @Override
++    public void onItemLongClick(View view, final int position) {
++        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
++        dialog.setMessage("삭제 하시겠습니까?");
++        dialog.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
++            @Override
++            public void onClick(DialogInterface dialog, int which) {
++                mStore.collection(FirebaseID.repost).document(mDatas.get(position).getDocumentId()).delete();
++                Toast.makeText(activity_notice.this, "삭제 되었습니다.", Toast.LENGTH_SHORT).show();
++            }
++        }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
++            @Override
++            public void onClick(DialogInterface dialog, int which) {
++                Toast.makeText(activity_notice.this, "취소 되었습니다.", Toast.LENGTH_SHORT).show();
++            }
++        });
++        dialog.setTitle("삭제 알림");
++        dialog.show();
++    }
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/example/coronaclassroomallocationapplication/activity_coummunity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.coronaclassroomallocationapplication;\n\nimport androidx.annotation.NonNull;\nimport androidx.annotation.Nullable;\nimport androidx.appcompat.app.AppCompatActivity;\nimport androidx.recyclerview.widget.RecyclerView;\n\nimport android.app.AlertDialog;\nimport android.app.admin.ConnectEvent;\nimport android.content.DialogInterface;\nimport android.content.Intent;\nimport android.os.Bundle;\nimport android.view.View;\nimport android.widget.Toast;\n\nimport com.example.coronaclassroomallocationapplication.adapters.PostAdapter;\nimport com.example.coronaclassroomallocationapplication.models.Post;\nimport com.example.coronaclassroomallocationapplication.models.Repost;\nimport com.google.android.gms.tasks.OnCompleteListener;\nimport com.google.android.gms.tasks.Task;\nimport com.google.firebase.auth.FirebaseAuth;\nimport com.google.firebase.firestore.DocumentSnapshot;\nimport com.google.firebase.firestore.EventListener;\nimport com.google.firebase.firestore.FirebaseFirestore;\nimport com.google.firebase.firestore.FirebaseFirestoreException;\nimport com.google.firebase.firestore.Query;\nimport com.google.firebase.firestore.QueryDocumentSnapshot;\nimport com.google.firebase.firestore.QuerySnapshot;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.Map;\n\npublic class activity_coummunity extends AppCompatActivity implements View.OnClickListener, RecyclerViewItemClickListener.OnItemClickListener {\n    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();\n\n    private RecyclerView mPostRecyclerView;\n    private PostAdapter mAdapter;\n    private List<Post> mDatas;\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(R.layout.activity_coummunity);\n\n        mPostRecyclerView = findViewById(R.id.main_recyclerview);\n        findViewById(R.id.main_post_edit).setOnClickListener(this);\n\n        mPostRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this, mPostRecyclerView, this));\n    }\n\n    @Override\n    protected void onStart() {\n        super.onStart();\n        mDatas = new ArrayList<>();\n        mStore.collection(FirebaseID.post)\n                .orderBy(FirebaseID.timestamp, Query.Direction.DESCENDING)\n                .addSnapshotListener(new EventListener<QuerySnapshot>() {\n                    @Override\n                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {\n                        if(queryDocumentSnapshots != null) {\n                            mDatas.clear(); //리스트가 갱신되는게 아니라 화면에 쌓이기 때문에 정리를 해주어야한다.\n                            for (DocumentSnapshot snap : queryDocumentSnapshots.getDocuments()) {\n                                Map<String, Object> shot = snap.getData();\n                                String documentId = String.valueOf(shot.get(FirebaseID.documentId));\n                                String title = String.valueOf(shot.get(FirebaseID.title));\n                                String contents = String.valueOf(shot.get(FirebaseID.contents));\n                                String name = String.valueOf(shot.get(FirebaseID.name));\n                                Post data = new Post(documentId, title, contents, name);\n                                mDatas.add(data);\n                            }\n\n                            mAdapter = new PostAdapter(mDatas);\n                            mPostRecyclerView.setAdapter(mAdapter);\n                        }\n                    }\n                });\n    }\n\n    @Override\n    public void onClick(View v) {\n        startActivity(new Intent(activity_coummunity.this, activity_post.class));\n    }\n\n    @Override\n    public void onItemClick(View view, int position) {\n        Intent intent = new Intent(this, activity_community_detail.class);\n        intent.putExtra(FirebaseID.documentId, mDatas.get(position).getDocumentId());\n        startActivity(intent);\n    }\n\n    @Override\n    public void onItemLongClick(View view, final int position) {\n        AlertDialog.Builder dialog = new AlertDialog.Builder(this);\n        dialog.setMessage(\"삭제 하시겠습니까?\");\n        dialog.setPositiveButton(\"삭제\", new DialogInterface.OnClickListener() {\n            @Override\n            public void onClick(DialogInterface dialog, int which) {\n                mStore.collection(FirebaseID.post).document(mDatas.get(position).getDocumentId()).delete();\n                Toast.makeText(activity_coummunity.this, \"삭제 되었습니다.\", Toast.LENGTH_SHORT).show();\n            }\n        }).setNegativeButton(\"취소\", new DialogInterface.OnClickListener() {\n            @Override\n            public void onClick(DialogInterface dialog, int which) {\n                Toast.makeText(activity_coummunity.this, \"취소 되었습니다.\", Toast.LENGTH_SHORT).show();\n            }\n        });\n        dialog.setTitle(\"삭제 알림\");\n        dialog.show();\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/coronaclassroomallocationapplication/activity_coummunity.java	(revision 19510acf64de322fd633c8b5574cb2a69f61963e)
++++ app/src/main/java/com/example/coronaclassroomallocationapplication/activity_coummunity.java	(date 1607142081000)
+@@ -11,6 +11,7 @@
+ import android.content.Intent;
+ import android.os.Bundle;
+ import android.view.View;
++import android.widget.ImageView;
+ import android.widget.Toast;
+ 
+ import com.example.coronaclassroomallocationapplication.adapters.PostAdapter;
+@@ -30,10 +31,17 @@
+ import java.util.ArrayList;
+ import java.util.List;
+ import java.util.Map;
++import java.util.Random;
++import java.util.*;
+ 
+ public class activity_coummunity extends AppCompatActivity implements View.OnClickListener, RecyclerViewItemClickListener.OnItemClickListener {
+     private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
+ 
++    int array_image[] = {R.drawable.cat, R.drawable.wolf, R.drawable.children, R.drawable.rabbit, R.drawable.dog};
++    Random ram = new Random();
++
++    int num = ram.nextInt(array_image.length);
++
+     private RecyclerView mPostRecyclerView;
+     private PostAdapter mAdapter;
+     private List<Post> mDatas;
+@@ -84,7 +92,7 @@
+ 
+     @Override
+     public void onItemClick(View view, int position) {
+-        Intent intent = new Intent(this, activity_community_detail.class);
++        Intent intent = new Intent(this, activity_notice.class);
+         intent.putExtra(FirebaseID.documentId, mDatas.get(position).getDocumentId());
+         startActivity(intent);
+     }
+Index: app/src/main/java/com/example/coronaclassroomallocationapplication/activity_community_detail.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.coronaclassroomallocationapplication;\n\nimport androidx.annotation.NonNull;\nimport androidx.annotation.Nullable;\nimport androidx.appcompat.app.AppCompatActivity;\nimport androidx.recyclerview.widget.RecyclerView;\n\nimport android.app.AlertDialog;\nimport android.content.DialogInterface;\nimport android.content.Intent;\nimport android.os.Bundle;\nimport android.util.Log;\nimport android.view.View;\nimport android.widget.EditText;\nimport android.widget.TextView;\nimport android.widget.Toast;\n\nimport com.example.coronaclassroomallocationapplication.adapters.PostAdapter;\nimport com.example.coronaclassroomallocationapplication.adapters.RepostAdapter;\nimport com.example.coronaclassroomallocationapplication.models.Post;\nimport com.example.coronaclassroomallocationapplication.models.Repost;\nimport com.google.android.gms.tasks.OnCompleteListener;\nimport com.google.android.gms.tasks.Task;\nimport com.google.firebase.auth.FirebaseAuth;\nimport com.google.firebase.auth.FirebaseUser;\nimport com.google.firebase.firestore.DocumentSnapshot;\nimport com.google.firebase.firestore.EventListener;\nimport com.google.firebase.firestore.FieldValue;\nimport com.google.firebase.firestore.FirebaseFirestore;\nimport com.google.firebase.firestore.FirebaseFirestoreException;\nimport com.google.firebase.firestore.Query;\nimport com.google.firebase.firestore.QuerySnapshot;\nimport com.google.firebase.firestore.SetOptions;\n\nimport java.util.ArrayList;\nimport java.util.HashMap;\nimport java.util.List;\nimport java.util.Map;\n\npublic class activity_community_detail extends AppCompatActivity implements View.OnClickListener, RecyclerViewItemClickListener.OnItemClickListener {\n\n    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();\n    private TextView mTitleText, mContentsText, mNameText;\n    private String id;\n    private String check;\n\n    //댓글 기능\n    private FirebaseAuth mAuth = FirebaseAuth.getInstance();\n    private EditText reContents;\n    private String reName;\n    private RecyclerView mPostRecyclerView;\n    private RepostAdapter mAdapter;\n    private List<Repost> mDatas;\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(R.layout.activity_community_detail);\n\n        //댓글 기능 역할(입력)\n        reContents = findViewById(R.id.post_contents_edit2);\n        findViewById(R.id.post_rewrite_button).setOnClickListener(this);\n\n        if (mAuth.getCurrentUser() != null) {\n            mStore.collection(FirebaseID.user).document(mAuth.getCurrentUser().getUid())\n                    .get()\n                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {\n                        @Override\n                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {\n                            if (task.getResult() != null) {\n                                reName = (String) task.getResult().getData().get(FirebaseID.name);\n                            }\n                        }\n                    });\n        }\n        mPostRecyclerView = findViewById(R.id.main_recyclerview2);\n        mPostRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this, mPostRecyclerView, this));\n\n\n        //글 불러오는 역할\n        mTitleText = findViewById(R.id.post2_title);\n        mContentsText = findViewById(R.id.post2_contents);\n        mNameText = findViewById(R.id.post2_name);\n\n        id = getIntent().getStringExtra(FirebaseID.documentId);\n        Log.e(\"ITEM DOCUMENT ID\", id);\n\n        check = mStore.collection(FirebaseID.post).document(id).getId();\n\n        mStore.collection(FirebaseID.post).document(id)\n                .get()\n                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {\n                    @Override\n                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {\n                        if (task.isSuccessful()) {\n                            if (task.getResult().exists()) { //문서가 없을경우 처리방법\n                                if (task.getResult() != null) {\n                                    Map<String, Object> snap = task.getResult().getData();\n                                    String title = String.valueOf(snap.get(FirebaseID.title));\n                                    String contents = String.valueOf(snap.get(FirebaseID.contents));\n                                    String name = String.valueOf(snap.get(FirebaseID.name));\n\n                                    mTitleText.setText(title);\n                                    mContentsText.setText(contents);\n                                    mNameText.setText(name);\n                                }\n                            } else {\n                                Toast.makeText(activity_community_detail.this, \"삭제된 문서입니다.\", Toast.LENGTH_SHORT).show();\n                            }\n                        }\n                    }\n                });\n    }\n\n    @Override\n    public void onClick(View v) {\n        if (mAuth.getCurrentUser() != null) {\n            String postId = mStore.collection(FirebaseID.post).document(id).getId();\n            String repostId = mStore.collection(FirebaseID.repost).document().getId();\n            Map<String, Object> data = new HashMap<>();\n            data.put(FirebaseID.documentId, repostId);\n            data.put(FirebaseID.userId, mAuth.getCurrentUser().getUid());\n            data.put(FirebaseID.contents, reContents.getText().toString());\n            data.put(FirebaseID.name, reName);\n            data.put(FirebaseID.post, postId);\n            data.put(FirebaseID.timestamp, FieldValue.serverTimestamp());\n            if (reContents.getText().toString().equals(\"\")) {\n                Toast.makeText(activity_community_detail.this, \"댓글을 입력하세요.\", Toast.LENGTH_SHORT).show();\n                return;\n            }\n            mStore.collection(FirebaseID.repost).document(repostId).set(data, SetOptions.merge());\n        }\n    }\n\n    @Override\n    protected void onStart() {\n        super.onStart();\n        mDatas = new ArrayList<>();\n        mStore.collection(FirebaseID.repost)\n                .orderBy(FirebaseID.timestamp, Query.Direction.DESCENDING)\n                .addSnapshotListener(new EventListener<QuerySnapshot>() {\n                    @Override\n                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {\n                        if (queryDocumentSnapshots != null) {\n                            mDatas.clear(); //리스트가 갱신되는게 아니라 화면에 쌓이기 때문에 정리를 해주어야한다.\n                            for (DocumentSnapshot snap : queryDocumentSnapshots.getDocuments()) {\n                                Map<String, Object> shot = snap.getData();\n                                String documentId = String.valueOf(shot.get(FirebaseID.documentId));\n                                String userId = String.valueOf(shot.get(FirebaseID.userId));\n                                String contents = String.valueOf(shot.get(FirebaseID.contents));\n                                String name = String.valueOf(shot.get(FirebaseID.name));\n                                String post = String.valueOf(shot.get(FirebaseID.post));\n                                Repost data = new Repost(documentId, userId, contents, name, post);\n                                if (check.equals(post)) {\n                                    mDatas.add(data);\n                                    reContents.setText(\"\");\n                                }\n                            }\n\n                            mAdapter = new RepostAdapter(mDatas);\n                            mPostRecyclerView.setAdapter(mAdapter);\n                        }\n                    }\n                });\n    }\n\n    @Override\n    public void onItemClick(View view, int position) {\n\n    }\n\n    @Override\n    public void onItemLongClick(View view, final int position) {\n            AlertDialog.Builder dialog = new AlertDialog.Builder(this);\n            dialog.setMessage(\"삭제 하시겠습니까?\");\n            dialog.setPositiveButton(\"삭제\", new DialogInterface.OnClickListener() {\n                @Override\n                public void onClick(DialogInterface dialog, int which) {\n                    mStore.collection(FirebaseID.repost).document(mDatas.get(position).getDocumentId()).delete();\n                    Toast.makeText(activity_community_detail.this, \"삭제 되었습니다.\", Toast.LENGTH_SHORT).show();\n                }\n            }).setNegativeButton(\"취소\", new DialogInterface.OnClickListener() {\n                @Override\n                public void onClick(DialogInterface dialog, int which) {\n                    Toast.makeText(activity_community_detail.this, \"취소 되었습니다.\", Toast.LENGTH_SHORT).show();\n                }\n            });\n            dialog.setTitle(\"삭제 알림\");\n            dialog.show();\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/coronaclassroomallocationapplication/activity_community_detail.java	(revision 19510acf64de322fd633c8b5574cb2a69f61963e)
++++ app/src/main/java/com/example/coronaclassroomallocationapplication/activity_community_detail.java	(date 1607149120000)
+@@ -156,7 +156,6 @@
+                                     reContents.setText("");
+                                 }
+                             }
+-
+                             mAdapter = new RepostAdapter(mDatas);
+                             mPostRecyclerView.setAdapter(mAdapter);
+                         }
+@@ -171,21 +170,21 @@
+ 
+     @Override
+     public void onItemLongClick(View view, final int position) {
+-            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+-            dialog.setMessage("삭제 하시겠습니까?");
+-            dialog.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+-                @Override
+-                public void onClick(DialogInterface dialog, int which) {
+-                    mStore.collection(FirebaseID.repost).document(mDatas.get(position).getDocumentId()).delete();
+-                    Toast.makeText(activity_community_detail.this, "삭제 되었습니다.", Toast.LENGTH_SHORT).show();
+-                }
+-            }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
+-                @Override
+-                public void onClick(DialogInterface dialog, int which) {
+-                    Toast.makeText(activity_community_detail.this, "취소 되었습니다.", Toast.LENGTH_SHORT).show();
+-                }
+-            });
+-            dialog.setTitle("삭제 알림");
+-            dialog.show();
++        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
++        dialog.setMessage("삭제 하시겠습니까?");
++        dialog.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
++            @Override
++            public void onClick(DialogInterface dialog, int which) {
++                mStore.collection(FirebaseID.repost).document(mDatas.get(position).getDocumentId()).delete();
++                Toast.makeText(activity_community_detail.this, "삭제 되었습니다.", Toast.LENGTH_SHORT).show();
++            }
++        }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
++            @Override
++            public void onClick(DialogInterface dialog, int which) {
++                Toast.makeText(activity_community_detail.this, "취소 되었습니다.", Toast.LENGTH_SHORT).show();
++            }
++        });
++        dialog.setTitle("삭제 알림");
++        dialog.show();
+     }
+ }
+\ No newline at end of file
+Index: app/src/main/res/layout/ativity_notice.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<LinearLayout\n    xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    android:orientation=\"vertical\">\n\n    <RelativeLayout\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"50dp\"\n        android:id=\"@+id/layout_toolbar\"\n        android:background=\"#00A3FF\">\n        <ImageView\n            android:id=\"@+id/backbutton\"\n            android:layout_centerVertical=\"true\"\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:layout_marginLeft=\"20dp\"\n            android:background=\"@drawable/ic_baseline_arrow_back_24\"\n            app:layout_constraintBottom_toBottomOf=\"parent\"\n            app:layout_constraintStart_toStartOf=\"parent\"\n            app:layout_constraintTop_toTopOf=\"parent\">\n\n        </ImageView>\n\n        <TextView\n            android:id=\"@+id/TextView_title\"\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:layout_centerInParent=\"true\"\n            android:text=\"자유게시판\"\n            android:textColor=\"#ffffff\"\n            android:textSize=\"20dp\"\n            android:textStyle=\"bold\"\n            app:layout_constraintBottom_toBottomOf=\"parent\"\n            app:layout_constraintLeft_toLeftOf=\"parent\"\n            app:layout_constraintRight_toRightOf=\"parent\"\n            app:layout_constraintTop_toTopOf=\"parent\">\n        </TextView>\n    </RelativeLayout>\n\n    <!-- 아래 내용 전체를 담고 있는 컨테이너-->\n    <LinearLayout\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"80dp\"\n        android:orientation=\"horizontal\">\n        <ImageView\n            android:id=\"@+id/main_image\"\n            android:layout_width=\"60dp\"\n            android:layout_height=\"60dp\"\n            android:layout_gravity=\"center_vertical\"\n            android:src=\"@drawable/ic_launcher_foreground\">\n        </ImageView>\n\n        <LinearLayout\n            android:layout_width=\"match_parent\"\n            android:layout_height=\"wrap_content\"\n            android:orientation=\"vertical\">\n            <TextView\n                android:id=\"@+id/main_name\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:layout_marginLeft=\"10dp\"\n                android:layout_marginTop=\"10dp\"\n                android:text=\"test\"\n                android:textSize=\"20sp\">\n            </TextView>\n            <TextView\n                android:id=\"@+id/main_data\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:layout_marginLeft=\"10dp\"\n                android:text=\"2020/12/12\"\n                android:textSize=\"20sp\">\n            </TextView>\n        </LinearLayout>\n    </LinearLayout>\n\n    <TextView\n        android:id=\"@+id/main_title\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:text=\"aaaaaaaaaaaaaaaaa\"\n        android:textSize=\"25sp\">\n    </TextView>\n\n    <TextView\n        android:id=\"@+id/main_ask\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:text=\"bbbbbbbbbbbbbbbbb\">\n    </TextView>\n\n    <ImageView\n        android:id=\"@+id/support_image\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"150dp\"\n        android:src=\"@drawable/ic_launcher_foreground\">\n    </ImageView>  <!-- 가운데 큰 이미지 -->\n\n    <TextView\n        android:layout_marginTop=\"20sp\"\n        android:layout_marginBottom=\"20sp\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"5dp\"\n        android:background=\"@color/colorAccent\">\n    </TextView>\n\n    <ListView\n        android:id=\"@+id/review_list\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\">\n    </ListView>\n\n</LinearLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/ativity_notice.xml	(revision 19510acf64de322fd633c8b5574cb2a69f61963e)
++++ app/src/main/res/layout/ativity_notice.xml	(date 1607151006000)
+@@ -1,22 +1,24 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<LinearLayout
+-    xmlns:android="http://schemas.android.com/apk/res/android"
++<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+-    android:orientation="vertical">
++    xmlns:tools="http://schemas.android.com/tools"
++    android:orientation="vertical"
++    tools:context=".activity_notice">
+ 
+-    <RelativeLayout
++    <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="50dp"
+         android:id="@+id/layout_toolbar"
++        android:paddingLeft="10dp"
++        android:paddingRight="10dp"
+         android:background="#00A3FF">
+         <ImageView
+             android:id="@+id/backbutton"
+-            android:layout_centerVertical="true"
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:layout_marginLeft="20dp"
++            android:layout_width="30dp"
++            android:layout_height="30dp"
++            android:layout_gravity="center_vertical"
+             android:background="@drawable/ic_baseline_arrow_back_24"
+             app:layout_constraintBottom_toBottomOf="parent"
+             app:layout_constraintStart_toStartOf="parent"
+@@ -28,25 +30,28 @@
+             android:id="@+id/TextView_title"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+-            android:layout_centerInParent="true"
++            android:layout_gravity="center_vertical"
+             android:text="자유게시판"
+             android:textColor="#ffffff"
+-            android:textSize="20dp"
++            android:textSize="20sp"
+             android:textStyle="bold"
++            android:paddingLeft="100dp"
+             app:layout_constraintBottom_toBottomOf="parent"
+             app:layout_constraintLeft_toLeftOf="parent"
+             app:layout_constraintRight_toRightOf="parent"
+             app:layout_constraintTop_toTopOf="parent">
+         </TextView>
+-    </RelativeLayout>
++    </LinearLayout>
+ 
+     <!-- 아래 내용 전체를 담고 있는 컨테이너-->
+     <LinearLayout
++        android:id="@+id/main"
++        android:layout_below="@id/layout_toolbar"
+         android:layout_width="match_parent"
+-        android:layout_height="80dp"
++        android:layout_height="wrap_content"
+         android:orientation="horizontal">
+         <ImageView
+-            android:id="@+id/main_image"
++            android:id="@+id/main_image1"
+             android:layout_width="60dp"
+             android:layout_height="60dp"
+             android:layout_gravity="center_vertical"
+@@ -58,7 +63,7 @@
+             android:layout_height="wrap_content"
+             android:orientation="vertical">
+             <TextView
+-                android:id="@+id/main_name"
++                android:id="@+id/main_name1"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_marginLeft="10dp"
+@@ -67,7 +72,7 @@
+                 android:textSize="20sp">
+             </TextView>
+             <TextView
+-                android:id="@+id/main_data"
++                android:id="@+id/main_data1"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_marginLeft="10dp"
+@@ -78,28 +83,25 @@
+     </LinearLayout>
+ 
+     <TextView
+-        android:id="@+id/main_title"
+-        android:layout_width="wrap_content"
++        android:layout_below="@id/main"
++        android:id="@+id/main_title1"
++        android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="aaaaaaaaaaaaaaaaa"
+         android:textSize="25sp">
+     </TextView>
+ 
+     <TextView
+-        android:id="@+id/main_ask"
+-        android:layout_width="wrap_content"
++        android:id="@+id/main_ask1"
++        android:layout_below="@id/main_title1"
++        android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="bbbbbbbbbbbbbbbbb">
+     </TextView>
+ 
+-    <ImageView
+-        android:id="@+id/support_image"
+-        android:layout_width="match_parent"
+-        android:layout_height="150dp"
+-        android:src="@drawable/ic_launcher_foreground">
+-    </ImageView>  <!-- 가운데 큰 이미지 -->
+-
+     <TextView
++        android:layout_below="@+id/main_ask1"
++        android:id="@+id/line"
+         android:layout_marginTop="20sp"
+         android:layout_marginBottom="20sp"
+         android:layout_width="match_parent"
+@@ -107,10 +109,40 @@
+         android:background="@color/colorAccent">
+     </TextView>
+ 
+-    <ListView
+-        android:id="@+id/review_list"
++    <androidx.recyclerview.widget.RecyclerView
++        android:id="@+id/main_recyclerview2"
+         android:layout_width="match_parent"
+-        android:layout_height="wrap_content">
+-    </ListView>
++        android:layout_height="match_parent"
++        android:layout_below="@+id/line"
++        android:background="#fff"
++        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
++    </androidx.recyclerview.widget.RecyclerView>
++
++    <RelativeLayout
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"
++        android:orientation="horizontal">
+ 
+-</LinearLayout>
+\ No newline at end of file
++        <EditText
++            android:id="@+id/post_contents_edit2"
++            android:layout_width="match_parent"
++            android:layout_height="40dp"
++            android:hint="@string/contents_input"
++            android:textSize="16sp"
++            android:textColor="@android:color/black"
++            android:background="@drawable/shape_round2"
++            android:layout_margin="10dp"
++            android:paddingLeft="10dp"
++            android:gravity="center_vertical"
++            android:layout_alignParentBottom="true"/>
++
++        <ImageButton android:id="@+id/post_rewrite_button"
++            android:layout_width="30dp"
++            android:layout_height="wrap_content"
++            android:layout_alignTop="@+id/post_contents_edit2"
++            android:layout_alignBottom="@+id/post_contents_edit2"
++            android:layout_alignRight="@+id/post_contents_edit2"
++            android:layout_margin="3dp"
++            android:background="@drawable/ic_baseline_send_24"/>
++    </RelativeLayout>
++</RelativeLayout>
+\ No newline at end of file
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    package=\"com.example.coronaclassroomallocationapplication\">\n    <uses-permission android:name=\"android.permission.INTERNET\"></uses-permission>\n\n    <application\n        android:allowBackup=\"true\"\n        android:icon=\"@mipmap/ic_launcher\"\n        android:label=\"@string/app_name\"\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\n        android:supportsRtl=\"true\"\n        android:theme=\"@style/Theme.AppCompat.Light.NoActionBar\">\n        <activity android:name=\".activity_post\"/>\n        <activity android:name=\".activity_community_detail\"/>\n        <activity android:name=\".activity_coummunity\" />\n        <activity android:name=\".activity_join\" />\n        <activity android:name=\".activity_menu\" /> <!-- <activity android:name=\".activity_login\" /> -->\n        <activity android:name=\".MainActivity\" />\n        <activity android:name=\".activity_login\" />\n        <activity android:name=\".activity_selectclass\" />\n        <activity android:name=\".activity_selecttime\" />\n        <activity android:name=\".activity_selectfloor\" />\n        <activity android:name=\".activity_privateinfo\" />\n        <activity android:name=\".activity_notice\"/>\n        <activity android:name=\".activity_secondprivateinfo\" />\n       <activity android:name=\".activity_selectbuilding\"></activity>\n        <activity android:name=\".activity_intro\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\" />\n\n                <category android:name=\"android.intent.category.LAUNCHER\" />\n            </intent-filter>\n\n        </activity>\n\n        <meta-data\n            android:name=\"preloaded_fonts\"\n            android:resource=\"@array/preloaded_fonts\" />\n    </application>\n\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/AndroidManifest.xml	(revision 19510acf64de322fd633c8b5574cb2a69f61963e)
++++ app/src/main/AndroidManifest.xml	(date 1607144709000)
+@@ -10,10 +10,11 @@
+         android:roundIcon="@mipmap/ic_launcher_round"
+         android:supportsRtl="true"
+         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+-        <activity android:name=".activity_post"/>
+-        <activity android:name=".activity_community_detail"/>
++        <activity android:name=".activity_community_detail"></activity>
++        <activity android:name=".activity_post" />
+         <activity android:name=".activity_coummunity" />
+         <activity android:name=".activity_join" />
++        <activity android:name=".activity_notice"/>
+         <activity android:name=".activity_menu" /> <!-- <activity android:name=".activity_login" /> -->
+         <activity android:name=".MainActivity" />
+         <activity android:name=".activity_login" />
+@@ -21,9 +22,10 @@
+         <activity android:name=".activity_selecttime" />
+         <activity android:name=".activity_selectfloor" />
+         <activity android:name=".activity_privateinfo" />
+-        <activity android:name=".activity_notice"/>
+         <activity android:name=".activity_secondprivateinfo" />
+-       <activity android:name=".activity_selectbuilding"></activity>
++        <activity android:name=".activity_selectbuilding">
++
++        </activity>
+         <activity android:name=".activity_intro">
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+Index: app/src/main/res/layout/ativity_notice_listview.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    android:orientation=\"vertical\">\n\n    <!-- 리스트 뷰에 담을 내용 -->\n    <LinearLayout\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"70dp\"\n        android:orientation=\"horizontal\">\n        <ImageView\n            android:id=\"@+id/sub_image\"\n            android:layout_width=\"50dp\"\n            android:layout_height=\"50dp\"\n            android:layout_gravity=\"top\"\n            android:src=\"@drawable/ic_launcher_foreground\">\n        </ImageView>\n\n        <!-- 댓글 창의 제목과 날자 -->\n\n        <LinearLayout\n            android:layout_width=\"match_parent\"\n            android:layout_height=\"wrap_content\"\n            android:orientation=\"vertical\">\n            <TextView\n                android:id=\"@+id/sub_name\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:layout_marginLeft=\"10dp\"\n                android:layout_marginTop=\"10dp\"\n                android:text=\"test\"\n                android:textSize=\"15sp\">\n            </TextView>\n            <TextView\n                android:id=\"@+id/sub_data\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:layout_marginLeft=\"10dp\"\n                android:text=\"2020/12/12\"\n                android:textSize=\"15sp\">\n            </TextView>\n        </LinearLayout>\n    </LinearLayout>\n    <LinearLayout\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\"\n        android:orientation=\"horizontal\">\n        <TextView\n            android:id=\"@+id/review\"\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:text=\"완전 친절하시고 너무 좋아요\">\n        </TextView>\n\n        <ImageView\n            android:id=\"@+id/heart\"\n            android:layout_width=\"30dp\"\n            android:layout_height=\"30dp\"\n            android:layout_marginLeft=\"160dp\"\n            android:src=\"@drawable/ic_launcher_foreground\">\n        </ImageView>\n        <TextView\n            android:id=\"@+id/heart_number\"\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:text=\"1\"\n            android:textSize=\"15dp\">\n        </TextView>\n    </LinearLayout>\n\n</LinearLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/ativity_notice_listview.xml	(revision 19510acf64de322fd633c8b5574cb2a69f61963e)
++++ app/src/main/res/layout/ativity_notice_listview.xml	(date 1607151078000)
+@@ -1,7 +1,7 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+-    android:layout_height="match_parent"
++    android:layout_height="wrap_content"
+     android:orientation="vertical">
+ 
+     <!-- 리스트 뷰에 담을 내용 -->
+Index: app/src/main/res/layout/activity_community_detail.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<RelativeLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    android:orientation=\"vertical\"\n    tools:context=\".activity_community_detail\">\n\n    <LinearLayout\n        android:id=\"@+id/community2\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\"\n        android:background=\"#00A3FF\"\n        android:paddingLeft=\"10dp\"\n        android:paddingRight=\"10dp\">\n\n        <ImageView\n            android:id=\"@+id/imageView\"\n            android:layout_width=\"30dp\"\n            android:layout_height=\"30dp\"\n            android:layout_gravity=\"center_vertical\"\n            android:background=\"#00A3FF\"\n            android:src=\"@drawable/ic_baseline_arrow_back_24\"\n            app:layout_constraintBottom_toTopOf=\"@+id/textView10\"\n            app:layout_constraintStart_toStartOf=\"parent\"\n            app:layout_constraintTop_toTopOf=\"parent\" />\n\n        <TextView\n            android:id=\"@+id/textView10\"\n            android:layout_width=\"0dp\"\n            android:layout_height=\"50dp\"\n            android:layout_weight=\"1\"\n            android:background=\"#00A3FF\"\n            android:gravity=\"center_vertical\"\n            android:paddingLeft=\"30dp\"\n            android:textColor=\"#fff\"\n            android:textSize=\"25sp\"\n            android:textStyle=\"bold\"\n            app:layout_constraintBottom_toBottomOf=\"parent\"\n            app:layout_constraintEnd_toEndOf=\"parent\"\n            app:layout_constraintStart_toEndOf=\"@+id/imageView\"\n            app:layout_constraintTop_toTopOf=\"parent\" />\n    </LinearLayout>\n\n    <LinearLayout\n        android:id=\"@+id/community3\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\"\n        android:orientation=\"horizontal\"\n        android:layout_below=\"@id/community2\">\n\n        <TextView\n            android:id=\"@+id/post2_title\"\n            android:layout_width=\"0dp\"\n            android:layout_height=\"wrap_content\"\n            android:layout_weight=\"1\"\n            android:paddingLeft=\"10dp\"\n            android:textColor=\"@android:color/black\"\n            android:textSize=\"24sp\"\n            android:textStyle=\"bold\"\n            tools:text=\"TITLE\" />\n\n        <TextView\n            android:id=\"@+id/post2_name\"\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:layout_gravity=\"center_vertical\"\n            android:paddingRight=\"10dp\"\n            android:textColor=\"@android:color/black\"\n            android:textSize=\"14sp\"\n            tools:text=\"작성자: name\" />\n\n    </LinearLayout>\n\n    <TextView\n        android:id=\"@+id/post2_contents\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:layout_marginLeft=\"10dp\"\n        android:textColor=\"@android:color/black\"\n        android:textSize=\"16sp\"\n        android:layout_below=\"@id/community3\"\n        tools:text=\"contents\" />\n\n    <TextView\n        android:id=\"@+id/community_line\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"0.5dp\"\n        android:background=\"#333333\"\n        android:layout_marginTop=\"7dp\"\n        android:layout_below=\"@id/post2_contents\"/>\n\n    <androidx.recyclerview.widget.RecyclerView\n        android:id=\"@+id/main_recyclerview2\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"match_parent\"\n        android:layout_below=\"@id/community_line\"\n        android:background=\"#fff\"\n        app:layoutManager=\"androidx.recyclerview.widget.LinearLayoutManager\">\n    </androidx.recyclerview.widget.RecyclerView>\n\n    <EditText\n        android:id=\"@+id/post_contents_edit2\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"40dp\"\n        android:hint=\"@string/contents_input\"\n        android:textSize=\"16sp\"\n        android:textColor=\"@android:color/black\"\n        android:background=\"@drawable/shape_round2\"\n        android:layout_margin=\"10dp\"\n        android:paddingLeft=\"10dp\"\n        android:gravity=\"center_vertical\"\n        android:layout_alignParentBottom=\"true\"/>\n\n    <ImageButton android:id=\"@+id/post_rewrite_button\"\n        android:layout_width=\"30dp\"\n        android:layout_height=\"wrap_content\"\n        android:layout_alignTop=\"@+id/post_contents_edit2\"\n        android:layout_alignBottom=\"@+id/post_contents_edit2\"\n        android:layout_alignRight=\"@+id/post_contents_edit2\"\n        android:layout_margin=\"3dp\"\n        android:background=\"@drawable/ic_baseline_send_24\"/>\n\n</RelativeLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_community_detail.xml	(revision 19510acf64de322fd633c8b5574cb2a69f61963e)
++++ app/src/main/res/layout/activity_community_detail.xml	(date 1607151006000)
+@@ -100,6 +100,7 @@
+         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+     </androidx.recyclerview.widget.RecyclerView>
+ 
++
+     <EditText
+         android:id="@+id/post_contents_edit2"
+         android:layout_width="match_parent"

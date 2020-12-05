@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.coronaclassroomallocationapplication.adapters.PostAdapter;
@@ -30,9 +31,16 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.*;
 
 public class activity_coummunity extends AppCompatActivity implements View.OnClickListener, RecyclerViewItemClickListener.OnItemClickListener {
     private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
+
+    int array_image[] = {R.drawable.cat, R.drawable.wolf, R.drawable.children, R.drawable.rabbit, R.drawable.dog};
+    Random ram = new Random();
+
+    int num = ram.nextInt(array_image.length);
 
     private RecyclerView mPostRecyclerView;
     private PostAdapter mAdapter;
@@ -84,7 +92,7 @@ public class activity_coummunity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onItemClick(View view, int position) {
-        Intent intent = new Intent(this, activity_community_detail.class);
+        Intent intent = new Intent(this, activity_notice.class);
         intent.putExtra(FirebaseID.documentId, mDatas.get(position).getDocumentId());
         startActivity(intent);
     }

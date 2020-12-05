@@ -19,13 +19,12 @@ public class Repost {
 
     }
 
-    public Repost(String documentId, String writeId, String userId, String contents, String name, String curdate) {
+    public Repost(String documentId, String writeId, String userId, String contents, String name) {
         this.documentId = documentId;
         this.writeId = writeId;
         this.userId = userId;
         this.contents = contents;
         this.name = name;
-        this.curdate = curdate;
     }
 
     public String getWriteId() {
