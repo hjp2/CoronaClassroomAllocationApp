@@ -54,6 +54,7 @@ public class activity_mypost extends AppCompatActivity implements View.OnClickLi
     private List<MyPost> mDatas;
     private String myname;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    //
 
 
 
