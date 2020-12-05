@@ -85,7 +85,7 @@
         android:layout_marginTop="32dp"
         android:background="#00A3FF"
         android:gravity="center"
-        android:text=" 내  보기"
+        android:text=" 내가 쓴글 보기"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"

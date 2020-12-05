@@ -1,0 +1,200 @@
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    package=\"com.example.coronaclassroomallocationapplication\">\r\n    <uses-permission android:name=\"android.permission.INTERNET\"></uses-permission>\r\n\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:icon=\"@mipmap/ic_launcher\"\r\n        android:label=\"@string/app_name\"\r\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\r\n        android:supportsRtl=\"true\"\r\n        android:theme=\"@style/Theme.AppCompat.Light.NoActionBar\">\r\n        <activity android:name=\".activity_post\"/>\r\n        <activity android:name=\".activity_community_detail\"/>\r\n        <activity android:name=\".activity_coummunity\" />\r\n        <activity android:name=\".activity_join\" />\r\n        <activity android:name=\".activity_menu\" /> <!-- <activity android:name=\".activity_login\" /> -->\r\n        <activity android:name=\".MainActivity\" />\r\n        <activity android:name=\".activity_login\" />\r\n        <activity android:name=\".activity_selectclass\" />\r\n        <activity android:name=\".activity_selecttime\" />\r\n        <activity android:name=\".activity_selectfloor\" />\r\n        <activity android:name=\".activity_privateinfo\" />\r\n        <activity android:name=\".activity_notice\"/>\r\n        <activity android:name=\".activity_secondprivateinfo\" />\r\n       <activity android:name=\".activity_selectbuilding\"></activity>\r\n        <activity android:name=\".activity_intro\">\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n\r\n        </activity>\r\n\r\n        <meta-data\r\n            android:name=\"preloaded_fonts\"\r\n            android:resource=\"@array/preloaded_fonts\" />\r\n    </application>\r\n\r\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/AndroidManifest.xml	(revision 40e37d871515c5fba5deeb094edc2457dd2d888f)
++++ app/src/main/AndroidManifest.xml	(date 1607102937573)
+@@ -23,6 +23,7 @@
+         <activity android:name=".activity_privateinfo" />
+         <activity android:name=".activity_notice"/>
+         <activity android:name=".activity_secondprivateinfo" />
++        <activity android:name=".activity_mypost"/>
+        <activity android:name=".activity_selectbuilding"></activity>
+         <activity android:name=".activity_intro">
+             <intent-filter>
+Index: app/src/main/java/com/example/coronaclassroomallocationapplication/activity_privateinfo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.coronaclassroomallocationapplication;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.text.Layout;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\n\r\nimport androidx.annotation.Nullable;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.appcompat.widget.AppCompatTextView;\r\n\r\nimport com.google.firebase.auth.FirebaseAuth;\r\n\r\npublic class activity_privateinfo extends AppCompatActivity {\r\n\r\n    Button bt_changeinfo; //회원정보 변경\r\n    Button bt_logout; //로그아웃\r\n    private FirebaseAuth mAuth;\r\n\r\n    @Override\r\n    protected void onCreate(@Nullable Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_privateinfo);\r\n\r\n       //Layout layout = (Layout)findViewById();\r\n        //Button butt = (Button)findViewById(R.)\r\n\r\n        mAuth = FirebaseAuth.getInstance();\r\n        bt_changeinfo = (Button)findViewById(R.id.info3); //회원정보 변경\r\n        bt_logout = (Button)findViewById(R.id.info4); //로그아웃\r\n\r\n        //고지훈 추가(회원 정보 변경) -> 문제시 이야기해주세요.\r\n        bt_changeinfo.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                Intent intent = new Intent(activity_privateinfo.this, activity_secondprivateinfo.class);\r\n                startActivity(intent);\r\n                finish();\r\n            }\r\n        });\r\n\r\n        //고지훈 추가(로그아웃) -> 문제시 이야기해주세요.\r\n        bt_logout.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                mAuth.getInstance().signOut(); //구글 계정에서 로그아웃\r\n                finishAffinity();\r\n            }\r\n        });\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/coronaclassroomallocationapplication/activity_privateinfo.java	(revision 40e37d871515c5fba5deeb094edc2457dd2d888f)
++++ app/src/main/java/com/example/coronaclassroomallocationapplication/activity_privateinfo.java	(date 1607170602236)
+@@ -5,31 +5,78 @@
+ import android.text.Layout;
+ import android.view.View;
+ import android.widget.Button;
++import android.widget.TextView;
++import android.widget.Toast;
+ 
++import androidx.annotation.NonNull;
+ import androidx.annotation.Nullable;
+ import androidx.appcompat.app.AppCompatActivity;
+ import androidx.appcompat.widget.AppCompatTextView;
+ 
++import com.example.coronaclassroomallocationapplication.adapters.PostAdapter;
++import com.example.coronaclassroomallocationapplication.models.Post;
++import com.google.android.gms.tasks.OnCompleteListener;
++import com.google.android.gms.tasks.OnSuccessListener;
++import com.google.android.gms.tasks.Task;
+ import com.google.firebase.auth.FirebaseAuth;
++import com.google.firebase.auth.FirebaseUser;
++import com.google.firebase.firestore.DocumentReference;
++import com.google.firebase.firestore.DocumentSnapshot;
++import com.google.firebase.firestore.EventListener;
++import com.google.firebase.firestore.FirebaseFirestore;
++import com.google.firebase.firestore.FirebaseFirestoreException;
++import com.google.firebase.firestore.Query;
++import com.google.firebase.firestore.QuerySnapshot;
++
++
++
++import java.util.HashMap;
++import java.util.List;
++import java.util.Map;
++import org.w3c.dom.Text;
++
++import java.util.ArrayList;
++import java.util.Map;
+ 
+ public class activity_privateinfo extends AppCompatActivity {
+ 
+     Button bt_changeinfo; //회원정보 변경
+     Button bt_logout; //로그아웃
+-    private FirebaseAuth mAuth;
++    Button bt_mypost; //로그아웃
++    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
++    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
++    public String myname;
++    private List<Post> mDatas;
++    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
++
+ 
+     @Override
+     protected void onCreate(@Nullable Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_privateinfo);
+ 
+-       //Layout layout = (Layout)findViewById();
+-        //Button butt = (Button)findViewById(R.)
++        Toast.makeText(this.getApplicationContext(), "" + myname, Toast.LENGTH_LONG).show();
++
++
++        TextView textView1 = (TextView) findViewById(R.id.name);
++        textView1.setText(myname);
+ 
+         mAuth = FirebaseAuth.getInstance();
+-        bt_changeinfo = (Button)findViewById(R.id.info3); //회원정보 변경
+-        bt_logout = (Button)findViewById(R.id.info4); //로그아웃
++        bt_mypost = (Button) findViewById(R.id.info2); //내글 보기
++        bt_changeinfo = (Button) findViewById(R.id.info3); //회원정보 변경
++        bt_logout = (Button) findViewById(R.id.info4); //로그아웃
+ 
++
++        //박성준 추가(내글 보기 변경) -> 문제시 이야기해주세요.
++        bt_mypost.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View v) {
++                Intent intent = new Intent(activity_privateinfo.this, activity_mypost.class);
++                startActivity(intent);
++                finish();
++            }
++        });
++
+         //고지훈 추가(회원 정보 변경) -> 문제시 이야기해주세요.
+         bt_changeinfo.setOnClickListener(new View.OnClickListener() {
+             @Override
+@@ -49,4 +96,4 @@
+             }
+         });
+     }
+-}
++}
+\ No newline at end of file
+Index: app/src/main/java/com/example/coronaclassroomallocationapplication/activity_community_detail.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.coronaclassroomallocationapplication;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.annotation.Nullable;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport android.app.AlertDialog;\r\nimport android.content.DialogInterface;\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\nimport android.view.View;\r\nimport android.widget.EditText;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\n\r\nimport com.example.coronaclassroomallocationapplication.adapters.PostAdapter;\r\nimport com.example.coronaclassroomallocationapplication.adapters.RepostAdapter;\r\nimport com.example.coronaclassroomallocationapplication.models.Post;\r\nimport com.example.coronaclassroomallocationapplication.models.Repost;\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.auth.FirebaseUser;\r\nimport com.google.firebase.firestore.DocumentSnapshot;\r\nimport com.google.firebase.firestore.EventListener;\r\nimport com.google.firebase.firestore.FieldValue;\r\nimport com.google.firebase.firestore.FirebaseFirestore;\r\nimport com.google.firebase.firestore.FirebaseFirestoreException;\r\nimport com.google.firebase.firestore.Query;\r\nimport com.google.firebase.firestore.QuerySnapshot;\r\nimport com.google.firebase.firestore.SetOptions;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.HashMap;\r\nimport java.util.List;\r\nimport java.util.Map;\r\n\r\npublic class activity_community_detail extends AppCompatActivity implements View.OnClickListener, RecyclerViewItemClickListener.OnItemClickListener {\r\n\r\n    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();\r\n    private TextView mTitleText, mContentsText, mNameText;\r\n    private String id;\r\n    private String check;\r\n\r\n    //댓글 기능\r\n    private FirebaseAuth mAuth = FirebaseAuth.getInstance();\r\n    private EditText reContents;\r\n    private String reName;\r\n    private RecyclerView mPostRecyclerView;\r\n    private RepostAdapter mAdapter;\r\n    private List<Repost> mDatas;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_community_detail);\r\n\r\n        //댓글 기능 역할(입력)\r\n        reContents = findViewById(R.id.post_contents_edit2);\r\n        findViewById(R.id.post_rewrite_button).setOnClickListener(this);\r\n\r\n        if (mAuth.getCurrentUser() != null) {\r\n            mStore.collection(FirebaseID.user).document(mAuth.getCurrentUser().getUid())\r\n                    .get()\r\n                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {\r\n                        @Override\r\n                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {\r\n                            if (task.getResult() != null) {\r\n                                reName = (String) task.getResult().getData().get(FirebaseID.name);\r\n                            }\r\n                        }\r\n                    });\r\n        }\r\n        mPostRecyclerView = findViewById(R.id.main_recyclerview2);\r\n        mPostRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this, mPostRecyclerView, this));\r\n\r\n\r\n        //글 불러오는 역할\r\n        mTitleText = findViewById(R.id.post2_title);\r\n        mContentsText = findViewById(R.id.post2_contents);\r\n        mNameText = findViewById(R.id.post2_name);\r\n\r\n        id = getIntent().getStringExtra(FirebaseID.documentId);\r\n        Log.e(\"ITEM DOCUMENT ID\", id);\r\n\r\n        check = mStore.collection(FirebaseID.post).document(id).getId();\r\n\r\n        mStore.collection(FirebaseID.post).document(id)\r\n                .get()\r\n                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {\r\n                    @Override\r\n                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {\r\n                        if (task.isSuccessful()) {\r\n                            if (task.getResult().exists()) { //문서가 없을경우 처리방법\r\n                                if (task.getResult() != null) {\r\n                                    Map<String, Object> snap = task.getResult().getData();\r\n                                    String title = String.valueOf(snap.get(FirebaseID.title));\r\n                                    String contents = String.valueOf(snap.get(FirebaseID.contents));\r\n                                    String name = String.valueOf(snap.get(FirebaseID.name));\r\n\r\n                                    mTitleText.setText(title);\r\n                                    mContentsText.setText(contents);\r\n                                    mNameText.setText(name);\r\n                                }\r\n                            } else {\r\n                                Toast.makeText(activity_community_detail.this, \"삭제된 문서입니다.\", Toast.LENGTH_SHORT).show();\r\n                            }\r\n                        }\r\n                    }\r\n                });\r\n    }\r\n\r\n    @Override\r\n    public void onClick(View v) {\r\n        if (mAuth.getCurrentUser() != null) {\r\n            String postId = mStore.collection(FirebaseID.post).document(id).getId();\r\n            String repostId = mStore.collection(FirebaseID.repost).document().getId();\r\n            Map<String, Object> data = new HashMap<>();\r\n            data.put(FirebaseID.documentId, repostId);\r\n            data.put(FirebaseID.userId, mAuth.getCurrentUser().getUid());\r\n            data.put(FirebaseID.contents, reContents.getText().toString());\r\n            data.put(FirebaseID.name, reName);\r\n            data.put(FirebaseID.post, postId);\r\n            data.put(FirebaseID.timestamp, FieldValue.serverTimestamp());\r\n            if (reContents.getText().toString().equals(\"\")) {\r\n                Toast.makeText(activity_community_detail.this, \"댓글을 입력하세요.\", Toast.LENGTH_SHORT).show();\r\n                return;\r\n            }\r\n            mStore.collection(FirebaseID.repost).document(repostId).set(data, SetOptions.merge());\r\n        }\r\n    }\r\n\r\n    @Override\r\n    protected void onStart() {\r\n        super.onStart();\r\n        mDatas = new ArrayList<>();\r\n        mStore.collection(FirebaseID.repost)\r\n                .orderBy(FirebaseID.timestamp, Query.Direction.DESCENDING)\r\n                .addSnapshotListener(new EventListener<QuerySnapshot>() {\r\n                    @Override\r\n                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {\r\n                        if (queryDocumentSnapshots != null) {\r\n                            mDatas.clear(); //리스트가 갱신되는게 아니라 화면에 쌓이기 때문에 정리를 해주어야한다.\r\n                            for (DocumentSnapshot snap : queryDocumentSnapshots.getDocuments()) {\r\n                                Map<String, Object> shot = snap.getData();\r\n                                String documentId = String.valueOf(shot.get(FirebaseID.documentId));\r\n                                String userId = String.valueOf(shot.get(FirebaseID.userId));\r\n                                String contents = String.valueOf(shot.get(FirebaseID.contents));\r\n                                String name = String.valueOf(shot.get(FirebaseID.name));\r\n                                String post = String.valueOf(shot.get(FirebaseID.post));\r\n                                Repost data = new Repost(documentId, userId, contents, name, post);\r\n                                if (check.equals(post)) {\r\n                                    mDatas.add(data);\r\n                                    reContents.setText(\"\");\r\n                                }\r\n                            }\r\n\r\n                            mAdapter = new RepostAdapter(mDatas);\r\n                            mPostRecyclerView.setAdapter(mAdapter);\r\n                        }\r\n                    }\r\n                });\r\n    }\r\n\r\n    @Override\r\n    public void onItemClick(View view, int position) {\r\n\r\n    }\r\n\r\n    @Override\r\n    public void onItemLongClick(View view, final int position) {\r\n            AlertDialog.Builder dialog = new AlertDialog.Builder(this);\r\n            dialog.setMessage(\"삭제 하시겠습니까?\");\r\n            dialog.setPositiveButton(\"삭제\", new DialogInterface.OnClickListener() {\r\n                @Override\r\n                public void onClick(DialogInterface dialog, int which) {\r\n                    mStore.collection(FirebaseID.repost).document(mDatas.get(position).getDocumentId()).delete();\r\n                    Toast.makeText(activity_community_detail.this, \"삭제 되었습니다.\", Toast.LENGTH_SHORT).show();\r\n                }\r\n            }).setNegativeButton(\"취소\", new DialogInterface.OnClickListener() {\r\n                @Override\r\n                public void onClick(DialogInterface dialog, int which) {\r\n                    Toast.makeText(activity_community_detail.this, \"취소 되었습니다.\", Toast.LENGTH_SHORT).show();\r\n                }\r\n            });\r\n            dialog.setTitle(\"삭제 알림\");\r\n            dialog.show();\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/coronaclassroomallocationapplication/activity_community_detail.java	(revision 40e37d871515c5fba5deeb094edc2457dd2d888f)
++++ app/src/main/java/com/example/coronaclassroomallocationapplication/activity_community_detail.java	(date 1607168307163)
+@@ -103,6 +103,7 @@
+                                     mTitleText.setText(title);
+                                     mContentsText.setText(contents);
+                                     mNameText.setText(name);
++                                    Toast.makeText(activity_community_detail.this, name, Toast.LENGTH_LONG).show();
+                                 }
+                             } else {
+                                 Toast.makeText(activity_community_detail.this, "삭제된 문서입니다.", Toast.LENGTH_SHORT).show();
+Index: app/src/main/java/com/example/coronaclassroomallocationapplication/activity_coummunity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.coronaclassroomallocationapplication;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.annotation.Nullable;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport android.app.AlertDialog;\r\nimport android.app.admin.ConnectEvent;\r\nimport android.content.DialogInterface;\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.view.View;\r\nimport android.widget.Toast;\r\n\r\nimport com.example.coronaclassroomallocationapplication.adapters.PostAdapter;\r\nimport com.example.coronaclassroomallocationapplication.models.Post;\r\nimport com.example.coronaclassroomallocationapplication.models.Repost;\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.firestore.DocumentSnapshot;\r\nimport com.google.firebase.firestore.EventListener;\r\nimport com.google.firebase.firestore.FirebaseFirestore;\r\nimport com.google.firebase.firestore.FirebaseFirestoreException;\r\nimport com.google.firebase.firestore.Query;\r\nimport com.google.firebase.firestore.QueryDocumentSnapshot;\r\nimport com.google.firebase.firestore.QuerySnapshot;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\nimport java.util.Map;\r\n\r\npublic class activity_coummunity extends AppCompatActivity implements View.OnClickListener, RecyclerViewItemClickListener.OnItemClickListener {\r\n    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();\r\n\r\n    private RecyclerView mPostRecyclerView;\r\n    private PostAdapter mAdapter;\r\n    private List<Post> mDatas;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_coummunity);\r\n\r\n        mPostRecyclerView = findViewById(R.id.main_recyclerview);\r\n        findViewById(R.id.main_post_edit).setOnClickListener(this);\r\n\r\n        mPostRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this, mPostRecyclerView, this));\r\n    }\r\n\r\n    @Override\r\n    protected void onStart() {\r\n        super.onStart();\r\n        mDatas = new ArrayList<>();\r\n        mStore.collection(FirebaseID.post)\r\n                .orderBy(FirebaseID.timestamp, Query.Direction.DESCENDING)\r\n                .addSnapshotListener(new EventListener<QuerySnapshot>() {\r\n                    @Override\r\n                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {\r\n                        if(queryDocumentSnapshots != null) {\r\n                            mDatas.clear(); //리스트가 갱신되는게 아니라 화면에 쌓이기 때문에 정리를 해주어야한다.\r\n                            for (DocumentSnapshot snap : queryDocumentSnapshots.getDocuments()) {\r\n                                Map<String, Object> shot = snap.getData();\r\n                                String documentId = String.valueOf(shot.get(FirebaseID.documentId));\r\n                                String title = String.valueOf(shot.get(FirebaseID.title));\r\n                                String contents = String.valueOf(shot.get(FirebaseID.contents));\r\n                                String name = String.valueOf(shot.get(FirebaseID.name));\r\n                                Post data = new Post(documentId, title, contents, name);\r\n                                mDatas.add(data);\r\n                            }\r\n\r\n                            mAdapter = new PostAdapter(mDatas);\r\n                            mPostRecyclerView.setAdapter(mAdapter);\r\n                        }\r\n                    }\r\n                });\r\n    }\r\n\r\n    @Override\r\n    public void onClick(View v) {\r\n        startActivity(new Intent(activity_coummunity.this, activity_post.class));\r\n    }\r\n\r\n    @Override\r\n    public void onItemClick(View view, int position) {\r\n        Intent intent = new Intent(this, activity_community_detail.class);\r\n        intent.putExtra(FirebaseID.documentId, mDatas.get(position).getDocumentId());\r\n        startActivity(intent);\r\n    }\r\n\r\n    @Override\r\n    public void onItemLongClick(View view, final int position) {\r\n        AlertDialog.Builder dialog = new AlertDialog.Builder(this);\r\n        dialog.setMessage(\"삭제 하시겠습니까?\");\r\n        dialog.setPositiveButton(\"삭제\", new DialogInterface.OnClickListener() {\r\n            @Override\r\n            public void onClick(DialogInterface dialog, int which) {\r\n                mStore.collection(FirebaseID.post).document(mDatas.get(position).getDocumentId()).delete();\r\n                Toast.makeText(activity_coummunity.this, \"삭제 되었습니다.\", Toast.LENGTH_SHORT).show();\r\n            }\r\n        }).setNegativeButton(\"취소\", new DialogInterface.OnClickListener() {\r\n            @Override\r\n            public void onClick(DialogInterface dialog, int which) {\r\n                Toast.makeText(activity_coummunity.this, \"취소 되었습니다.\", Toast.LENGTH_SHORT).show();\r\n            }\r\n        });\r\n        dialog.setTitle(\"삭제 알림\");\r\n        dialog.show();\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/coronaclassroomallocationapplication/activity_coummunity.java	(revision 40e37d871515c5fba5deeb094edc2457dd2d888f)
++++ app/src/main/java/com/example/coronaclassroomallocationapplication/activity_coummunity.java	(date 1607169987849)
+@@ -1,30 +1,23 @@
+ package com.example.coronaclassroomallocationapplication;
+ 
+-import androidx.annotation.NonNull;
+-import androidx.annotation.Nullable;
+-import androidx.appcompat.app.AppCompatActivity;
+-import androidx.recyclerview.widget.RecyclerView;
+-
+ import android.app.AlertDialog;
+-import android.app.admin.ConnectEvent;
+ import android.content.DialogInterface;
+ import android.content.Intent;
+ import android.os.Bundle;
+ import android.view.View;
+ import android.widget.Toast;
+ 
++import androidx.annotation.Nullable;
++import androidx.appcompat.app.AppCompatActivity;
++import androidx.recyclerview.widget.RecyclerView;
++
+ import com.example.coronaclassroomallocationapplication.adapters.PostAdapter;
+ import com.example.coronaclassroomallocationapplication.models.Post;
+-import com.example.coronaclassroomallocationapplication.models.Repost;
+-import com.google.android.gms.tasks.OnCompleteListener;
+-import com.google.android.gms.tasks.Task;
+-import com.google.firebase.auth.FirebaseAuth;
+ import com.google.firebase.firestore.DocumentSnapshot;
+ import com.google.firebase.firestore.EventListener;
+ import com.google.firebase.firestore.FirebaseFirestore;
+ import com.google.firebase.firestore.FirebaseFirestoreException;
+ import com.google.firebase.firestore.Query;
+-import com.google.firebase.firestore.QueryDocumentSnapshot;
+ import com.google.firebase.firestore.QuerySnapshot;
+ 
+ import java.util.ArrayList;
+Index: app/src/main/res/layout/activity_privateinfo.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    android:orientation=\"vertical\">\r\n\r\n    <include\r\n        android:id=\"@+id/include2\"\r\n        layout=\"@layout/toolbar\"></include>\r\n\r\n    <TextView\r\n        android:id=\"@+id/textView9\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:background=\"#2196F3\"\r\n        android:gravity=\"center_horizontal\"\r\n        android:paddingTop=\"5dp\"\r\n        android:paddingBottom=\"5dp\"\r\n        android:text=\"내 정보\"\r\n        android:textColor=\"#000000\"\r\n        android:textSize=\"20sp\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.0\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toBottomOf=\"@+id/include2\"\r\n        app:layout_constraintVertical_bias=\"0.0\"\r\n        tools:ignore=\"MissingConstraints\" />\r\n\r\n    <ImageView\r\n        android:id=\"@+id/imageView7\"\r\n        android:layout_width=\"140dp\"\r\n        android:layout_height=\"140dp\"\r\n        android:layout_gravity=\"center_horizontal\"\r\n        android:layout_marginBottom=\"472dp\"\r\n        android:layout_marginTop=\"20dp\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.498\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toBottomOf=\"@+id/textView9\"\r\n        app:layout_constraintVertical_bias=\"0.0\"\r\n        tools:srcCompat=\"@tools:sample/avatars\" />\r\n\r\n    <androidx.appcompat.widget.AppCompatTextView\r\n        android:id=\"@+id/name\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginBottom=\"20dp\"\r\n        android:paddingTop=\"20dp\"\r\n        android:paddingBottom=\"20dp\"\r\n        android:gravity=\"center\"\r\n        app:layout_constraintTop_toBottomOf=\"@id/imageView7\"\r\n        android:text=\"name\"\r\n        android:textSize=\"20sp\"/>\r\n\r\n\r\n    <View\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"2dp\"\r\n        android:layout_marginTop=\"20dp\"\r\n        android:layout_marginBottom=\"20dp\"\r\n        app:layout_constraintTop_toBottomOf=\"@+id/name\"\r\n        app:layout_constraintBottom_toTopOf=\"@id/info\"\r\n        tools:ignore=\"MissingConstraints\" />\r\n\r\n    <Button\r\n        android:id=\"@+id/info\"\r\n        android:layout_width=\"200dp\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginTop=\"100dp\"\r\n        android:background=\"#00A3FF\"\r\n        android:gravity=\"center\"\r\n        android:text=\" 내 예정 보기\"\r\n        android:textColor=\"#FFFFFF\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.497\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toBottomOf=\"@+id/imageView7\" />\r\n\r\n    <Button\r\n        android:id=\"@+id/info2\"\r\n        android:layout_width=\"200dp\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginTop=\"32dp\"\r\n        android:background=\"#00A3FF\"\r\n        android:gravity=\"center\"\r\n        android:text=\" 내  보기\"\r\n        android:textColor=\"#FFFFFF\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.497\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toBottomOf=\"@+id/info\"\r\n        tools:ignore=\"MissingConstraints\" />\r\n\r\n    <Button\r\n        android:id=\"@+id/info3\"\r\n        android:layout_width=\"200dp\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginTop=\"32dp\"\r\n        android:background=\"#00A3FF\"\r\n        android:gravity=\"center\"\r\n        android:text=\"내 정보 변경\"\r\n        android:textColor=\"#FFFFFF\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.497\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toBottomOf=\"@+id/info2\"\r\n        tools:ignore=\"MissingConstraints\" />\r\n\r\n    <Button\r\n        android:id=\"@+id/info4\"\r\n        android:layout_width=\"200dp\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginTop=\"32dp\"\r\n        android:background=\"#FF0000\"\r\n        android:gravity=\"center\"\r\n        android:text=\"로그아웃\"\r\n        android:textColor=\"#FFFFFF\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.497\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toBottomOf=\"@+id/info3\"\r\n        tools:ignore=\"MissingConstraints\" />\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_privateinfo.xml	(revision 40e37d871515c5fba5deeb094edc2457dd2d888f)
++++ app/src/main/res/layout/activity_privateinfo.xml	(date 1607102937560)
+@@ -85,7 +85,7 @@
+         android:layout_marginTop="32dp"
+         android:background="#00A3FF"
+         android:gravity="center"
+-        android:text=" 내  보기"
++        android:text=" 내가 쓴글 보기"
+         android:textColor="#FFFFFF"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="0.497"
+diff --git .idea/shelf/Uncommitted_changes_before_Update_at_12_4_20_5_08_PM__Default_Changelist_.xml .idea/shelf/Uncommitted_changes_before_Update_at_12_4_20_5_08_PM__Default_Changelist_.xml
+diff --git .idea/shelf/Uncommitted_changes_before_Update_at_12_3_20_3_12_PM__Default_Changelist_.xml .idea/shelf/Uncommitted_changes_before_Update_at_12_3_20_3_12_PM__Default_Changelist_.xml
+diff --git .idea/shelf/Uncommitted_changes_before_Update_at_12_4_20_1_14_AM__Default_Changelist_.xml .idea/shelf/Uncommitted_changes_before_Update_at_12_4_20_1_14_AM__Default_Changelist_.xml
+diff --git .idea/shelf/Uncommitted_changes_before_Update_at_12_4_20_4_04_PM__Default_Changelist_.xml .idea/shelf/Uncommitted_changes_before_Update_at_12_4_20_4_04_PM__Default_Changelist_.xml

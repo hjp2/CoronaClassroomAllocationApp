@@ -117,6 +117,7 @@ public class activity_community_detail extends AppCompatActivity implements View
                                     mTitleText.setText(title);
                                     mContentsText.setText(contents);
                                     mNameText.setText(name);
+                                    Toast.makeText(activity_community_detail.this, name, Toast.LENGTH_LONG).show();
                                 }
                             } else {
                                 Toast.makeText(activity_community_detail.this, "삭제된 문서입니다.", Toast.LENGTH_SHORT).show();

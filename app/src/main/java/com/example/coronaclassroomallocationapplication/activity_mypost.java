@@ -1,50 +1,66 @@
 package com.example.coronaclassroomallocationapplication;
+import com.example.coronaclassroomallocationapplication.adapters.MyPostAdapter;
+import com.example.coronaclassroomallocationapplication.adapters.PostAdapter;
+import com.example.coronaclassroomallocationapplication.models.MyPost;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.coronaclassroomallocationapplication.adapters.PostAdapter;
-import com.example.coronaclassroomallocationapplication.models.Post;
+import com.example.coronaclassroomallocationapplication.adapters.MyPostAdapter;
+import com.example.coronaclassroomallocationapplication.models.MyPost;
+import com.example.coronaclassroomallocationapplication.models.Repost;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.*;
 
-public class activity_coummunity extends AppCompatActivity implements View.OnClickListener, RecyclerViewItemClickListener.OnItemClickListener {
-    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
+
+public class activity_mypost extends AppCompatActivity implements View.OnClickListener, RecyclerViewItemClickListener.OnItemClickListener {
     int array_image[] = {R.drawable.cat, R.drawable.wolf, R.drawable.children, R.drawable.rabbit, R.drawable.dog};
     Random ram = new Random();
     int num = ram.nextInt(array_image.length);
 
-    private RecyclerView mPostRecyclerView;
-    private PostAdapter mAdapter;
-    private List<Post> mDatas;
-
     private Intent intent;
     private ImageView homebutton;
+
+    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private RecyclerView mPostRecyclerView;
+    private MyPostAdapter mAdapter;
+    private List<MyPost> mDatas;
+    private String myname;
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_coummunity);
+        setContentView(R.layout.activity_mypost_list);
 
         mPostRecyclerView = findViewById(R.id.main_recyclerview);
         findViewById(R.id.main_post_edit).setOnClickListener(this);
@@ -54,17 +70,21 @@ public class activity_coummunity extends AppCompatActivity implements View.OnCli
         homebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent(activity_coummunity.this, MainActivity.class);
+                intent = new Intent(activity_mypost.this, MainActivity.class);
                 startActivity(intent);
             }
         });
     }
 
+
+
     @Override
     protected void onStart() {
+        myname= user.getUid();
         super.onStart();
         mDatas = new ArrayList<>();
         mStore.collection(FirebaseID.post)
+                .whereEqualTo("userId",""+myname)
                 .orderBy(FirebaseID.timestamp, Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
@@ -77,11 +97,11 @@ public class activity_coummunity extends AppCompatActivity implements View.OnCli
                                 String title = String.valueOf(shot.get(FirebaseID.title));
                                 String contents = String.valueOf(shot.get(FirebaseID.contents));
                                 String name = String.valueOf(shot.get(FirebaseID.name));
-                                Post data = new Post(documentId, title, contents, name);
+                                MyPost data = new MyPost(documentId, title, contents, name);
                                 mDatas.add(data);
                             }
 
-                            mAdapter = new PostAdapter(mDatas);
+                            mAdapter = new MyPostAdapter(mDatas);
                             mPostRecyclerView.setAdapter(mAdapter);
                         }
                     }
@@ -90,7 +110,7 @@ public class activity_coummunity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        startActivity(new Intent(activity_coummunity.this, activity_post.class));
+        startActivity(new Intent(activity_mypost.this, activity_post.class));
     }
 
     @Override
@@ -108,12 +128,12 @@ public class activity_coummunity extends AppCompatActivity implements View.OnCli
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mStore.collection(FirebaseID.post).document(mDatas.get(position).getDocumentId()).delete();
-                Toast.makeText(activity_coummunity.this, "삭제 되었습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity_mypost.this, "삭제 되었습니다.", Toast.LENGTH_SHORT).show();
             }
         }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(activity_coummunity.this, "취소 되었습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity_mypost.this, "취소 되었습니다.", Toast.LENGTH_SHORT).show();
             }
         });
         dialog.setTitle("삭제 알림");
