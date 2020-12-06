@@ -36,7 +36,7 @@ public class activity_selectfloor extends AppCompatActivity {
     private ListView listView;
     private ArrayAdapter<String> adapter;
     private List<String> Array = new ArrayList<String>();
-    //private List<String> ids = new ArrayList<String>();
+
 
 
     @Override

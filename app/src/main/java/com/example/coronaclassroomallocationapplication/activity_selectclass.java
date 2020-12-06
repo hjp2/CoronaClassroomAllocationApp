@@ -49,7 +49,8 @@ public class activity_selectclass extends AppCompatActivity {
     private String sdate;
     private ArrayList<String> max;
     private String currentlevel;
-    private String levelinfo;
+    private String[] levelinfo= new String[1];
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,11 +94,13 @@ public class activity_selectclass extends AppCompatActivity {
 
         title.setText(building + " " + floor);
 
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<String>());
+        adapter = new ArrayAdapter<String>(this, android.R.layout. simple_list_item_1, new ArrayList<String>());
         max = new ArrayList<String>();
         listView.setAdapter(adapter);
 
-        String test;
+
+
+
         DocumentReference docRef = mStore.collection("corona").document("level");
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -106,31 +109,24 @@ public class activity_selectclass extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if(document.exists()){
                         currentlevel = document.getString("current");
-                        levelinfo = document.getString(currentlevel);
+                        levelinfo[0] = document.getString(currentlevel);
 
                         System.out.println(currentlevel);
                         System.out.println(levelinfo);
 
                     }
+
+                    levelinfo[0] = document.getString(currentlevel);
                 }
+
             }
         });
-
-
-
-
-
-
-
-
-
-
-
 
 
         mStore.collection("classroom/"+building+"/층/"+floor+"/강의실")
                 //.orderBy("층", Query.Direction.ASCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
+
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
                         if (queryDocumentSnapshots != null) {
@@ -147,7 +143,7 @@ public class activity_selectclass extends AppCompatActivity {
 
                                 //ids.add(id);
                                 Array.add(sclass);
-                                adapter.add(sclass+" - "+info + "       적정인원: "+ Integer.parseInt(temp)/2);
+                                adapter.add(sclass+" - "+info + "\n적정인원: "+ Integer.parseInt(temp)/2);
                             }
                             adapter.notifyDataSetChanged();
                             listView.setSelection(adapter.getCount() - 1);

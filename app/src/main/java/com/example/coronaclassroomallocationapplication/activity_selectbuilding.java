@@ -48,9 +48,6 @@ public class activity_selectbuilding extends AppCompatActivity{
     private List<String> Array = new ArrayList<String>();
 
 
-    //private List<String> docid = new ArrayList<String>();
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,10 +65,6 @@ public class activity_selectbuilding extends AppCompatActivity{
                 onBackPressed();
             }
         });
-
-
-
-
 
 
 
@@ -116,7 +109,6 @@ public class activity_selectbuilding extends AppCompatActivity{
         });
 
     }
-
 
 
     @Override
