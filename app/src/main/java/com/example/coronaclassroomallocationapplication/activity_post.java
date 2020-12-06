@@ -64,7 +64,7 @@ public class activity_post extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    //클릭 이벤트
+    //완료 버튼 클릭 이벤트
     @Override
     public void onClick(View v) {
         if(mAuth.getCurrentUser() != null){//현재 로그인된 사용자가 null이 아닐 경우
