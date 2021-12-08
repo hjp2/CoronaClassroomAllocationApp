@@ -1,18 +1,11 @@
-# 2020-mobilecomputing-project
-2020년 박유현 교수님 모바일컴퓨팅 수업의 안드로이드 팀프로젝트
+# TeamProject 동의보강(강의실 거리두기 어플리케이션)
+## 1. 비전
 
-## Collaborator
-- 고지훈
-- 공성현
-- 박성준
-- 박희준
-- 이세진
+## 2. 문제 기술
 
-## 어플리케이션 예상안
-![어플리케이션 예상 초안](https://user-images.githubusercontent.com/38236367/98114612-d9c8e600-1ee8-11eb-99b1-25fe93824d80.png)
+## 3. 요구사항 목록
 
-## 프로젝트 계획
+## 4. 통신 다이어그램
 
-
-## 프로젝트 결과
-발표동영상: https://youtu.be/HtmUTVlWEkk
+## 5. 구현
+### 동의보강(강의실 거리두기 어플리케이션) 발표 링크: [동의보강(강의실 거리두기 어플리케이션)](https://youtu.be/HtmUTVlWEkk)
