@@ -15,3 +15,4 @@
 
 
 ## 프로젝트 결과
+발표동영상: https://youtu.be/HtmUTVlWEkk
